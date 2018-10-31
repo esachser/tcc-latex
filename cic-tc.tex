@@ -71,7 +71,7 @@
 % \renewcommand{\nominataPRAPGname}{Pr{\'o}-Reitora Adjunta de P{\'o}s-Gradua{\c{c}}{\~a}o}
 % \renewcommand{\nominataDir}{Prof.~Philippe Olivier Alexandre Navaux}
 % \renewcommand{\nominataDirname}{Diretor do Instituto de Inform{\'a}tica}
-% \renewcommand{\nominataCoord}{Prof.~Carlos Alberto Heuser}
+\renewcommand{\nominataCoord}{Prof.~Sérgio Luis Cechin}
 % \renewcommand{\nominataCoordname}{Coordenador do PPGC}
 % \renewcommand{\nominataBibchefe}{Beatriz Regina Bastos Haro}
 % \renewcommand{\nominataBibchefename}{Bibliotec{\'a}ria-chefe do Instituto de Inform{\'a}tica}
@@ -156,19 +156,17 @@
 
 % lista de abreviaturas e siglas
 % o parametro deve ser a abreviatura mais longa
-\begin{listofabbrv}{SPMD}
-    \item[SMP] Symmetric Multi-Processor
-    \item[NUMA] Non-Uniform Memory Access
-    \item[SIMD] Single Instruction Multiple Data
-    \item[SPMD] Single Program Multiple Data
-    \item[ABNT] Associação Brasileira de Normas Técnicas
+\begin{listofabbrv}{CoSaMP}
+    \item[RIP] Restricted Isometric Property
+    \item[OMP] Orthogonal Matching Pursuit
+    \item[CoSaMP] Compressive Sampling Matching Pursuit 
 \end{listofabbrv}
 
 % idem para a lista de símbolos
-% \begin{listofsymbols}{$\alpha\beta\pi\omega$}
-%     \item[$\sum{\frac{a}{b}}$] Somatório do produtório
-%     \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
-% \end{listofsymbols}
+\begin{listofsymbols}{$\alpha\beta\pi\omega$}
+    \item[$\sum{\frac{a}{b}}$] Somatório do produtório
+    \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
+\end{listofsymbols}
 
 % sumario
 \tableofcontents
@@ -180,10 +178,6 @@
 No início dos tempos, Donald E. Knuth criou o \TeX. Algum tempo depois, Leslie Lamport criou o \LaTeX. Graças a eles, não somos obrigados a usar o Word nem o LibreOffice.
 
 \section{Figuras e tabelas}
-
-Esta seção faz referência às Figuras~\ref{fig:estrutura},~\ref{fig:ex1} e~\ref{fig:ex2}, a título de exemplo. A primeira figura apresenta a estrutura de uma figura. A \emph{descrição} deve aparecer \textbf{acima} da figura. Abaixo da figura, deve ser indicado a origem da imagem, mesmo se essa for apenas os autores do texto.
-
-A Figura~\ref{fig:ex1} representa o caso mais comum, onde a figura propriamente dita é importada de um arquivo ( neste exemplo o formato é \texttt{eps} ou \texttt{pdf}. Veja a seção \ref{sec:fig_format}). A Figura~\ref{fig:ex2} exemplifica o uso do environment \texttt{picture}, para desenhar usando o próprio~\LaTeX.
 
 \begin{figure}[h]
     \caption{Descrição da Figura deve ir no topo}
@@ -203,14 +197,14 @@ A Figura~\ref{fig:ex1} representa o caso mais comum, onde a figura propriamente 
     \legend{Fonte: Os Autores}
 \end{figure}
 
-\begin{figure}
-    \caption{Exemplo de figura importada de um arquivo e também exemplo de caption muito grande que ocupa mais de uma linha na Lista~de~Figuras}
-    \begin{center}
-        \includegraphics[width=8em]{fig}
-    \end{center}
-    \legend{Fonte: Os Autores}
-    \label{fig:ex1}
-\end{figure}
+% \begin{figure}
+%     \caption{Exemplo de figura importada de um arquivo e também exemplo de caption muito grande que ocupa mais de uma linha na Lista~de~Figuras}
+%     \begin{center}
+%         \includegraphics[width=8em]{fig}
+%     \end{center}
+%     \legend{Fonte: Os Autores}
+%     \label{fig:ex1}
+% \end{figure}
 
 % o `[h]' abaixo é um parâmetro opcional que sugere que o LaTeX coloque a
 % figura exatamente neste ponto do texto. Somente preocupe-se com esse tipo
@@ -301,11 +295,23 @@ biblio.bib).
 
 \chapter{Referencial Teórico}
 
-\section{Representação de sinais}
+\section{Representação de Sinais}
 
 \section{Compressive Sensing}
+\subsection{O modelo de Compressive Sensing}
 
-\section{Codificação de vídeo}
+\subsection{Mecanismos de Amostragem}
+
+\subsection{Algoritmos aplicados ao modelo de Compressive Sensing}
+\subsubsection{Métodos baseados em otimização}
+
+\subsubsection{Métodos utilizando algoritmos gulosos}
+
+\subsubsection{Métodos utilizando \textit{Total Variation}}
+
+\section{Codificação de Imagens}
+
+\section{Codificação de Vídeo}
 
 \chapter{Trabalhos Relacionados}
 
