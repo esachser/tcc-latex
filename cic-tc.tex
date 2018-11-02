@@ -36,13 +36,19 @@
 \usepackage{times}            % pacote para usar fonte Adobe Times
 % \usepackage{palatino}
 % \usepackage{mathptmx}       % p/ usar fonte Adobe Times nas fórmulas
+\usepackage{amsfonts}
+\usepackage{amsmath}
 
 \usepackage[alf,abnt-emphasize=bf]{abntex2cite}	% pacote para usar citações abnt
+
+\def\SPSB#1#2{\rlap{\textsuperscript{#1}}\SB{#2}}
+\def\SP#1{\textsuperscript{#1}}
+\def\SB#1{\textsubscript{#1}}
 
 % 
 % Informações gerais
 % 
-\title{Utilização de compressive censing para compressão de frames e transmissão de vídeos em tempo real.}
+\title{Utilização de compressed sensing para compressão de frames e transmissão de vídeos em tempo real.}
 
 \author{Sachser}{Eduardo}
 % alguns documentos podem ter varios autores:
@@ -100,7 +106,7 @@
 % palavras-chave
 % iniciar todas com letras minúsculas, exceto no caso de abreviaturas
 % 
-\keyword{Compressive Sensing}
+\keyword{Compressed Sensing}
 \keyword{Compressed Sensing}
 \keyword{Compressive Sampling}
 \keyword{Real Time}
@@ -297,8 +303,44 @@ biblio.bib).
 
 \section{Representação de Sinais}
 
-\section{Compressive Sensing}
-\subsection{O modelo de Compressive Sensing}
+\section{Compressed Sensing}
+\subsection{O modelo de Compressed Sensing}
+Muitos sinais de interesse possuem menos informação do que a dimensão do ambiente sugere \cite{chen2015compressed}.
+As formas tradicionais de aquisição de sinais baseadas nos teoremas de Shannon e Nyquist acabam por causar o discarte
+de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: é possível haver 
+uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? Frequentemente a resposta 
+é sim. 
+
+O modelo de \textit{Compressed Sensing (CS)} surgiu com esse intuito. Trabalhos na área mostram que, para certas classes
+de sinais, poucas amostras são necessárias para representar o sinal com acurácia.
+
+De acordo com o modelo, um sinal \textbf{$ \hat{f} $} em geral é um elemento de $ \mathbb{C}^d $. Amostragens são executadas na forma:
+$$ y_i = \langle \hat{\phi_i}, \hat{f} \rangle \text{ for } i=1,2,...,m, $$
+na qual $m \ll d$. Os vetores \textbf{$\hat{\phi_i}$} são colunas de uma matriz $m \times n$ $\Phi$, chamada matriz de amostragem.
+Assim, podemos reescrevem o vetor de amostragem como \textbf{$y = \Phi \hat{f}$}. Fica claro que, se $ m \ll d$, reconstruir
+\textbf{$\hat{f}$} a partir de \textbf{$y$} é um problema com infinitas soluções, sem assumir nada a mais. \cite{chen2015compressed}.
+
+Uma importante consideração que CS faz é a de que os sinais de interesse possuem menos informação do que sugere a 
+dimensão $d$. Uma forma de quantificar essa noção é a esparsidade, que pode ser definida como a quantidade de valores não
+nulos de um sinal $\hat{f} \in \mathbb{C}^d$, também conhecida como norma $\ell_0$:
+$$ \lVert \hat{f} \rVert_0 := | supp(\hat{f}) | $$
+
+Considerando o mesmo sinal $\hat{f}$, diz-se que este é \textit{s-esparso}, quando, para dado um um valor $s$, $\hat{f}$
+satisfaz a seguinte inequação:
+$$ \lVert \hat{f} \rVert_0 \le s \ll d $$
+
+Na prática, sinais não são usualmente encontrados esparsos, o que leva a definição de que \textit{sinais compressíveis}
+são aqueles que obedecem a seguinte lei de decaimento exponencial:
+$$ | f\SPSB{*}{k} | < R k^{-\frac{1}{q}},  $$
+tal que $\hat{f}^* $ é o rearranjo decrescente de $\hat{f}$, $R$ é uma constante positiva e $0< q < 1$. Percebe-se
+que para valores bem pequenos de $q$ a compressibilidade se torna praticamente o mesmo que esparsidade. Se considerarmos
+$\hat{f}_s$ o vetor com os $s$ maiores valores de $\hat{f}$ em magnitude, temos que, para sinais compressíveis $\hat{f}$ e 
+$\hat{f}_s$:
+$$ \lVert \hat{f} - \hat{f}_s \rVert_2 \le Rs^{\frac{1}{2} - \frac{1}{q}} \text{ e,}$$
+$$ \lVert \hat{f} - \hat{f}_s \rVert_1 \le Rs^{1 - \frac{1}{q}} $$
+
+
+
 
 \subsection{Mecanismos de Amostragem}
 
@@ -308,6 +350,10 @@ biblio.bib).
 \subsubsection{Métodos utilizando algoritmos gulosos}
 
 \subsubsection{Métodos utilizando \textit{Total Variation}}
+
+\section{Aprendizado de Dicionários}
+
+\section{Codificação Esparsa}
 
 \section{Codificação de Imagens}
 
