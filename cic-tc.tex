@@ -320,9 +320,10 @@ De acordo com o modelo, um sinal \textbf{$ \hat{f} $} em geral é um elemento de
 \begin{equation}
     y_i = \langle \hat{\phi_i}, \hat{f} \rangle \text{ para } i=1,2,...,m, 
 \end{equation}
-na qual $m \ll d$. Os vetores \textbf{$\hat{\phi_i}$} são colunas de uma matriz $m \times n$ $\Phi$, chamada matriz de amostragem.
-Assim, podemos reescrever o vetor de amostragem como \textbf{$\hat{y} = \Phi \hat{f}$}. Fica claro que, se $ m \ll d$, reconstruir
-\textbf{$\hat{f}$} a partir de \textbf{$\hat{y}$}, sem assumir nada a mais, é um problema com infinitas soluções. \cite{chen2015compressed}.
+na qual $m \ll d$. Os vetores \textbf{$\hat{\phi_i}$} são colunas de uma matriz $m \times n$ $\Phi$, chamada matriz 
+de amostragem.Assim, podemos reescrever o vetor de amostragem como \textbf{$\hat{y} = \Phi \hat{f}$}. Fica claro que, 
+se $ m \ll d$, reconstruir\textbf{$\hat{f}$} a partir de \textbf{$\hat{y}$}, sem assumir nada a mais, é um problema 
+com infinitas soluções \cite{chen2015compressed}.
 
 Uma importante consideração que CS faz é a de que os sinais de interesse possuem menos informação do que sugere a 
 dimensão $d$. Uma forma de quantificar essa noção é a esparsidade, que pode ser definida como a quantidade de valores não
