@@ -307,8 +307,8 @@ biblio.bib).
 \subsection{O modelo de Compressed Sensing}
 "Muitos sinais de interesse possuem menos informação do que a dimensão do ambiente sugere"
 \footnote{"Many signals of interest contain far less information than their ambient dimension suggests"}
-(\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, tradução própria).
-As formas tradicionais de aquisição de sinais baseadas nos teoremas de Shannon e Nyquist acabam por causar o discarte
+(\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, p. 2, tradução própria).
+As formas tradicionais de aquisição de sinais baseadas nos teoremas de Shannon e Nyquist acabam por causar o descarte
 de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: é possível haver 
 uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? Frequentemente a resposta 
 é sim. 
@@ -318,11 +318,11 @@ de sinais, poucas amostras são necessárias para representar o sinal com acurá
 
 De acordo com o modelo, um sinal \textbf{$ \hat{f} $} em geral é um elemento de $ \mathbb{C}^d $. Amostragens são executadas na forma:
 \begin{equation}
-    y_i = \langle \hat{\phi_i}, \hat{f} \rangle \text{ for } i=1,2,...,m, 
+    y_i = \langle \hat{\phi_i}, \hat{f} \rangle \text{ para } i=1,2,...,m, 
 \end{equation}
 na qual $m \ll d$. Os vetores \textbf{$\hat{\phi_i}$} são colunas de uma matriz $m \times n$ $\Phi$, chamada matriz de amostragem.
-Assim, podemos reescrevem o vetor de amostragem como \textbf{$y = \Phi \hat{f}$}. Fica claro que, se $ m \ll d$, reconstruir
-\textbf{$\hat{f}$} a partir de \textbf{$y$} é um problema com infinitas soluções, sem assumir nada a mais. \cite{chen2015compressed}.
+Assim, podemos reescrever o vetor de amostragem como \textbf{$\hat{y} = \Phi \hat{f}$}. Fica claro que, se $ m \ll d$, reconstruir
+\textbf{$\hat{f}$} a partir de \textbf{$\hat{y}$}, sem assumir nada a mais, é um problema com infinitas soluções. \cite{chen2015compressed}.
 
 Uma importante consideração que CS faz é a de que os sinais de interesse possuem menos informação do que sugere a 
 dimensão $d$. Uma forma de quantificar essa noção é a esparsidade, que pode ser definida como a quantidade de valores não
@@ -361,6 +361,13 @@ no máximo. Por outro lado, $\hat{f}$ pode ser esparso em alguma outra base orto
 
 
 \subsection{Mecanismos de Amostragem}
+Tomando um operador de amostragem $\Phi$, mapeamento linear de $\mathbb{C}^d$ para algum espaço de dimensão 
+$\mathbb{C}^m$, para recuperarmos um sinal $\hat{f}$ a partir de suas medidas $y = \Phi \hat{f}$, podemos escrever
+como um problema de minimização.
+\begin{equation}
+    \hat{f}' = \underset{\hat{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \hat{g} \rVert_0 \hspace{1em} \text{sujeito a} \hspace{1em}
+    \Phi \hat{g} = y 
+\end{equation}
 
 \subsection{Algoritmos aplicados ao modelo de Compressive Sensing}
 \subsubsection{Métodos baseados em otimização}
