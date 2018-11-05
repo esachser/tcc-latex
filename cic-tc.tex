@@ -38,6 +38,12 @@
 % \usepackage{mathptmx}       % p/ usar fonte Adobe Times nas fórmulas
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{amsthm}      % Teoremas
+\usepackage{thmtools}    % Front end para amsthm (\declaretheorem)
+
+\declaretheorem[style=definition,name=Definição,parent=chapter,qed=\textemdash]{definicao}
+\declaretheorem[style=plain,name=Teorema,qed=\textnormal{\textemdash}]{teorema}
+\declaretheorem[style=plain,name=Axioma,qed=\textnormal{\textemdash}]{axioma}
 
 \usepackage[alf,abnt-emphasize=bf]{abntex2cite}	% pacote para usar citações abnt
 
@@ -305,31 +311,37 @@ biblio.bib).
 
 \section{Compressed Sensing}
 \subsection{O modelo de Compressed Sensing}
+\textit{Compressed Sensing (CS)} ou \textit{Compressive Sampling} é um campo de estudo de sinais cujos
+primeiros trabalhos surgiram a partir de 2006, a partir da análise de amostragens executadas em imagens de 
+ressonância magnética. Essas amostragens eram de muito menor dimensionalidade do que a da imagem, o que 
+fez com que os métodos conhecidos de processamento de sinais não tivessem boa acurácia.
+
 "Muitos sinais de interesse possuem menos informação do que a dimensão do ambiente sugere"
 \footnote{"Many signals of interest contain far less information than their ambient dimension suggests"}
 (\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, p. 2, tradução própria).
 As formas tradicionais de aquisição de sinais baseadas nos teoremas de Shannon e Nyquist acabam por causar o descarte
 de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: é possível haver 
-uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? Frequentemente a resposta 
-é sim. 
+uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? 
 
-O modelo de \textit{Compressed Sensing (CS)} surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
-de sinais, poucas amostras são necessárias para representar o sinal com acurácia.
+O modelo de Compressed Sensing surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
+de sinais, poucas amostras são necessárias para representar o sinal com acurácia \cite{chen2015compressed}.
+Ou seja, Compressed Sensing busca encontrar quais tipos
+de sinais podem ser amostrados de forma já comprimida e respostas de como fazê-lo.
 
-De acordo com o modelo, um sinal \textbf{$ \hat{f} $} em geral é um elemento de $ \mathbb{C}^d $. Amostragens são executadas na forma:
+De acordo com o modelo, um sinal $ \hat{f} $ em geral é um elemento de $ \mathbb{C}^d $. Amostragens são executadas na forma:
 \begin{equation}
     y_i = \langle \hat{\phi_i}, \hat{f} \rangle \text{ para } i=1,2,...,m, 
 \end{equation}
-na qual $m \ll d$. Os vetores \textbf{$\hat{\phi_i}$} são colunas de uma matriz $m \times n$ $\Phi$, chamada matriz 
-de amostragem.Assim, podemos reescrever o vetor de amostragem como \textbf{$\hat{y} = \Phi \hat{f}$}. Fica claro que, 
-se $ m \ll d$, reconstruir\textbf{$\hat{f}$} a partir de \textbf{$\hat{y}$}, sem assumir nada a mais, é um problema 
+na qual $m \ll d$. Os vetores $\hat{\phi_i}$ são colunas de uma matriz $m \times n$ $\mathbf{\Phi}$, chamada matriz 
+de amostragem.Assim, podemos reescrever o vetor de amostragem como $\hat{y} = \mathbf{\Phi} \hat{f}$. Fica claro que, 
+se $ m \ll d$, reconstruir $\hat{f}$ a partir de $\hat{y}$, sem assumir nada a mais, é um problema 
 com infinitas soluções \cite{chen2015compressed}.
 
 Uma importante consideração que CS faz é a de que os sinais de interesse possuem menos informação do que sugere a 
 dimensão $d$. Uma forma de quantificar essa noção é a esparsidade, que pode ser definida como a quantidade de valores não
-nulos de um sinal $\hat{f} \in \mathbb{C}^d$, também conhecida como norma $\ell_0$:
+nulos $s$ de um sinal $\hat{f} \in \mathbb{C}^d$, também conhecida como norma $\ell_0$:
 \begin{equation}
-    \lVert \hat{f} \rVert_0 := | supp(\hat{f}) |
+    \lVert \hat{f} \rVert_0 = s
 \end{equation}
 
 Considerando o mesmo sinal $\hat{f}$, diz-se que este é \textit{s-esparso}, quando, para dado um um valor $s$, $\hat{f}$
@@ -354,28 +366,129 @@ $\hat{f}_s$:
 \end{equation} 
 
 Por fim, a definição \eqref{eq:f0less} exige que $\hat{f}$ seja esparso, ou seja, tenha $s$ coeficientes não nulos
-no máximo. Por outro lado, $\hat{f}$ pode ser esparso em alguma outra base ortonormal $D$, uma \textit{sparsifying basis} 
+no máximo. Por outro lado, $\hat{f}$ pode ser esparso em alguma outra base ortonormal $\mathbf{D}$, uma \textit{sparsifying basis} 
 \cite{CandesDecoLinear}. Nesse caso, considera-se $\hat{f}$ s-esparso se:
 \begin{equation}
-    \hat{f} = D\hat{x} \hspace{1em} \text{dado que} \hspace{1em} \lVert \hat{x} \rVert_0 \le s \ll d.
+    \hat{f} = \mathbf{D}\hat{x} \hspace{1em} \text{dado que} \hspace{1em} \lVert \hat{x} \rVert_0 \le s \ll d.
 \end{equation}
 
 
 \subsection{Mecanismos de Amostragem}
-Tomando um operador de amostragem $\Phi$, mapeamento linear de $\mathbb{C}^d$ para algum espaço de dimensão 
-$\mathbb{C}^m$, para recuperarmos um sinal $\hat{f}$ a partir de suas medidas $y = \Phi \hat{f}$, podemos escrever
+A partir das definições básicas do modelo, podemos formular o problema básico de CS da seguinte forma:
+
+Tomando um operador de amostragem $\mathbf{\Phi}$, mapeamento linear de $\mathbb{C}^d$ para algum espaço de dimensão 
+$\mathbb{C}^m$, para recuperarmos um sinal $\hat{f}$ a partir de suas medidas $\hat{y} = \mathbf{\Phi} \hat{f}$, podemos escrever
 como um problema de minimização.
 \begin{equation}
+    \label{eq:problem}
     \hat{f}' = \underset{\hat{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \hat{g} \rVert_0 \hspace{1em} \text{sujeito a} \hspace{1em}
-    \Phi \hat{g} = y 
+    \mathbf{\Phi} \hat{g} = \hat{y} 
 \end{equation}
 
+A partir da formulação, se $\mathbf{\Phi}$ não mapeia 2 vetores esparsos quaisquer para a mesma imagem, ou seja,
+se $\hat{f} \ne \hat{g} \rightarrow \mathbf{\Phi}\hat{f} \ne \mathbf{\Phi}\hat{g} $, então a solução $\hat{f}'$ recupera
+$\hat{f}$, $\hat{f}' = \hat{f}$ \cite{chen2015compressed}. Esse problema, por outro lado, é intratável, e, em geral,
+NP-difícil \cite{Mut05}.
+Para que o operador de amostragem forneça o resultado anterior, ele deve ser \textit{incoerente}.
+Dado um operador $\mathbf{\Phi}$ de colunas $\{ \hat{\phi_i} \}$  com norma unitária, define-se a sua coerência $\mu$
+como a maior correlação entre suas colunas.
+\begin{equation}
+    \label{eq:coerence}
+    \mu = \underset{i \ne j}{max}\langle \hat{\phi_i} , \hat{\phi_j} \rangle
+\end{equation}
+
+Fica definido, portanto, que um operador de amostragem é \textit{incoerente} quando a sua coerência $\mu$ é 
+suficientemente pequena. Por exemplo, um operador de amostragem que seja uma base ortonormal é incoerente, bem como
+operadores que sejam aproximadamente ortonormais para vetores esparsos.
+
+Uma propriedade que captura a mesma ideia que o referido acima foi desenvolvida por Candès e Tao, chamada 
+\textit{Restricted Isometry Property}(RIP)\cite{CandesSignalRecovery}. A constante de isometria restrita 
+$\delta_s$ é a menor tal que:
+\begin{equation}
+    \label{eq:rip}
+    (1 - \delta_s)\lVert \hat{f} \rVert\SPSB{2}{2} \le \lVert \mathbf{\Phi} \hat{f} \rVert \SPSB{2}{2} \le 
+    (1 + \delta_s)\lVert \hat{f} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso } \hat{f}.
+\end{equation}
+
+Diz-se que um operador de amostragem $\mathbf{\Phi}$ tem o RIP de ordem $s$ quando $\delta_s$ é suficientemente
+pequeno, por exemplo, $\delta_s \le 0.1$.
+
+A questão importante da RIP é descobrir qual o número de amostras $m$ é necessária e quais são as 
+classes de matrizes que possuem a propriedade. Duas classes de matrizes que possuem a RIP são as 
+matrizes subgaussianas \cite{Mendelson2008} e as matrizes ortogonais parcialmente limitadas \cite{rudelson2008sparse}.
+\textbf{Preciso falar sobre essas matrizes mais a fundo??????????????}
+
+
 \subsection{Algoritmos aplicados ao modelo de Compressive Sensing}
+Ao considerar-se a formulação do problema geral de CS apresentada na seção anterior, um dos resultados também apresentados
+é de que o problema é NP-difícil. Sob essa ótica, diversas soluções alternativas foram desenvolvidas com 
+o intuito de, através da solução de algum outro problema relacionado, ou do uso de alguma diferente estratégia, fosse possível 
+chegar a uma solução ótima para a formulação de CS. 
+
+Inicialmente, é necessário levar em consideração que nem sempre as amostras coletadas estão completamente corretas,
+o que leva a um novo vetor de medidas, $\hat{y} = \mathbf{\Phi} \hat{f} + \hat{e}$, que considera o ruído de amostragem, 
+ou vetor de erro, $\hat{e}$.
+
+Além disso, é essencial definir as propriedades ideais de um método de recuperação
+baseado em CS. Segundo \citet{chen2015compressed}, as propriedades são as seguintes:
+\begin{itemize}
+    \item \textbf{Amostragem não adaptativa:} Os operadoes de amostragem não devem ser dependentes do sinal. 
+          Operadores que possuem RIP também possuem essa propriedade.
+    \item \textbf{Número ótimo de amostras:} O número de amostras necessárias deve ser mínimo.
+    \item \textbf{Garatia de Uniformidade:} Um único operador de amostragem deve ser suficiente para qualquer sinal.
+    \item \textbf{Robustez:} O método deve ser estável e robusto em relação ao ruído, e possuir garantias 
+          quanto ao erro.
+    \item \textbf{Complexidade:} O algoritmo deve ser eficiente.
+\end{itemize}
+
+Buscando obedecer o maior número das propriedades citadas acima, alguns métodos e algoritmos surgiram. 
+Nas subseções seguintes serão descritas duas metodologias que foram utilizadas para tal.
+
 \subsubsection{Métodos baseados em otimização}
+Essa metodologia, utilizada pelos primeiros trabalhos na área, utiliza uma relaxação convexa como forma
+de chegar a solução do problema \eqref{eq:problem}. Ou seja, utiliza a norma $\ell_1$ ao invés da norma $\ell_0$,
+de forma que o problema se torna convexo e solúvel através de métodos de programação linear.
+
+Dessa forma, o problema relaxado para a norma $\ell_1$ fica como segue:
+\begin{equation}
+    \label{eq:probleml1}
+    \hat{f}' = \underset{\hat{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \hat{g} \rVert_1 \hspace{1em} \text{sujeito a} \hspace{1em}
+    \lVert \mathbf{\Phi} \hat{g} - \hat{y} \rVert_2 \le \epsilon
+\end{equation}
+tal que $\lVert \hat{e} \rVert_2 \le \epsilon $.
+
+A geometria da norma $\ell_1$ permite esparsidade, como pode-se ver no exemplo a seguir. Imaginando-se 
+que a reta em verde retrata todas as possíveis soluções para um sinal $\hat{f} \in \mathbb{R}^2$, os pontos
+mais esparsos da reta são $A=(0;1)$ e $B=(-1.\overline{6};0)$. A região em azul limita todos os pontos 
+nos quais $\lVert\hat{p}\rVert_1 \le 1.0$, tal que $\hat{p} \in \mathbb{R}^2$. Nesse caso, o ponto $A$ é o 
+de menor norma $\ell_1$ da reta, sendo essa a solução do problema \eqref{eq:probleml1} e, ao mesmo tempo, 
+uma das possíveis soluções do problema \eqref{eq:problem}.
+\begin{figure}[h]
+    \caption{Minimização $\ell_1$ nos pontos da reta.}
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{img//l1ball}
+    \end{center}
+    \legend{Fonte: O Autor}
+    \label{fig:l1ball}
+\end{figure}
+
+Candès, Romberg e Tao chegaram a resultados quanto a garantias para os limites de erro, baseado na 
+intensidade do ruído, como segue.
+\begin{teorema}
+    \cite{candes2006stable}. Dado um operador de amostragem $\mathbf{\Phi}$ que satisfaz a RIP.
+    Então, para qualquer sinal $\hat{f}$ e sua amostragem ruidosa $\hat{y} = \mathbf{\Phi}\hat{f} + \hat{e}$, 
+    tal que $\lVert \hat{e} \rVert_2 \le \epsilon$, a solução $\hat{f}'$ de \eqref{eq:probleml1} satisfaz:
+    \begin{equation*}
+        \lVert \hat{f}' - \hat{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \hat{f} - \hat{f}_s \rVert_1}{\sqrt{s}} \right],
+    \end{equation*}
+    tal que $\hat{f}_s$ denota o vetor com os $s$ maiores coeficientes em magnitude de $\hat{f}$ e $C$ é uma
+    constante tal que $C \ge 0$.
+\end{teorema}  
 
 \subsubsection{Métodos utilizando algoritmos gulosos}
 
-\subsubsection{Métodos utilizando \textit{Total Variation}}
+% \subsubsection{Métodos utilizando \textit{Total Variation}}
+% Decidir se terá ou não
 
 \section{Aprendizado de Dicionários}
 
