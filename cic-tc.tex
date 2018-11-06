@@ -459,7 +459,7 @@ de forma que o problema se torna convexo e solúvel através de métodos de prog
 Dessa forma, o problema relaxado para a norma $\ell_1$ fica como segue:
 \begin{equation}
     \label{eq:probleml1}
-    \vec{f}' = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \vec{g} \rVert_1 \hspace{1em} \text{sujeito a} \hspace{1em}
+    \vec{f'} = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \vec{g} \rVert_1 \hspace{1em} \text{sujeito a} \hspace{1em}
     \lVert \mathbf{\Phi} \vec{g} - \vec{y} \rVert_2 \le \epsilon
 \end{equation}
 tal que $\lVert \vec{e} \rVert_2 \le \epsilon $.
@@ -546,14 +546,70 @@ limites demonstrados, bem como número de iterações e medidas. Dois principais
 \textit{CoSaMP (Compressive Sampling Matching Pursuit)} \cite{NeedellCoSaMP}, e o 
 \textit{IHT (Iterative Hard Thresholding)} \cite{BLUMENSATHIHT}.
 
+\section{Resultados com dicionários coerentes}
+A utilização de matrizes de amostragens incoerentes, ou dicionários incoerentes, limita a aplicação de 
+Compressed Sensing em algumas áreas, ou para alguns problemas cuja base de solução dos mesmos era baseada
+em dicionários coerentes, que podem ser, por exemplo, um dicionário supercompleto, com mais colunas que linhas. 
+"Coerência é, de certa forma, uma propriedade natural para Compressed Sensing, 
+porque se duas colunas são muito correlatas, será impossível em geral distinguir se a energia do sinal
+vem de uma ou da outra" 
+\footnote{"Coherence is in some sense a natural property in the compressed sensing framework, for if two
+columns are closely correlated, it will be impossible in general to distinguish whether the energy in 
+the signal comes from one or the other"}
+(\citeauthor{CANDESDICTS}, \citeyear{CANDESDICTS}, tradução própria).
+
+Porém, em alguns casos, não precisa-se recuperar os coeficientes originais do sinal, o que com dicionários 
+coerentes não é possível, mas sim o próprio sinal já transportado para uma nova base.
+Matematicamente falando, imagine-se um sinal $\vec{f} = \mathbf{D}\vec{x}$, no qual suas medidas são
+$\vec{y} = \mathbf{\Phi}\vec{f} = \mathbf{\Phi}\mathbf{D}\vec{x}$, se o dicionário $\mathbf{D}$ for
+coerente, não é possível recuperar os coeficientes $\vec{x}$, mas é possível recuperar $\vec{f}$ \cite{CANDESDICTS}.
+
+A partir desses estudos, \citet{CANDESDICTS} gerou uma nova definição para o problema de CS, 
+baseado na solução utilizando a norma $\ell_1$, considerando $\vec{f} = \mathbf{D}\vec{x}$ o sinal
+e $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$ as medidas, $\vec{e}$ o erro.
+\begin{equation}
+    \label{eq:problemDl1}
+    \vec{f'} = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \mathbf{D}^*\vec{g} \rVert_1 
+    \hspace{1em} \text{sujeito a} \hspace{1em}
+    \lVert \mathbf{\Phi} \vec{g} - \vec{y} \rVert_2 \le \epsilon
+\end{equation}
+tal que $\lVert \vec{e} \rVert_2 \le \epsilon $.
+
+\citet{CANDESDICTS} também redefiniu a RIP, chamando de D-RIP como segue. 
+Dado um operador de amostragem $\mathbf{\Phi}$, ele satisfaz o D-RIP para um determinado 
+dicionário $\mathbf{D}$ de ordem $s$ se:
+\begin{equation}
+    (1 - \delta_s)\lVert \mathbf{D}\vec{x} \rVert\SPSB{2}{2} \le \lVert \mathbf{\Phi} \mathbf{D}\vec{x} \rVert \SPSB{2}{2} \le 
+    (1 + \delta_s)\lVert \mathbf{D}\vec{x} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso } \vec{x}.
+\end{equation}
+para algum $\delta_s$, por exemplo $\delta_s \le 0.08$.
+
+Tomando a nova definição, \citet{CANDESDICTS} provou o seguinte teorema sobre a recuperação do sinal.
+\begin{teorema}
+    \cite{CANDESDICTS}
+    Dado $\mathbf{D}$ um dicionário e supondo um operador de amostragem $\mathbf{\Phi}$ que satisfaz
+    o D-RIP de ordem $s$.
+    Então, a solução $\vec{f'}$ para a análise $\ell_1$ satisfaz:
+    \begin{equation*}
+        \lVert \vec{f'} - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \mathbf{D}^* \vec{f} - \left( \mathbf{D}^* \vec{f} \right)_s}{\sqrt{s}} \right],
+    \end{equation*}
+    tal que $\left( \mathbf{D}^* \vec{f} \right)_s$ denota o vetor com os $s$ maiores coeficientes em 
+    magnitude de $\mathbf{D}^* \vec{f}$ e $C$ é uma constante tal que $C \ge 0$.
+\end{teorema}
+
+Esse novo campo de estudo abriu caminhos para novas análises e usos de CS para outros
+problemas, antes não possível, além tornar possível utilizar os modelos e técnicas de CS
+para outros campos do conhecimento.
+
 % \subsubsection{Métodos utilizando \textit{Total Variation}}
 % Decidir se terá ou não
 
 \section{Aprendizado de Dicionários}
 
-\section{Codificação Esparsa}
+\subsection{Codificação Esparsa}
 
-\section{Codificação de Imagens}
+% \section{Codificação de Imagens}
+% Decidir se terá ou não
 
 \section{Codificação de Vídeo}
 
