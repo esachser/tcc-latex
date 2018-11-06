@@ -38,6 +38,7 @@
 % \usepackage{mathptmx}       % p/ usar fonte Adobe Times nas fórmulas
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{bm}
 \usepackage{amsthm}      % Teoremas
 \usepackage{thmtools}    % Front end para amsthm (\declaretheorem)
 
@@ -47,9 +48,14 @@
 
 \usepackage[alf,abnt-emphasize=bf]{abntex2cite}	% pacote para usar citações abnt
 
+\usepackage[portuguese,ruled,vlined,boxed]{algorithm2e}
+\renewcommand{\algorithmautorefname}{Algoritmo}% para utilizar \autoref
+
 \def\SPSB#1#2{\rlap{\textsuperscript{#1}}\SB{#2}}
 \def\SP#1{\textsuperscript{#1}}
 \def\SB#1{\textsubscript{#1}}
+
+\renewcommand{\vec}[1]{\bm{#1}}
 
 % 
 % Informações gerais
@@ -328,27 +334,27 @@ de sinais, poucas amostras são necessárias para representar o sinal com acurá
 Ou seja, Compressed Sensing busca encontrar quais tipos
 de sinais podem ser amostrados de forma já comprimida e respostas de como fazê-lo.
 
-De acordo com o modelo, um sinal $ \hat{f} $ em geral é um elemento de $ \mathbb{C}^d $. Amostragens são executadas na forma:
+De acordo com o modelo, um sinal $ \vec{f} $ em geral é um elemento de $ \mathbb{C}^d $. Amostragens são executadas na forma:
 \begin{equation}
-    y_i = \langle \hat{\phi_i}, \hat{f} \rangle \text{ para } i=1,2,...,m, 
+    y_i = \langle \vec{\phi_i}, \vec{f} \rangle \text{ para } i=1,2,...,m, 
 \end{equation}
-na qual $m \ll d$. Os vetores $\hat{\phi_i}$ são colunas de uma matriz $m \times n$ $\mathbf{\Phi}$, chamada matriz 
-de amostragem.Assim, podemos reescrever o vetor de amostragem como $\hat{y} = \mathbf{\Phi} \hat{f}$. Fica claro que, 
-se $ m \ll d$, reconstruir $\hat{f}$ a partir de $\hat{y}$, sem assumir nada a mais, é um problema 
+na qual $m \ll d$. Os vetores $\vec{\phi_i}$ são linhas de uma matriz $m \times d$ $\mathbf{\Phi}$, chamada matriz 
+de amostragem.Assim, podemos reescrever o vetor de amostragem como $\vec{y} = \mathbf{\Phi} \vec{f}$. Fica claro que, 
+se $ m \ll d$, reconstruir $\vec{f}$ a partir de $\vec{y}$, sem assumir nada a mais, é um problema 
 com infinitas soluções \cite{chen2015compressed}.
 
 Uma importante consideração que CS faz é a de que os sinais de interesse possuem menos informação do que sugere a 
 dimensão $d$. Uma forma de quantificar essa noção é a esparsidade, que pode ser definida como a quantidade de valores não
-nulos $s$ de um sinal $\hat{f} \in \mathbb{C}^d$, também conhecida como norma $\ell_0$:
+nulos $s$ de um sinal $\vec{f} \in \mathbb{C}^d$, também conhecida como norma $\ell_0$:
 \begin{equation}
-    \lVert \hat{f} \rVert_0 = s
+    \lVert \vec{f} \rVert_0 = s
 \end{equation}
 
-Considerando o mesmo sinal $\hat{f}$, diz-se que este é \textit{s-esparso}, quando, para dado um um valor $s$, $\hat{f}$
+Considerando o mesmo sinal $\vec{f}$, diz-se que este é \textit{s-esparso}, quando, para dado um um valor $s$, $\vec{f}$
 satisfaz a seguinte inequação:
 \begin{equation}
     \label{eq:f0less}
-    \lVert \hat{f} \rVert_0 \le s \ll d
+    \lVert \vec{f} \rVert_0 \le s \ll d
 \end{equation} 
 
 Na prática, sinais não são usualmente encontrados esparsos, o que leva a definição de que \textit{sinais compressíveis}
@@ -356,20 +362,20 @@ são aqueles que obedecem a seguinte lei de decaimento exponencial:
 \begin{equation}
     | f\SPSB{*}{k} | < R k^{-\frac{1}{q}},  
 \end{equation}
-tal que $\hat{f}^* $ é o rearranjo decrescente de $\hat{f}$, $R$ é uma constante positiva e $0< q < 1$. Percebe-se
+tal que $\vec{f}^* $ é o rearranjo decrescente de $\vec{f}$, $R$ é uma constante positiva e $0< q < 1$. Percebe-se
 que para valores bem pequenos de $q$ a compressibilidade se torna praticamente o mesmo que esparsidade. Se considerarmos
-$\hat{f}_s$ o vetor com os $s$ maiores valores de $\hat{f}$ em magnitude, temos que, para sinais compressíveis $\hat{f}$ e 
-$\hat{f}_s$:
+$\vec{f}_s$ o vetor com os $s$ maiores valores de $\vec{f}$ em magnitude, temos que, para sinais compressíveis $\vec{f}$ e 
+$\vec{f}_s$:
 \begin{equation}
-    \lVert \hat{f} - \hat{f}_s \rVert_2 \le Rs^{\frac{1}{2} - \frac{1}{q}} \hspace{1em} \text{ e } \hspace{1em}
-    \lVert \hat{f} - \hat{f}_s \rVert_1 \le Rs^{1 - \frac{1}{q}} 
+    \lVert \vec{f} - \vec{f}_s \rVert_2 \le Rs^{\frac{1}{2} - \frac{1}{q}} \hspace{1em} \text{ e } \hspace{1em}
+    \lVert \vec{f} - \vec{f}_s \rVert_1 \le Rs^{1 - \frac{1}{q}} 
 \end{equation} 
 
-Por fim, a definição \eqref{eq:f0less} exige que $\hat{f}$ seja esparso, ou seja, tenha $s$ coeficientes não nulos
-no máximo. Por outro lado, $\hat{f}$ pode ser esparso em alguma outra base ortonormal $\mathbf{D}$, uma \textit{sparsifying basis} 
-\cite{CandesDecoLinear}. Nesse caso, considera-se $\hat{f}$ s-esparso se:
+Por fim, a definição \eqref{eq:f0less} exige que $\vec{f}$ seja esparso, ou seja, tenha $s$ coeficientes não nulos
+no máximo. Por outro lado, $\vec{f}$ pode ser esparso em alguma outra base ortonormal $\mathbf{D}$, uma \textit{sparsifying basis} 
+\cite{CandesDecoLinear}. Nesse caso, considera-se $\vec{f}$ s-esparso se:
 \begin{equation}
-    \hat{f} = \mathbf{D}\hat{x} \hspace{1em} \text{dado que} \hspace{1em} \lVert \hat{x} \rVert_0 \le s \ll d.
+    \vec{f} = \mathbf{D}\vec{x} \hspace{1em} \text{dado que} \hspace{1em} \lVert \vec{x} \rVert_0 \le s \ll d.
 \end{equation}
 
 
@@ -377,24 +383,24 @@ no máximo. Por outro lado, $\hat{f}$ pode ser esparso em alguma outra base orto
 A partir das definições básicas do modelo, podemos formular o problema básico de CS da seguinte forma:
 
 Tomando um operador de amostragem $\mathbf{\Phi}$, mapeamento linear de $\mathbb{C}^d$ para algum espaço de dimensão 
-$\mathbb{C}^m$, para recuperarmos um sinal $\hat{f}$ a partir de suas medidas $\hat{y} = \mathbf{\Phi} \hat{f}$, podemos escrever
+$\mathbb{C}^m$, para recuperarmos um sinal $\vec{f}$ a partir de suas medidas $\vec{y} = \mathbf{\Phi} \vec{f}$, podemos escrever
 como um problema de minimização.
 \begin{equation}
     \label{eq:problem}
-    \hat{f}' = \underset{\hat{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \hat{g} \rVert_0 \hspace{1em} \text{sujeito a} \hspace{1em}
-    \mathbf{\Phi} \hat{g} = \hat{y} 
+    \vec{f}' = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \vec{g} \rVert_0 \hspace{1em} \text{sujeito a} \hspace{1em}
+    \mathbf{\Phi} \vec{g} = \vec{y} 
 \end{equation}
 
 A partir da formulação, se $\mathbf{\Phi}$ não mapeia 2 vetores esparsos quaisquer para a mesma imagem, ou seja,
-se $\hat{f} \ne \hat{g} \rightarrow \mathbf{\Phi}\hat{f} \ne \mathbf{\Phi}\hat{g} $, então a solução $\hat{f}'$ recupera
-$\hat{f}$, $\hat{f}' = \hat{f}$ \cite{chen2015compressed}. Esse problema, por outro lado, é intratável, e, em geral,
+se $\vec{f} \ne \vec{g} \rightarrow \mathbf{\Phi}\vec{f} \ne \mathbf{\Phi}\vec{g} $, então a solução $\vec{f}'$ recupera
+$\vec{f}$, $\vec{f}' = \vec{f}$ \cite{chen2015compressed}. Esse problema, por outro lado, é intratável, e, em geral,
 NP-difícil \cite{Mut05}.
 Para que o operador de amostragem forneça o resultado anterior, ele deve ser \textit{incoerente}.
-Dado um operador $\mathbf{\Phi}$ de colunas $\{ \hat{\phi_i} \}$  com norma unitária, define-se a sua coerência $\mu$
+Dado um operador $\mathbf{\Phi}$ de colunas $\{ \vec{\phi_i} \}$  com norma unitária, define-se a sua coerência $\mu$
 como a maior correlação entre suas colunas.
 \begin{equation}
     \label{eq:coerence}
-    \mu = \underset{i \ne j}{max}\langle \hat{\phi_i} , \hat{\phi_j} \rangle
+    \mu = \underset{i \ne j}{max}\langle \vec{\phi_i} , \vec{\phi_j} \rangle
 \end{equation}
 
 Fica definido, portanto, que um operador de amostragem é \textit{incoerente} quando a sua coerência $\mu$ é 
@@ -406,8 +412,8 @@ Uma propriedade que captura a mesma ideia que o referido acima foi desenvolvida 
 $\delta_s$ é a menor tal que:
 \begin{equation}
     \label{eq:rip}
-    (1 - \delta_s)\lVert \hat{f} \rVert\SPSB{2}{2} \le \lVert \mathbf{\Phi} \hat{f} \rVert \SPSB{2}{2} \le 
-    (1 + \delta_s)\lVert \hat{f} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso } \hat{f}.
+    (1 - \delta_s)\lVert \vec{f} \rVert\SPSB{2}{2} \le \lVert \mathbf{\Phi} \vec{f} \rVert \SPSB{2}{2} \le 
+    (1 + \delta_s)\lVert \vec{f} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso } \vec{f}.
 \end{equation}
 
 Diz-se que um operador de amostragem $\mathbf{\Phi}$ tem o RIP de ordem $s$ quando $\delta_s$ é suficientemente
@@ -426,8 +432,8 @@ o intuito de, através da solução de algum outro problema relacionado, ou do u
 chegar a uma solução ótima para a formulação de CS. 
 
 Inicialmente, é necessário levar em consideração que nem sempre as amostras coletadas estão completamente corretas,
-o que leva a um novo vetor de medidas, $\hat{y} = \mathbf{\Phi} \hat{f} + \hat{e}$, que considera o ruído de amostragem, 
-ou vetor de erro, $\hat{e}$.
+o que leva a um novo vetor de medidas, $\vec{y} = \mathbf{\Phi} \vec{f} + \vec{e}$, que considera o ruído de amostragem, 
+ou vetor de erro, $\vec{e}$.
 
 Além disso, é essencial definir as propriedades ideais de um método de recuperação
 baseado em CS. Segundo \citet{chen2015compressed}, as propriedades são as seguintes:
@@ -452,15 +458,15 @@ de forma que o problema se torna convexo e solúvel através de métodos de prog
 Dessa forma, o problema relaxado para a norma $\ell_1$ fica como segue:
 \begin{equation}
     \label{eq:probleml1}
-    \hat{f}' = \underset{\hat{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \hat{g} \rVert_1 \hspace{1em} \text{sujeito a} \hspace{1em}
-    \lVert \mathbf{\Phi} \hat{g} - \hat{y} \rVert_2 \le \epsilon
+    \vec{f}' = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \vec{g} \rVert_1 \hspace{1em} \text{sujeito a} \hspace{1em}
+    \lVert \mathbf{\Phi} \vec{g} - \vec{y} \rVert_2 \le \epsilon
 \end{equation}
-tal que $\lVert \hat{e} \rVert_2 \le \epsilon $.
+tal que $\lVert \vec{e} \rVert_2 \le \epsilon $.
 
 A geometria da norma $\ell_1$ permite esparsidade, como pode-se ver no exemplo a seguir. Imaginando-se 
-que a reta em verde retrata todas as possíveis soluções para um sinal $\hat{f} \in \mathbb{R}^2$, os pontos
+que a reta em verde retrata todas as possíveis soluções para um sinal $\vec{f} \in \mathbb{R}^2$, os pontos
 mais esparsos da reta são $A=(0;1)$ e $B=(-1.\overline{6};0)$. A região em azul limita todos os pontos 
-nos quais $\lVert\hat{p}\rVert_1 \le 1.0$, tal que $\hat{p} \in \mathbb{R}^2$. Nesse caso, o ponto $A$ é o 
+nos quais $\lVert\vec{p}\rVert_1 \le 1.0$, tal que $\vec{p} \in \mathbb{R}^2$. Nesse caso, o ponto $A$ é o 
 de menor norma $\ell_1$ da reta, sendo essa a solução do problema \eqref{eq:probleml1} e, ao mesmo tempo, 
 uma das possíveis soluções do problema \eqref{eq:problem}.
 \begin{figure}[h]
@@ -476,16 +482,36 @@ Candès, Romberg e Tao chegaram a resultados quanto a garantias para os limites 
 intensidade do ruído, como segue.
 \begin{teorema}
     \cite{candes2006stable}. Dado um operador de amostragem $\mathbf{\Phi}$ que satisfaz a RIP.
-    Então, para qualquer sinal $\hat{f}$ e sua amostragem ruidosa $\hat{y} = \mathbf{\Phi}\hat{f} + \hat{e}$, 
-    tal que $\lVert \hat{e} \rVert_2 \le \epsilon$, a solução $\hat{f}'$ de \eqref{eq:probleml1} satisfaz:
+    Então, para qualquer sinal $\vec{f}$ e sua amostragem ruidosa $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$, 
+    tal que $\lVert \vec{e} \rVert_2 \le \epsilon$, a solução $\vec{f}'$ de \eqref{eq:probleml1} satisfaz:
     \begin{equation*}
-        \lVert \hat{f}' - \hat{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \hat{f} - \hat{f}_s \rVert_1}{\sqrt{s}} \right],
+        \lVert \vec{f}' - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \vec{f} - \vec{f}_s \rVert_1}{\sqrt{s}} \right],
     \end{equation*}
-    tal que $\hat{f}_s$ denota o vetor com os $s$ maiores coeficientes em magnitude de $\hat{f}$ e $C$ é uma
+    tal que $\vec{f}_s$ denota o vetor com os $s$ maiores coeficientes em magnitude de $\vec{f}$ e $C$ é uma
     constante tal que $C \ge 0$.
-\end{teorema}  
+\end{teorema}
 
 \subsubsection{Métodos utilizando algoritmos gulosos}
+Depois da formalização do problema de CS, unido ao estouro da novo assunto que se apresentou,
+surgiram os primeiros algoritmos que, de forma iterativa, resolvem o problema \eqref{eq:problem}. 
+Um dos principais algoritmos é o \textit{Orthogonal Matching Pursuit (OMP)}, analisado por Gilbert e Tropp \cite{GilbertOMP}.
+
+Segundo \citet{GilbertOMP}, o algoritmo do OMP é o seguinte:
+
+\begin{algorithm}[H]
+\caption{\textit{Orthogonal Matching Pursuit (OMP)}}
+\Entrada{Matriz de medidas $m \times d$ $\mathbf{\Phi}$, Vetor de $m$ medidas $\vec{y}$, nível de esparsidade $s$}
+\Saida{Estimativa do sinal ideal $\vec{f}' \in \mathbb{R}^d$}
+$\vec{r} \leftarrow \vec{y}$\;
+$t \leftarrow 1$\;
+$\Lambda_0 \leftarrow ()$\;
+\While{$t \le s$}{
+    $\lambda_t = \underset{j=1,...,d}{argmax}|\langle\vec{r_{t-1}}, \vec{\phi_j}\rangle|$\;
+    $\Lambda_t = \Lambda_{t-1} \cup \left\{\lambda_t\right\}$\;
+    $\mathbf{\Phi_t} = \left[ \mathbf{\Phi_{t-1}} \hspace{0.5em} \vec{\phi_{\lambda_t}} \right]$\;
+    Resolver problema de mínimos quadrados: $\vec{x_t} = \underset{\vec{x}}{argmin} \lVert \vec{y} - \mathbf{\Phi_t} \vec{x} \rVert_2$\;
+}
+\end{algorithm}
 
 % \subsubsection{Métodos utilizando \textit{Total Variation}}
 % Decidir se terá ou não
