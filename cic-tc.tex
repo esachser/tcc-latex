@@ -215,6 +215,7 @@ No início dos tempos, Donald E. Knuth criou o \TeX. Algum tempo depois, Leslie 
     \legend{Fonte: Os Autores}
 \end{figure}
 
+
 % \begin{figure}
 %     \caption{Exemplo de figura importada de um arquivo e também exemplo de caption muito grande que ocupa mais de uma linha na Lista~de~Figuras}
 %     \begin{center}
@@ -364,11 +365,11 @@ são aqueles que obedecem a seguinte lei de decaimento exponencial:
 \end{equation}
 tal que $\vec{f}^* $ é o rearranjo decrescente de $\vec{f}$, $R$ é uma constante positiva e $0< q < 1$. Percebe-se
 que para valores bem pequenos de $q$ a compressibilidade se torna praticamente o mesmo que esparsidade. Se considerarmos
-$\vec{f}_s$ o vetor com os $s$ maiores valores de $\vec{f}$ em magnitude, temos que, para sinais compressíveis $\vec{f}$ e 
-$\vec{f}_s$:
+$\vec{f_s}$ o vetor com os $s$ maiores valores de $\vec{f}$ em magnitude, temos que, para sinais compressíveis $\vec{f}$ e 
+$\vec{f_s}$:
 \begin{equation}
-    \lVert \vec{f} - \vec{f}_s \rVert_2 \le Rs^{\frac{1}{2} - \frac{1}{q}} \hspace{1em} \text{ e } \hspace{1em}
-    \lVert \vec{f} - \vec{f}_s \rVert_1 \le Rs^{1 - \frac{1}{q}} 
+    \lVert \vec{f} - \vec{f_s} \rVert_2 \le Rs^{\frac{1}{2} - \frac{1}{q}} \hspace{1em} \text{ e } \hspace{1em}
+    \lVert \vec{f} - \vec{f_s} \rVert_1 \le Rs^{1 - \frac{1}{q}} 
 \end{equation} 
 
 Por fim, a definição \eqref{eq:f0less} exige que $\vec{f}$ seja esparso, ou seja, tenha $s$ coeficientes não nulos
@@ -481,13 +482,14 @@ uma das possíveis soluções do problema \eqref{eq:problem}.
 Candès, Romberg e Tao chegaram a resultados quanto a garantias para os limites de erro, baseado na 
 intensidade do ruído, como segue.
 \begin{teorema}
-    \cite{candes2006stable}. Dado um operador de amostragem $\mathbf{\Phi}$ que satisfaz a RIP.
+    \cite{candes2006stable}. 
+    Dado um operador de amostragem $\mathbf{\Phi}$ que satisfaz a RIP.
     Então, para qualquer sinal $\vec{f}$ e sua amostragem ruidosa $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$, 
     tal que $\lVert \vec{e} \rVert_2 \le \epsilon$, a solução $\vec{f}'$ de \eqref{eq:probleml1} satisfaz:
     \begin{equation*}
-        \lVert \vec{f}' - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \vec{f} - \vec{f}_s \rVert_1}{\sqrt{s}} \right],
+        \lVert \vec{f}' - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \vec{f} - \vec{f_s} \rVert_1}{\sqrt{s}} \right],
     \end{equation*}
-    tal que $\vec{f}_s$ denota o vetor com os $s$ maiores coeficientes em magnitude de $\vec{f}$ e $C$ é uma
+    tal que $\vec{f_s}$ denota o vetor com os $s$ maiores coeficientes em magnitude de $\vec{f}$ e $C$ é uma
     constante tal que $C \ge 0$.
 \end{teorema}
 
@@ -496,22 +498,53 @@ Depois da formalização do problema de CS, unido ao estouro da novo assunto que
 surgiram os primeiros algoritmos que, de forma iterativa, resolvem o problema \eqref{eq:problem}. 
 Um dos principais algoritmos é o \textit{Orthogonal Matching Pursuit (OMP)}, analisado por Gilbert e Tropp \cite{GilbertOMP}.
 
-Segundo \citet{GilbertOMP}, o algoritmo do OMP é o seguinte:
+Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 
 \begin{algorithm}[H]
 \caption{\textit{Orthogonal Matching Pursuit (OMP)}}
 \Entrada{Matriz de medidas $m \times d$ $\mathbf{\Phi}$, Vetor de $m$ medidas $\vec{y}$, nível de esparsidade $s$}
-\Saida{Estimativa do sinal ideal $\vec{f}' \in \mathbb{R}^d$}
-$\vec{r} \leftarrow \vec{y}$\;
+\Saida{Estimativa do sinal ideal $\vec{f'} \in \mathbb{R}^d$}
+$\vec{r^0} \leftarrow \vec{y}$\;
 $t \leftarrow 1$\;
-$\Lambda_0 \leftarrow ()$\;
+$\Lambda^0 \leftarrow ()$\;
+$\vec{f'} \leftarrow \vec{0}$\;
 \While{$t \le s$}{
-    $\lambda_t = \underset{j=1,...,d}{argmax}|\langle\vec{r_{t-1}}, \vec{\phi_j}\rangle|$\;
-    $\Lambda_t = \Lambda_{t-1} \cup \left\{\lambda_t\right\}$\;
-    $\mathbf{\Phi_t} = \left[ \mathbf{\Phi_{t-1}} \hspace{0.5em} \vec{\phi_{\lambda_t}} \right]$\;
-    Resolver problema de mínimos quadrados: $\vec{x_t} = \underset{\vec{x}}{argmin} \lVert \vec{y} - \mathbf{\Phi_t} \vec{x} \rVert_2$\;
+    $\lambda^t = \underset{j=1,...,d}{argmax}|\langle\vec{r^{t-1}}, \vec{\phi_j}\rangle|$\;
+    $\Lambda^t = \Lambda^{t-1} \cup \left\{\lambda^t\right\}$\;
+    $\mathbf{\Phi^t} = \left[ \mathbf{\Phi^{t-1}} \hspace{0.5em} \vec{\phi_{\lambda^t}} \right]$\;
+    Resolver problema de mínimos quadrados: $\vec{x^t} = \underset{\vec{x}}{argmin} \lVert \vec{y} - \mathbf{\Phi^t} \vec{x} \rVert^2$\;
+    $\vec{a^t} \leftarrow \mathbf{\Phi^t} \vec{x^t}$\;
+    $\vec{r^t} \leftarrow \vec{y} - \vec{a^t}$\;
+    $t \leftarrow t + 1$\;
 }
+$\vec{f'}_{\Lambda^{t-1}} \leftarrow \vec{x^{t-1}}$\;
 \end{algorithm}
+
+Uma importante observação relativa ao sucesso do algoritmo OMP é que, dado que a matriz $\mathbf{\Phi}$ é incoerente,
+seu conjugado transposto multiplicado por si mesmo é próximo a identidade, ou seja, 
+$\vec{u} = \mathbf{\Phi}* \vec{y} = \mathbf{\Phi}* \mathbf{\Phi} \vec{f}$ 
+é, de certa forma, muito próximo a $\vec{f}$. Logo, o OMP considera que o mais alto coeficiente de 
+$\vec{u}$ é um dos coeficientes esparsos de $\vec{f}$ \cite{chen2015compressed}.
+
+Gilbert e Tropp ainda apresentam um teorema sobre o algoritmo.
+\begin{teorema}
+    \cite{GilbertOMP}.
+    Dado $\mathbf{\Phi}$ uma matriz $m \times d$ subgaussiana de medidas tal que $m \ge C s log d$ e
+    $\vec{f}$ um sinal s-esparso em $\mathbb{R}^d$.
+    Então, com alta probabilidade, OMP reconstrui corretamente o sinal $\vec{f}$ a partir de suas
+    medidas $\vec{y} = \mathbf{\Phi}\vec{f}$.
+\end{teorema}
+Sem nenhuma modificação, o OMP não é reconhecidamente robusto a ruído, nem oferece garantias de uniformidade.
+Porém, esse algoritmo possui um baixo custo computacional e boa eficiência, tendo complexidade de
+$O(s m d)$ \cite{chen2015compressed}. 
+Algo que fica claro, observando-se o pseudo-código e a complexidade, é que o OMP tem desempenho diretamente
+proporcional com a esparsidade da solução, ou seja, a cada nova iteração no \textit{loop} principal, um 
+novo coeficiente da solução é calculado.
+
+Outros algoritmos de estratégia gulosa oferecem garantias de uniformidade, além de robustez a ruído, com 
+limites demonstrados, bem como número de iterações e medidas. Dois principais destes algoritmos são o 
+\textit{CoSaMP (Compressive Sampling Matching Pursuit)} \cite{NeedellCoSaMP}, e o 
+\textit{IHT (Iterative Hard Thresholding)} \cite{BLUMENSATHIHT}.
 
 % \subsubsection{Métodos utilizando \textit{Total Variation}}
 % Decidir se terá ou não
