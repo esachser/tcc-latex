@@ -641,7 +641,11 @@ de aprendizado de dicionários utilizando a norma $\ell_2$ como segue  \cite{che
 Nesse caso, $\mat{D} \in \mathbb{R}^{L\times m}$ é o dicionário aprendido, enquanto os 
 vetores $\gamma_i \in \mathbb{R}^m$, com no máximo $s$ coeficientes não nulos, é a Representação
 linear de $\vec{x_i}$ em $\mat{D}$. O valor de $m$ pode ser maior que o de $L$, talvez para 
-explorar alguma redundância, mas $s\ll L$.
+explorar alguma redundância, mas $s\ll L$. Outra coisa que fica clara é que, para que as escolhas
+de $\gamma_i$ e $\mat{D}$ sejam únicas, pode-se forçar que as colunas de $\mat{D}$ tenham norma $\ell_2$
+unitária \cite{chen2015compressed}.
+
+
 
 \subsection{\textit{Online Dictionary Learning}}
 
