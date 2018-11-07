@@ -56,6 +56,7 @@
 \def\SB#1{\textsubscript{#1}}
 
 \renewcommand{\vec}[1]{\bm{#1}}
+\newcommand{\mat}[1]{\bm{#1}}
 
 % 
 % Informações gerais
@@ -522,7 +523,7 @@ $\vec{f'}_{\Lambda^{t-1}} \leftarrow \vec{x^{t-1}}$\;
 
 Uma importante observação relativa ao sucesso do algoritmo OMP é que, dado que a matriz $\mathbf{\Phi}$ é incoerente,
 seu conjugado transposto multiplicado por si mesmo é próximo a identidade, ou seja, 
-$\vec{u} = \mathbf{\Phi}* \vec{y} = \mathbf{\Phi}* \mathbf{\Phi} \vec{f}$ 
+$\vec{u} = \mathbf{\Phi}^* \vec{y} = \mathbf{\Phi}^* \mathbf{\Phi} \vec{f}$ 
 é, de certa forma, muito próximo a $\vec{f}$. Logo, o OMP considera que o mais alto coeficiente de 
 $\vec{u}$ é um dos coeficientes esparsos de $\vec{f}$ \cite{chen2015compressed}.
 
@@ -546,7 +547,7 @@ limites demonstrados, bem como número de iterações e medidas. Dois principais
 \textit{CoSaMP (Compressive Sampling Matching Pursuit)} \cite{NeedellCoSaMP}, e o 
 \textit{IHT (Iterative Hard Thresholding)} \cite{BLUMENSATHIHT}.
 
-\section{Resultados com dicionários coerentes}
+\subsection{Resultados com dicionários coerentes}
 A utilização de matrizes de amostragens incoerentes, ou dicionários incoerentes, limita a aplicação de 
 Compressed Sensing em algumas áreas, ou para alguns problemas cuja base de solução dos mesmos era baseada
 em dicionários coerentes, que podem ser, por exemplo, um dicionário supercompleto, com mais colunas que linhas. 
@@ -605,6 +606,44 @@ para outros campos do conhecimento.
 % Decidir se terá ou não
 
 \section{Aprendizado de Dicionários}
+A área de aprendizado de dicionários, do inglês \textit{Dictionary Learning}, busca, através
+dos dados já conhecidos de uma classe de sinais, prover novos dicionários nos quais os sinais 
+serão capazes de se conformar com maior esparsidade. 
+Sob o ponto de vista de CS, um dicionário $\mat{D}$ normalmente é escolhido de forma aleatória,
+desde que satisfaça a RIP.
+Aprendizado de dicionários, por outro lado, busca gerar modelos considerando os sinais envolvidos,
+ou seja, dicionários que dependem dos dados, ou \textit{data-dependent dictionaries} \cite{chen2015compressed}.
+
+Nas seções seguintes será explicitado o problema geral de aprendizado de dicionários, bem como 
+um algoritmo que é capaz de de gerar um dicionário a partir de dados observados, e, por fim, 
+uma aplicação focada em processamento de imagens.
+
+\subsection{Problema Geral de Aprendizado de Dicionários}
+Nessa seção será apresentado um modelo geral do problema que aprendizado de dicionários busca resolver.
+De forma intuitiva, pode-se imaginar aprendizado de dicionários como se fosse desejado gerar 
+um sub-dicionário da língua portuguesa a partir de uma grande quantidade textos, livros, todos 
+eles separados por palavras.
+
+Mais formalmente, suponha-se $\vec{x_1}, \vec{x_2}, ..., \vec{x_n} \in \mathbb{R}^L$
+um conjunto finito de sinais de trainamento, e inteiros positivos $m, s$.
+Deseja-se encontrar a matriz $\mat{D}$ e os s-esparsos vetores 
+$\vec{\gamma_1}, \vec{\gamma_2}, ..., \vec{\gamma_n} \in \mathbb{R}^m$ os quais
+$\mat{D}\vec{\gamma_i} \approx x_i$ para todo $i$. Dessa forma, pode-se escrever o problema
+de aprendizado de dicionários utilizando a norma $\ell_2$ como segue  \cite{chen2015compressed}:
+\begin{equation}
+    \label{eq:dlgeneral}
+    \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
+    \sum_{i=1}^{n} {\lVert  \vec{x_i} - \mat{D} \vec{\gamma_i} \rVert \SPSB{2}{2}}
+    \hspace{1em} \text{tal que} \hspace{1em}
+    \lVert \gamma_i \rVert_0 \le s, \text{ para todo } i.
+\end{equation}
+
+Nesse caso, $\mat{D} \in \mathbb{R}^{L\times m}$ é o dicionário aprendido, enquanto os 
+vetores $\gamma_i \in \mathbb{R}^m$, com no máximo $s$ coeficientes não nulos, é a Representação
+linear de $\vec{x_i}$ em $\mat{D}$. O valor de $m$ pode ser maior que o de $L$, talvez para 
+explorar alguma redundância, mas $s\ll L$.
+
+\subsection{\textit{Online Dictionary Learning}}
 
 \subsection{Codificação Esparsa}
 
@@ -620,7 +659,6 @@ para outros campos do conhecimento.
 \chapter{Resultados}
 
 \chapter{Conclusão}
-
 
 % referências
 % aqui será usado o environment padrao `thebibliography'; porém, sugere-se
