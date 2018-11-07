@@ -635,14 +635,14 @@ de aprendizado de dicionários utilizando a norma $\ell_2$ como segue  \cite{che
     \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
     \sum_{i=1}^{n} {\lVert  \vec{x_i} - \mat{D} \vec{\gamma_i} \rVert \SPSB{2}{2}}
     \hspace{1em} \text{tal que} \hspace{1em}
-    \lVert \gamma_i \rVert_0 \le s, \text{ para todo } i.
+    \lVert \vec{\gamma_i} \rVert_0 \le s, \text{ para todo } i.
 \end{equation}
 
 Nesse caso, $\mat{D} \in \mathbb{R}^{L\times m}$ é o dicionário aprendido, enquanto os 
-vetores $\gamma_i \in \mathbb{R}^m$, com no máximo $s$ coeficientes não nulos, é a Representação
+vetores $\vec{\gamma_i} \in \mathbb{R}^m$, com no máximo $s$ coeficientes não nulos, é a Representação
 linear de $\vec{x_i}$ em $\mat{D}$. O valor de $m$ pode ser maior que o de $L$, talvez para 
 explorar alguma redundância, mas $s\ll L$. Outra coisa que fica clara é que, para que as escolhas
-de $\gamma_i$ e $\mat{D}$ sejam únicas, pode-se forçar que as colunas de $\mat{D}$ tenham norma $\ell_2$
+de $\vec{\gamma_i}$ e $\mat{D}$ sejam únicas, pode-se forçar que as colunas de $\mat{D}$ tenham norma $\ell_2$
 unitária \cite{chen2015compressed}.
 
 
