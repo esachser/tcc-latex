@@ -179,6 +179,7 @@
     \item[RIP] Restricted Isometric Property
     \item[OMP] Orthogonal Matching Pursuit
     \item[CoSaMP] Compressive Sampling Matching Pursuit 
+    \item[ODL] Online Dictionary Learning 
 \end{listofabbrv}
 
 % idem para a lista de símbolos
@@ -428,6 +429,7 @@ matrizes subgaussianas \cite{Mendelson2008} e as matrizes ortogonais parcialment
 
 
 \subsection{Algoritmos aplicados ao modelo de Compressive Sensing}
+\label{sec:csalgo}
 Ao considerar-se a formulação do problema geral de CS apresentada na seção anterior, um dos resultados também apresentados
 é de que o problema é NP-difícil. Sob essa ótica, diversas soluções alternativas foram desenvolvidas com 
 o intuito de, através da solução de algum outro problema relacionado, ou do uso de alguma diferente estratégia, fosse possível 
@@ -505,20 +507,20 @@ Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 \caption{\textit{Orthogonal Matching Pursuit (OMP)}}
 \Entrada{Matriz de medidas $m \times d$ $\mathbf{\Phi}$, Vetor de $m$ medidas $\vec{y}$, nível de esparsidade $s$}
 \Saida{Estimativa do sinal ideal $\vec{f'} \in \mathbb{R}^d$}
-$\vec{r^0} \leftarrow \vec{y}$\;
+$\vec{r_{(0)}} \leftarrow \vec{y}$\;
 $t \leftarrow 1$\;
-$\Lambda^0 \leftarrow ()$\;
+$\Lambda_{(0)} \leftarrow ()$\;
 $\vec{f'} \leftarrow \vec{0}$\;
 \While{$t \le s$}{
-    $\lambda^t = \underset{j=1,...,d}{argmax}|\langle\vec{r^{t-1}}, \vec{\phi_j}\rangle|$\;
-    $\Lambda^t = \Lambda^{t-1} \cup \left\{\lambda^t\right\}$\;
-    $\mathbf{\Phi^t} = \left[ \mathbf{\Phi^{t-1}} \hspace{0.5em} \vec{\phi_{\lambda^t}} \right]$\;
-    Resolver problema de mínimos quadrados: $\vec{x^t} = \underset{\vec{x}}{argmin} \lVert \vec{y} - \mathbf{\Phi^t} \vec{x} \rVert^2$\;
-    $\vec{a^t} \leftarrow \mathbf{\Phi^t} \vec{x^t}$\;
-    $\vec{r^t} \leftarrow \vec{y} - \vec{a^t}$\;
+    $\lambda_{(t)} = \underset{j=1,...,d}{argmax}|\langle\vec{r_{(t-1)}}, \vec{\phi_j}\rangle|$\;
+    $\Lambda_{(t)} = \Lambda_{(t-1)} \cup \left\{\lambda_{(t)}\right\}$\;
+    $\mathbf{\Phi_{(t)}} = \left[ \mathbf{\Phi_{(t-1)}} \hspace{0.5em} \vec{\phi_{\lambda_{(t)}}} \right]$\;
+    Resolver problema de mínimos quadrados: $\vec{x_{(t)}} = \underset{\vec{x}}{argmin} \lVert \vec{y} - \mathbf{\Phi_{(t)}} \vec{x} \rVert^2$\;
+    $\vec{a_{(t)}} \leftarrow \mathbf{\Phi_{(t)}} \vec{x_{(t)}}$\;
+    $\vec{r_{(t)}} \leftarrow \vec{y} - \vec{a_{(t)}}$\;
     $t \leftarrow t + 1$\;
 }
-$\vec{f'}_{\Lambda^{t-1}} \leftarrow \vec{x^{t-1}}$\;
+$\vec{f'}_{\Lambda_{(t-1)}} \leftarrow \vec{x_{(t-1)}}$\;
 \end{algorithm}
 
 Uma importante observação relativa ao sucesso do algoritmo OMP é que, dado que a matriz $\mathbf{\Phi}$ é incoerente,
@@ -639,17 +641,124 @@ de aprendizado de dicionários utilizando a norma $\ell_2$ como segue  \cite{che
 \end{equation}
 
 Nesse caso, $\mat{D} \in \mathbb{R}^{L\times m}$ é o dicionário aprendido, enquanto os 
-vetores $\vec{\gamma_i} \in \mathbb{R}^m$, com no máximo $s$ coeficientes não nulos, é a Representação
+vetores $\vec{\gamma_i} \in \mathbb{R}^m$, com no máximo $s$ coeficientes não nulos, é a representação
 linear de $\vec{x_i}$ em $\mat{D}$. O valor de $m$ pode ser maior que o de $L$, talvez para 
-explorar alguma redundância, mas $s\ll L$. Outra coisa que fica clara é que, para que as escolhas
+explorar alguma redundância, mas $s\ll L$. Ainda, sobre o problema \eqref{eq:dlgeneral}, para que as escolhas
 de $\vec{\gamma_i}$ e $\mat{D}$ sejam únicas, pode-se forçar que as colunas de $\mat{D}$ tenham norma $\ell_2$
 unitária \cite{chen2015compressed}.
 
+É importante notar que a função de erro de \eqref{eq:dlgeneral} usa norma $\ell_2$, mas pode ser trocada
+por outra função de erro, como, por exemplo, a norma $\ell_1$ \cite{chen2015compressed}.
 
+Também é possível formular o problema com um dado erro de aproximação $\epsilon$.
+Nesse caso, pode-se reformular o problema de aprendizado de dicionários como segue \cite{chen2015compressed}.
+\begin{equation}
+    \label{eq:dleps}
+    \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
+    \sum_{i=1}^{n} {\lVert \vec{\gamma_i} \rVert_0}
+    \hspace{1em} \text{tal que} \hspace{1em}
+    \lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert_2 \le \epsilon, \text{ para todo } i.
+\end{equation}
+
+Unificando as duas formulações \eqref{eq:dlgeneral} e \eqref{eq:dleps}, chega-se ao seguinte
+\cite{chen2015compressed}.
+\begin{equation}
+    \label{eq:dlunica}
+    \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
+    \sum_{i=1}^{n} {\lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2} + \lambda \lVert \vec{\gamma_i} \rVert_0}
+\end{equation}
+
+Porém, utilizando-se a norma $\ell_0$, o problema é usualmente NP-difícil. Dessa forma, pode-se gerar
+uma reformulação somente trocando a norma $\ell_0$ pela norma $\ell_1$ \cite{chen2015compressed}.
+\begin{equation}
+    \label{eq:dlunical1}
+    \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
+    \sum_{i=1}^{n} {\lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2} + \lambda \lVert \vec{\gamma_i} \rVert_1}
+\end{equation}
+
+Aprendizado de dicionários tem ligação com diversas outras áreas do conhecimento. 
+Em especial, e que será utilizado no decorrer do desenvolvimento do trabalho, está sua ligação
+com CS, da forma que foi explicitada no início da seção, e com processamento de imagens,
+o que será melhor abordados na seção \ref{sec:codesparsa}.
 
 \subsection{\textit{Online Dictionary Learning}}
+Um dos principais algoritmos de aprendizado de dicionários, com aplicação em processamento de imagens
+é o algoritmo \textit{Online Dictionary Learning (ODL)}. Um de seus principais diferenciais
+se dá pela possibilidade de utilizar um conjunto de treinamente bastante volumoso com bom 
+desempenho \cite{MairalOnlineDictLearn}.
+
+O ODL, como o próprio nome retrata, é um algoritmo \textit{online}, ou seja, a cada nova iteração $t$
+é gerada uma nova versão do dicionário $\mat{D_{(t)}}$ a partir de uma nova amostra $\vec{x_{(t)}}$.
+
+Entrando mais a fundo na definição geral do algoritmo, tomado um chute inicial $\mat{D_{(0)}}$, as próximas
+iterações $t \ge 1$ serão baseadas em $\mat{D_{(t-1)}}$ e $\vec{x_{(t)}}$. O novo dicionário $\mat{D_{(t)}}$ será
+gerado a partir de dois passos. Primeiramente, deve-se encontrar o vetor de coeficientes $\vec{\gamma_{(t)}}$
+relativos a $\vec{x_{(t)}}$ e $\mat{D_{(t-1)}}$, resovendo o problema de codificação esparsa a seguir \cite{chen2015compressed}.
+\begin{equation}
+    \vec{\gamma_{(t)}} = \underset{\vec{\gamma}}{argmin}
+    \frac{1}{2} \lVert \vec{x_{(t)}} - \mat{D_{(t-1)}}\vec{\gamma} \rVert\SPSB{2}{2} +
+    \lambda \lVert \vec{\gamma} \rVert_1
+\end{equation}
+sendo que $\lambda$ é um parâmetro de configuração do algoritmo. Esse problema pode ser resolvido algum dos 
+algortimos discutidos na seção \ref{sec:csalgo}. Também é possível alterar-se a norma $\ell_1$ pela $\ell_0$,
+de forma que algum algoritmo guloso de CS possa ser utilizado. O mesmo se dará para o passo seguinte.
+
+No segundo passo do algoritmo, definimos o novo dicionário $\mat{D_{(t)}}$ através dos vetores de coeficientes
+anteriores, $\vec{\gamma_{(1)}}, ..., \vec{\gamma_{(t-1)}}$, além de considerar o novo $\vec{\gamma_{(t)}}$.
+Para facilitar, consideremos a matriz $\mat{X}$ com colunas $\vec{x_1},...,\vec{x_t}$ e a matriz $\mat{\Gamma}$
+com colunas $\vec{\gamma_1},...,\vec{\gamma_t}$.
+Dessa forma, e considerando que os valores de $\vec{\gamma_i}$ são fixos, pode-se formular o problema \cite{chen2015compressed}.
+\begin{equation}
+    \mat{D_{(t)}} = \underset{\mat{D}}{argmin}
+    \frac{1}{t} \sum_{i=1}^t \lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2}.
+\end{equation}
+
+Processando o problema anterior, chega-se em que ele pode ser resolvido utilizando-se o método do 
+gradiente descendente. Para isso, primeiramente precisamos definir as matrizes a seguir \cite{chen2015compressed}.
+\begin{equation}
+    \mat{A_{(t)}} = \sum_{i=1}^t \vec{\gamma_i}\vec{\gamma_i^T} \in \mathbb{R}^{m \times m},
+    \hspace{0.5em}
+    \mat{B_{(t)}} = \sum_{i=1}^t \vec{x_i}\vec{\gamma_i^T} \in \mathbb{R}^{L \times m}.
+\end{equation}
+
+Tomando como valor inicial $\mat{D} = \mat{D_{(t-1)}}$, e utilizando o seguinte cálculo em cada coluna $\vec{d_k}$, 
+de forma iterativa,
+que sempre minimiza a função objetivo, chega-se no novo dicionário $\mat{D_{(t)}}$.
+\begin{equation}
+    \vec{d_k} \leftarrow \frac{1}{\mat{A_{(t)_{k,k}}}}
+    \left( \vec{B_{(t)_{:,k}}} - \mat{D}\vec{A_{(t)_{:,k}}} \right) +
+    \vec{d_k}
+\end{equation}
+
+Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLearn}.
+
+\begin{algorithm}[H]
+    \caption{\textit{Online Dictionary Learning (ODL)}}
+    \Entrada{Distribuição de $\vec{x} \in \mathbb{R}^L$, parâmetro $\lambda$, 
+    dicionário inicial $\mat{D_{(0)}}$, número de iterações $T$}
+    \Saida{Dicionário final $\mat{D_{(t)}}$}
+    $\mat{A_{(0)}} \leftarrow \mat{0}$\;
+    $\mat{B_{(0)}} \leftarrow \mat{0}$\;
+    \For{$i = 1..T$}{
+        Escolher nova amostra $\vec{x_{(t)}}$\;
+        Resolver:
+        $\vec{\gamma_{(t)}} = \underset{\vec{\gamma}}{argmin} \lVert \vec{x_{(t)}} - \mat{D_{(t-1)}}\vec{\gamma} \rVert_2^2 +
+        \lambda \lVert \vec{\gamma} \rVert_1.$\;
+        $\mat{A_{(t)}} \leftarrow \mat{A_{(t-1)}} + \vec{\gamma_{(t)}} \vec{\gamma_{(t)}^T}$\;
+        $\mat{B_{(t)}} \leftarrow \mat{B_{(t-1)}} + \vec{x_{(t)}} \vec{\gamma_{(t)}^T}$\;
+        Realizar a atualização do dicionário até convergência:
+        $\vec{d_k} \leftarrow \frac{1}{\mat{A_{(t)_{k,k}}}}
+        \left( \vec{B_{(t)_{:,k}}} - \mat{D}\vec{A_{(t)_{:,k}}} \right) + \vec{d_k}$ \;
+        \If{$\lVert \vec{d_k} \rVert_2 > 1$}{
+            Normalizar $\vec{d_k}$\;
+        }
+    }
+    \Return{$\mat{D_{(t)}}$}
+\end{algorithm}
+
 
 \subsection{Codificação Esparsa}
+\label{sec:codesparsa}
 
 % \section{Codificação de Imagens}
 % Decidir se terá ou não
