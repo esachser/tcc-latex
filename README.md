@@ -14,7 +14,7 @@ trabalho, bem como dúvidas e conclusões.
 [ _ ] Introdução \
 [ _ ] Representação de sinais \
 [ x ] Compressed Sensing \
-[ p ] Dictionary Learning \
+[ x ] Dictionary Learning \
 [ _ ] Codificação de vídeos \
 [ _ ] Trabalhos relacionados \
 [ _ ] Proposta \

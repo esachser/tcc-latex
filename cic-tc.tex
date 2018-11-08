@@ -412,8 +412,8 @@ Fica definido, portanto, que um operador de amostragem é \textit{incoerente} qu
 suficientemente pequena. Por exemplo, um operador de amostragem que seja uma base ortonormal é incoerente, bem como
 operadores que sejam aproximadamente ortonormais para vetores esparsos.
 
-Uma propriedade que captura a mesma ideia que o referido acima foi desenvolvida por Candès e Tao, chamada 
-\textit{Restricted Isometry Property}(RIP)\cite{CandesSignalRecovery}. A constante de isometria restrita 
+Uma propriedade que captura a mesma ideia que o referido acima foi desenvolvida por \citet{CandesSignalRecovery}, chamada 
+\textit{Restricted Isometry Property}(RIP). A constante de isometria restrita 
 $\delta_s$ é a menor tal que:
 \begin{equation}
     \label{eq:rip}
@@ -499,6 +499,7 @@ intensidade do ruído, como segue.
 \end{teorema}
 
 \subsubsection{Métodos utilizando algoritmos gulosos}
+\label{sec:greedy}
 Depois da formalização do problema de CS, unido ao estouro da novo assunto que se apresentou,
 surgiram os primeiros algoritmos que, de forma iterativa, resolvem o problema \eqref{eq:problem}. 
 Um dos principais algoritmos é o \textit{Orthogonal Matching Pursuit (OMP)}, analisado por Gilbert e Tropp \cite{GilbertOMP}.
@@ -766,7 +767,7 @@ buscar um outro objetivo, compressão de sinais.
 No caso que será estudado, o foco será em codificação esparsa de imagens, buscando 
 embasar os estudos para a proposta do trabalho em questão.
 
-É necessário recordar que imagens não são usualmente esparsas no domínio tempo.
+É necessário considerar que imagens não são usualmente esparsas no domínio tempo.
 Porém, no domínio da Transformada do Cosseno, ou no domínio da DCT, \textit{Discrete Cosine Transform}, 
 imagens são, em geral, compressíveis, vide \eqref{eq:compressiblesignal}, fato 
 que permite, por exemplo, gerar representações da imagem com alta fidelidade, mesmo
@@ -775,26 +776,47 @@ utilizando baixa quantidade de informação.
 
 Por outro lado, podemos imaginar que, para uma determinada classe de imagens,
 por exemplo, imagens naturais, a utilização de um dicionário previamente treinado 
-pode gerar bons resultados. Para remoção de ruído em imagens, \citet{aharon2006k} 
-mostra que o uso de dicionários aprendidos tem resultados melhores que o uso de 
+pode gerar bons resultados. Para remoção de ruído em imagens, \citet{EladDenoising} 
+mostram que o uso de dicionários aprendidos têm resultados melhores que o uso de 
 dicionários gerais, teóricos.
 
 Considerando uma imagem $I$, separada em patches $P_i$ de tamanho $\sqrt{L}\times\sqrt{L}$, 
 com ou sem sobreposição - normalmente para problemas de remoção de ruído, com sobreposição,
 enquanto para representação esparsa, sem - e vetorizando cada patch $P_i$ em vetores
-$\vec{x_i} \in \mathbb{R}^L$. Tomando um dicionário $\mat{D}$, aprendido via patches 
-de imagens correlatas a $I$, se desejarmos representar os patches $\vec{x_i}$ em relação
-a $\mat{D}$, temos a seguinte formulação.
+$\vec{x_i} \in \mathbb{R}^L$. Tomando um dicionário $\mat{D} \in \mathbb{R}^{L\times m}$, 
+aprendido via patches de imagens correlatas a $I$, se desejar-se representar os patches 
+$\vec{x_i}$ em relação a $\mat{D}$, temos a seguinte formulação.
 \begin{equation}
     \label{eq:patchcoding}
-    \vec{\gamma_i} = \underset{\vec{\gamma}}{argmin} \lVert \vec{\gamma} \rVert_0
+    \vec{\gamma_i} = \underset{\vec{\gamma}}{argmin} \lVert \vec{x_i} - \mat{D}\vec{\gamma} \rVert_2^2
+    \hspace{1em} \text{sujeito a} \hspace{1em}
+    \lVert \vec{\gamma} \rVert_0 \le s
+    \text{ para todo } i,
 \end{equation}
-% Terminar formulação
+tal que $s$ é o número máximo de valores não nulos da representação $\vec{\gamma_i} \in \mathbb{R}^m$.
+Para resolver essa formulação, pode-se utilizar algum dos algoritmos apresentados na
+seção \ref{sec:greedy}, por exemplo o OMP. 
+Para que a representação seja esparsa, precisa-se garantir que $s \ll L$.
+Por exemplo, tomando uma imagem $I$ e separando em patches de $8\times 8$, ou seja,
+$L = 64$, poderia ser escolhido um valor de $s = 8$ ou $s=12$, independente do valor 
+de $m$, garantido $s < m$, cujo valor escolhido, por exemplo, poderia ser $m = 256$.
+
+Existem diversas outras aplicações de aprendizado de dicionários no campo de processamento de
+imagens, principalmente \cite{MairalSparse}:
+\begin{itemize}
+    \item \textit{Denoising}: remoção de ruído de imagens;
+    \item \textit{Inpainting}: preenchimento de regiões não \textit{pintadas} de imagens;
+    \item \textit{Demosaicking}: reconstrução da imagem a partir de sensores digitais;
+    \item \textit{Up-scaling}: aumento da resolução de imagens.
+\end{itemize}
 
 % \section{Codificação de Imagens}
 % Decidir se terá ou não
 
+\section{Codificação de Huffman}
+
 \section{Codificação de Vídeo}
+
 
 \chapter{Trabalhos Relacionados}
 
