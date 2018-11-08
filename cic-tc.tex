@@ -180,6 +180,7 @@
     \item[OMP] Orthogonal Matching Pursuit
     \item[CoSaMP] Compressive Sampling Matching Pursuit 
     \item[ODL] Online Dictionary Learning 
+    \item[DCT] Discrete Cosine Transform 
 \end{listofabbrv}
 
 % idem para a lista de símbolos
@@ -363,6 +364,7 @@ satisfaz a seguinte inequação:
 Na prática, sinais não são usualmente encontrados esparsos, o que leva a definição de que \textit{sinais compressíveis}
 são aqueles que obedecem a seguinte lei de decaimento exponencial:
 \begin{equation}
+    \label{eq:compressiblesignal}
     | f\SPSB{*}{k} | < R k^{-\frac{1}{q}},  
 \end{equation}
 tal que $\vec{f}^* $ é o rearranjo decrescente de $\vec{f}$, $R$ é uma constante positiva e $0< q < 1$. Percebe-se
@@ -734,19 +736,19 @@ Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLear
 
 \begin{algorithm}[H]
     \caption{\textit{Online Dictionary Learning (ODL)}}
-    \Entrada{Distribuição de $\vec{x} \in \mathbb{R}^L$, parâmetro $\lambda$, 
-    dicionário inicial $\mat{D_{(0)}}$, número de iterações $T$}
-    \Saida{Dicionário final $\mat{D_{(t)}}$}
+    \Entrada{Distribuição de $\vec{x} \in \mathbb{R}^L = p(\vec{x})$, parâmetro $\lambda$, 
+    dicionário inicial $\mat{D_{(0)}}$, número de iterações $T$.}
+    \Saida{Dicionário final $\mat{D_{(t)}}$.}
     $\mat{A_{(0)}} \leftarrow \mat{0}$\;
     $\mat{B_{(0)}} \leftarrow \mat{0}$\;
-    \For{$i = 1..T$}{
-        Escolher nova amostra $\vec{x_{(t)}}$\;
+    \For{$t = 1..T$}{
+        Escolher nova amostra $\vec{x_{(t)}}$ de $p(\vec{x})$\;
         Resolver:
         $\vec{\gamma_{(t)}} = \underset{\vec{\gamma}}{argmin} \lVert \vec{x_{(t)}} - \mat{D_{(t-1)}}\vec{\gamma} \rVert_2^2 +
-        \lambda \lVert \vec{\gamma} \rVert_1.$\;
+        \lambda \lVert \vec{\gamma} \rVert_1$\;
         $\mat{A_{(t)}} \leftarrow \mat{A_{(t-1)}} + \vec{\gamma_{(t)}} \vec{\gamma_{(t)}^T}$\;
         $\mat{B_{(t)}} \leftarrow \mat{B_{(t-1)}} + \vec{x_{(t)}} \vec{\gamma_{(t)}^T}$\;
-        Realizar a atualização do dicionário até convergência:
+        Realizar a atualização do dicionário para todas as colunas $k$ até convergência:
         $\vec{d_k} \leftarrow \frac{1}{\mat{A_{(t)_{k,k}}}}
         \left( \vec{B_{(t)_{:,k}}} - \mat{D}\vec{A_{(t)_{:,k}}} \right) + \vec{d_k}$ \;
         \If{$\lVert \vec{d_k} \rVert_2 > 1$}{
@@ -759,6 +761,35 @@ Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLear
 
 \subsection{Codificação Esparsa}
 \label{sec:codesparsa}
+A partir das bases de Compressed Sensing e de aprendizado de dicionários, pode-se 
+buscar um outro objetivo, compressão de sinais.
+No caso que será estudado, o foco será em codificação esparsa de imagens, buscando 
+embasar os estudos para a proposta do trabalho em questão.
+
+É necessário recordar que imagens não são usualmente esparsas no domínio tempo.
+Porém, no domínio da Transformada do Cosseno, ou no domínio da DCT, \textit{Discrete Cosine Transform}, 
+imagens são, em geral, compressíveis, vide \eqref{eq:compressiblesignal}, fato 
+que permite, por exemplo, gerar representações da imagem com alta fidelidade, mesmo
+utilizando baixa quantidade de informação.
+% Preciso de referências aqui.
+
+Por outro lado, podemos imaginar que, para uma determinada classe de imagens,
+por exemplo, imagens naturais, a utilização de um dicionário previamente treinado 
+pode gerar bons resultados. Para remoção de ruído em imagens, \citet{aharon2006k} 
+mostra que o uso de dicionários aprendidos tem resultados melhores que o uso de 
+dicionários gerais, teóricos.
+
+Considerando uma imagem $I$, separada em patches $P_i$ de tamanho $\sqrt{L}\times\sqrt{L}$, 
+com ou sem sobreposição - normalmente para problemas de remoção de ruído, com sobreposição,
+enquanto para representação esparsa, sem - e vetorizando cada patch $P_i$ em vetores
+$\vec{x_i} \in \mathbb{R}^L$. Tomando um dicionário $\mat{D}$, aprendido via patches 
+de imagens correlatas a $I$, se desejarmos representar os patches $\vec{x_i}$ em relação
+a $\mat{D}$, temos a seguinte formulação.
+\begin{equation}
+    \label{eq:patchcoding}
+    \vec{\gamma_i} = \underset{\vec{\gamma}}{argmin} \lVert \vec{\gamma} \rVert_0
+\end{equation}
+% Terminar formulação
 
 % \section{Codificação de Imagens}
 % Decidir se terá ou não
