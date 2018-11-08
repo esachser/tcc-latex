@@ -344,7 +344,7 @@ De acordo com o modelo, um sinal $ \vec{f} $ em geral é um elemento de $ \mathb
     y_i = \langle \vec{\phi_i}, \vec{f} \rangle \text{ para } i=1,2,...,m, 
 \end{equation}
 na qual $m \ll d$. Os vetores $\vec{\phi_i}$ são linhas de uma matriz $m \times d$ $\mathbf{\Phi}$, chamada matriz 
-de amostragem.Assim, podemos reescrever o vetor de amostragem como $\vec{y} = \mathbf{\Phi} \vec{f}$. Fica claro que, 
+de amostragem. Assim, pode-se reescrever o vetor de amostragem como $\vec{y} = \mathbf{\Phi} \vec{f}$. Fica claro que, 
 se $ m \ll d$, reconstruir $\vec{f}$ a partir de $\vec{y}$, sem assumir nada a mais, é um problema 
 com infinitas soluções \cite{chen2015compressed}.
 
@@ -386,10 +386,10 @@ no máximo. Por outro lado, $\vec{f}$ pode ser esparso em alguma outra base orto
 
 
 \subsection{Mecanismos de Amostragem}
-A partir das definições básicas do modelo, podemos formular o problema básico de CS da seguinte forma:
+A partir das definições básicas do modelo, pode-se formular o problema básico de CS da seguinte forma:
 
 Tomando um operador de amostragem $\mathbf{\Phi}$, mapeamento linear de $\mathbb{C}^d$ para algum espaço de dimensão 
-$\mathbb{C}^m$, para recuperarmos um sinal $\vec{f}$ a partir de suas medidas $\vec{y} = \mathbf{\Phi} \vec{f}$, podemos escrever
+$\mathbb{C}^m$, para recuperarmos um sinal $\vec{f}$ a partir de suas medidas $\vec{y} = \mathbf{\Phi} \vec{f}$, pode-se escrever
 como um problema de minimização.
 \begin{equation}
     \label{eq:problem}
@@ -494,7 +494,7 @@ uma das possíveis soluções do problema \eqref{eq:problem}.
 \begin{figure}[h]
     \caption{Minimização $\ell_1$ nos pontos da reta.}
     \begin{center}
-        \includegraphics[width=0.9\textwidth]{img//l1ball}
+        \includegraphics[width=0.9\textwidth]{img/l1ball}
     \end{center}
     \legend{Fonte: O Autor}
     \label{fig:l1ball}
@@ -601,7 +601,7 @@ Resultando, por fim, em:
     \end{cases}
 \end{equation}
 
-Após definidas essas bases, podemos considerar a minimização a seguir, utilizando a norma TV \cite{chen2015compressed}.
+Após definidas essas bases, pode-se considerar a minimização a seguir, utilizando a norma TV \cite{chen2015compressed}.
 \begin{equation}
     \mat{X'} = \underset{\mat{M}}{argmin} \lVert \mat{M} \rVert_{TV} 
     \hspace{1em} \text{sujeito a} \hspace{1em}
@@ -623,7 +623,7 @@ abaixo.
     (b) Amostragem no domínio frequência. (c) Reconstrução via \textit{Filtered BackProjection}
     (d) Reconstrução utilizando a norma TV.}
     \begin{center}
-        \includegraphics[width=0.6\textwidth]{img//candesmri}
+        \includegraphics[width=0.6\textwidth]{img/candesmri}
     \end{center}
     \legend{Fonte: \citet{CandesMRI}}
     \label{fig:l1ball}
@@ -725,7 +725,8 @@ vetores $\vec{\gamma_i} \in \mathbb{R}^m$, com no máximo $s$ coeficientes não 
 linear de $\vec{x_i}$ em $\mat{D}$. O valor de $m$ pode ser maior que o de $L$, talvez para 
 explorar alguma redundância, mas $s\ll L$. Ainda, sobre o problema \eqref{eq:dlgeneral}, para que as escolhas
 de $\vec{\gamma_i}$ e $\mat{D}$ sejam únicas, pode-se forçar que as colunas de $\mat{D}$ tenham norma $\ell_2$
-unitária \cite{chen2015compressed}.
+unitária \cite{chen2015compressed}. O valor $m$ é conhecido como o número de átomos do 
+dicionário.
 
 É importante notar que a função de erro de \eqref{eq:dlgeneral} usa norma $\ell_2$, mas pode ser trocada
 por outra função de erro, como, por exemplo, a norma $\ell_1$ \cite{chen2015compressed}.
@@ -762,6 +763,7 @@ com CS, da forma que foi explicitada no início da seção, e com processamento 
 o que será melhor abordados na seção \ref{sec:codesparsa}.
 
 \subsection{\textit{Online Dictionary Learning}}
+\label{sec:odl}
 Um dos principais algoritmos de aprendizado de dicionários, com aplicação em processamento de imagens
 é o algoritmo \textit{Online Dictionary Learning (ODL)}. Um de seus principais diferenciais
 se dá pela possibilidade de utilizar um conjunto de treinamente bastante volumoso com bom 
@@ -813,6 +815,7 @@ que sempre minimiza a função objetivo, chega-se no novo dicionário $\mat{D_{(
 Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLearn}.
 
 \begin{algorithm}[H]
+    \label{algo:odl}
     \caption{\textit{Online Dictionary Learning (ODL)}}
     \Entrada{Distribuição de $\vec{x} \in \mathbb{R}^L = p(\vec{x})$, parâmetro $\lambda$, 
     dicionário inicial $\mat{D_{(0)}}$, número de iterações $T$.}
@@ -851,7 +854,7 @@ que permite, por exemplo, gerar representações da imagem com alta fidelidade, 
 utilizando baixa quantidade de informação.
 % Preciso de referências aqui.
 
-Por outro lado, podemos imaginar que, para uma determinada classe de imagens,
+Por outro lado, pode-se imaginar que, para uma determinada classe de imagens,
 por exemplo, imagens naturais, a utilização de um dicionário previamente treinado 
 pode gerar bons resultados. Para remoção de ruído em imagens, \citet{EladDenoising} 
 mostram que o uso de dicionários aprendidos têm resultados melhores que o uso de 
@@ -897,10 +900,122 @@ imagens, principalmente \cite{MairalSparse}:
 \section{Introdução a CUDA}
 
 \chapter{Trabalhos Relacionados}
+Neste capítulo serão abordados alguns trabalhos que se relacionam com a proposta apresentada.
+O foco principal da proposta está na codificação esparsa de frames utilizando dicionários
+previamente treinados, focando em vídeos e buscando fazer o processo em tempo real.
+
+\citet{BRYTFACEKSVD}, em seu trabalho, fizeram a compressão de imagens de faces, 
+utilizando o algoritmo K-SVD para aprendizado de um dicionário. 
+Cada imagem facial foi amostrada para as mesmas dimensões, com as faces centralizadas
+em um mesmo ponto, de forma que, aproximadamente, cada componente da face localiza-se
+em uma mesma posição.
+Por fim, cada imagem foi dividia e patches de tamanho $15\times 15$ sem sobreposição.
+Para cada posição de patch, foi treinado um dicionário
+de 512 átomos. A partir dessas definições, \citet{BRYTFACEKSVD} chegaram a resultados 
+com alta taxa de compressão, e ótimas qualidades de recuperação da imagem.
+Os resultados alcançados pelos autores indicam a possibilidade de se utilizar essa
+metodologia de forma menos restritiva, com, possivelmente, resultados menos impressionantes
+em qualidade ou em compressão.
+
+% Continuar e terminar...
+
 
 \chapter{Proposta}
+Após considerar o desenvolvimento da área de CS e de aprendizado de dicionários e 
+resumidos alguns trabalhos que focaram em alguma dessas áreas, será descrita a proposta 
+do trabalho de forma detalhada.
+
+O trabalho proposto visa desenvolver uma metodologia para codificação de vídeos em
+tempo real, utilizando pré-aprendidos dicionários relacionados ao próprio vídeo.
+Por ser um \textit{framework} com foco em tempo real, naturalmente se põe em questão 
+a necessidade de definir as funções que serão desenvolvidas por parte do \textit{encoder}
+e por parte do \textit{decoder}.
+
+A imagem a seguir apresenta um diagrama geral de blocos, dividindo entre \textit{encoder}
+e \textit{decoder}, além de representar blocos funcionais de cada uma das partes de 
+forma geral.
+\begin{figure}[H]
+    \caption{Diagrama geral da solução proposta}
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{img/DiagramaFinal.png}
+    \end{center}
+    \legend{Fonte: O Autor.}
+\end{figure}
+
+Nas seções seguintes serão descritas mais a fundo cada uma das etapas, seguindo a ordem
+apresentada na imagem, além de explicitar a ligação entre cada um dos blocos funcionais
+do projeto.
+
+\section{Aprendizado de dicionário}
+A parte de aprendizado do dicionário é essencial para que a qualidade da representação
+esparsa utilizada seja boa.
+Além disso, para o caso de treinamento a partir de frames de vídeos, caso em que se está
+trabalhando, é também necessário fazer a escolha de um algoritmo que permita a utilização
+de uma grande quantidade de dados de treinamento.
+
+Considerando isso e o desempenho apresentado por \citet{MairalOnlineDictLearn}, foi escolhido
+como algoritmo de treinamento do dicionário o \textit{Online Dictionary Learning},
+descrito em \ref{sec:odl},
+pois esse apresenta bom resultado para grande número de sinais de treinamento.
+
+O treinamento foi executado da seguinte forma:
+\begin{enumerate}
+    \item Separados frames de vídeos de classe semelhante. Por exemplo, vídeos naturais, vídeos
+    de esportes, \textit{cartoon}, etc...
+    \item Os frames foram sorteados, de forma a garantir que um comportamento dos últimos frames
+    não prepondere sobre todo o dicionário.
+    \item Cada frame foi separado em patches com tamanho $p \times p$, sendo $p$ o tamanho de
+    patch escolhido para o sistema. \textbf{CITAR RESULTADO COM ESCOLHA DE TAMANHO DE PATCH}.
+    Para o treinamento, foram utilizados patches com sobreposição. Por fim, todos os patches
+    foram vetorizados conforme \textbf{CITAR PROCEDIMENTO DOS PATCHES}.
+    \item Executado algoritmo do ODL, conforme Algoritmo \ref{algo:odl}.
+\end{enumerate}
+
+Vale ressaltar que para vídeos muito especializados, pode-se utilizar um treinamento
+mais especializado. Por exemplo, uma transmissão esportiva, que seja de somente um tipo
+de esporte, pode treinar um dicionário somente com frames desse determinado esporte.
+
+A fase de aprendizado do dicionário, por envolver um tempo maior de processamento,
+deve ser executada antes da transmissão de tempo real. Isso é possível, mesmo que não
+se conheça a transmissão em si, mas se conheça que tipo de conteúdo será transmitido.
+
+Um importante parâmetro que deve ser escolhido é o número de átomos do dicionário.
+Escolhas de valores maiores tendem a proporcionar maior qualidade na representação do vídeo,
+porém com perda de desempenho. No capítulo \ref{sec:results} serão mostrados resultados
+de escolhas diferentes no número de átomos do dicionário.
+
+Como parametrização....
+
+
+\section{\textit{Encoder}}
+\subsection{Aquisição do frame}
+Entende-se, nessa etapa, que o frame já está disponível, no formato de imagem colorida,
+pixel a pixel, RGB. Ou seja, a entrada para essa etapa é um frame $m \times n \times 3$,
+sendo a resolução do vídeo $m \times n$. No caso do sistema criado, a ordem dos pixels é 
+com linha a linha, ou seja, primeiro a linha $0$, depois a $1$, e assim por diante.
+Em contraste com essa definição poderíamos ter a imagem coluna por coluna, o que alteraria
+alguns cálculos internos, mas é possível adaptar o sistema de forma bastante simples.
+
+Já nesse ponto do processamento é necessário ter em vista o tamanho dos patches $p\times p$
+que será utilizado. A escolha deve seguir o parâmetro definido na escolha do dicionário.
+Valor típicos a serem escolhidos são $p=4$ ou $p=8$. No capítulo \ref{sec:results} serão 
+discutidos resultados alcançados com ambas escolhas de tamanho de patch.
+
+\subsection{Codificação esparsa dos patches}
+
+\subsection{Quantização e compressão}
+
+\section{\textit{Decoder}}
+
+\subsection{Decompressão e dequantização}
+
+\subsection{Recuperação dos patches}
+
+\subsection{Reconstrução do frame}
+
 
 \chapter{Resultados}
+\label{sec:results}
 
 \chapter{Conclusão}
 
