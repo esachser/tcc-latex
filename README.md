@@ -22,6 +22,8 @@ trabalho, bem como dúvidas e conclusões.
 [ _ ] Conclusão
 
 ### Controle de dúvidas
-- Falar sobre matrizes subgaussianas?
-- Explicitar métodos utilizando _Total Variation_?
+- Que referências utilizar para escrever sobre sinais? Buscar referências em artigos de CS.
+- Falar sobre matrizes subgaussianas? Sim, OK.
+- Explicitar métodos utilizando _Total Variation_? Sim, OK.
 - Criar seção sobre codificação de imagens?
+    Citar como as imagens serão codificadas num escopo principal, e utilizar adiante.

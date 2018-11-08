@@ -41,6 +41,7 @@
 \usepackage{bm}
 \usepackage{amsthm}      % Teoremas
 \usepackage{thmtools}    % Front end para amsthm (\declaretheorem)
+\usepackage{icomma}
 
 \declaretheorem[style=definition,name=Definição,parent=chapter,qed=\textemdash]{definicao}
 \declaretheorem[style=plain,name=Teorema,qed=\textnormal{\textemdash}]{teorema}
@@ -413,7 +414,7 @@ suficientemente pequena. Por exemplo, um operador de amostragem que seja uma bas
 operadores que sejam aproximadamente ortonormais para vetores esparsos.
 
 Uma propriedade que captura a mesma ideia que o referido acima foi desenvolvida por \citet{CandesSignalRecovery}, chamada 
-\textit{Restricted Isometry Property}(RIP). A constante de isometria restrita 
+\textit{Restricted Isometry Property} (RIP). A constante de isometria restrita 
 $\delta_s$ é a menor tal que:
 \begin{equation}
     \label{eq:rip}
@@ -421,13 +422,28 @@ $\delta_s$ é a menor tal que:
     (1 + \delta_s)\lVert \vec{f} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso } \vec{f}.
 \end{equation}
 
-Diz-se que um operador de amostragem $\mathbf{\Phi}$ tem o RIP de ordem $s$ quando $\delta_s$ é suficientemente
-pequeno, por exemplo, $\delta_s \le 0.1$.
+Diz-se que um operador de amostragem $\mathbf{\Phi}$ tem a RIP de ordem $s$ quando $\delta_s$ é suficientemente
+pequeno, por exemplo, $\delta_s \le 0,1$.
 
 A questão importante da RIP é descobrir qual o número de amostras $m$ é necessária e quais são as 
-classes de matrizes que possuem a propriedade. Duas classes de matrizes que possuem a RIP são as 
-matrizes subgaussianas \cite{Mendelson2008} e as matrizes ortogonais parcialmente limitadas \cite{rudelson2008sparse}.
-\textbf{Preciso falar sobre essas matrizes mais a fundo??????????????}
+classes de matrizes que possuem a propriedade. Doi importantes exemplos de matrizes que satisfazem a RIP são
+as seguintes \cite{chen2015compressed}: 
+\begin{itemize}
+    \item \textbf{Matrizes subgaussianas}: uma variável randômica $\mat{X}$ é subgaussiana se 
+    $\mathbb{P}(|\mat{X}| > t) \le Ce^{-ct^2}$ para todo $t>0$ e constantes positivas $C$ e $c$. Ou seja,
+    variáveis subgaussianas possuem distribuição de média aproximadamente $0$, e a maior parte dos valores
+    próximos a média. Exemplos dessa distribuição são a própria distribuição Gaussiana e a matrizes de 
+    Bernoulli, que possuem coeficientes $-1$ e $+1$ distribuídos com média $0$. \citet{Mendelson2008} provaram que
+    se $\mat{\Phi} \in \mathbb{R}^{m\times d}$ é subgaussiana, então, com alta probabilidade, $\frac{1}{\sqrt{m}}\mat{\Phi}$
+    satisfaz a RIP de ordem $s$ quando $m$ está na ordem de $s\log{d}$.
+    \item \textbf{Matrizes parcialmente ortogonais limitadas}: dada uma matriz $d\times d$ ortogonal $\mat{\Psi}$
+    cujos coeficientes são limitados por $\frac{C}{\sqrt{d}}$ para uma constante $C$. Uma matriz parcialmente
+    ortogonal limitada $\mat{\Phi}$ é formada escolhendo $m$ colunas de $\mat{\Psi}$ randomicamente.
+    Por exemplo, a matriz da transformada discreta de Fourier tem coeficientes limitados em $\frac{1}{\sqrt{d}}$,
+    logo escolhendo $m$ linhas randomicamente tem-se uma matriz parcialmente ortogonal limitada.
+    \citet{rudelson2008sparse} provaram que essas matrizes satisfazem RIP com alta probabilidade quando
+    o número de medidas $m$ é na ordem de $s\log^4{d}$.
+\end{itemize}
 
 
 \subsection{Algoritmos aplicados ao modelo de Compressive Sensing}
@@ -472,7 +488,7 @@ tal que $\lVert \vec{e} \rVert_2 \le \epsilon $.
 A geometria da norma $\ell_1$ permite esparsidade, como pode-se ver no exemplo a seguir. Imaginando-se 
 que a reta em verde retrata todas as possíveis soluções para um sinal $\vec{f} \in \mathbb{R}^2$, os pontos
 mais esparsos da reta são $A=(0;1)$ e $B=(-1.\overline{6};0)$. A região em azul limita todos os pontos 
-nos quais $\lVert\vec{p}\rVert_1 \le 1.0$, tal que $\vec{p} \in \mathbb{R}^2$. Nesse caso, o ponto $A$ é o 
+nos quais $\lVert\vec{p}\rVert_1 \le 1,0$, tal que $\vec{p} \in \mathbb{R}^2$. Nesse caso, o ponto $A$ é o 
 de menor norma $\ell_1$ da reta, sendo essa a solução do problema \eqref{eq:probleml1} e, ao mesmo tempo, 
 uma das possíveis soluções do problema \eqref{eq:problem}.
 \begin{figure}[h]
@@ -552,6 +568,67 @@ limites demonstrados, bem como número de iterações e medidas. Dois principais
 \textit{CoSaMP (Compressive Sampling Matching Pursuit)} \cite{NeedellCoSaMP}, e o 
 \textit{IHT (Iterative Hard Thresholding)} \cite{BLUMENSATHIHT}.
 
+\subsubsection{Métodos utilizando \textit{Total Variation}}
+Em diversas aplicações, os sinais de interesse são imagens. Imagens natuais normalmente são compressíveis
+em determinada base, tal qual Wavelets. Porém, a utilização dos métodos anteriores para recuperação 
+destas imagens gera, algumas vezes, artefatos de alta frequência, que se tornam desagradáveis a
+visualização \cite{chen2015compressed}.
+Tal fato levou ao desenvolvimento de outro método de minimização, baseado em \textit{Total Variation},
+ou seja, na minimização da norma $\ell_1$ do gradiente da imagem.
+
+Para simplificar a definição, considere-se uma imagem em tons de cinza $\mat{X}$ de tamanho $N\times N$.
+Por definição, a \textit{total variation} (TV) de uma imagem $\mat{X}$ é:
+\begin{equation}
+    \lVert \mat{X} \rVert_{TV} = \sum_{j,k}
+    \sqrt{\left( \mat{X_{j+1,k}} - \mat{X_{j,k}} \right)^2 + \left( \mat{X_{j,k+1}} - \mat{X_{j,k}} \right)^2} = 
+    \sum_{j,k} |\mat{(\nabla X)}_{j,k} |
+\end{equation}
+tal que $\mat{\nabla X}$ é o gradiente discreto da imagem $\mat{X}$. O gradiente pode ser definido da 
+seguinte forma:
+\begin{align*}
+    \mat{(X_x)}_{j,k} = \mat{X_{j+1,k}} - \mat{X_{j,k}} \\
+    \mat{(X_y)}_{j,k} = \mat{X_{j,k+1}} - \mat{X_{j,k}},
+\end{align*}
+
+Resultando, por fim, em:
+\begin{equation}
+    \mat{\nabla X} = 
+    \begin{cases}
+        \left( \mat{(X_x)}_{j,k}, \mat{(X_y)}_{j,k} \right), \hspace{0.5em} 1 \le j \le N-1, \hspace{0.5em} 1 \le k \le N-1 \\
+        \left( 0, \mat{(X_y)}_{j,k} \right), \hspace{0.5em} j=N, \hspace{0.5em} 1 \le k \le N-1 \\
+        \left( \mat{(X_x)}_{j,k}, 0 \right), \hspace{0.5em} 1 \le j \le N-1, \hspace{0.5em} k=N \\
+        \left(0,0\right), \hspace{0.5em} j = N, \hspace{0.5em} k=N
+    \end{cases}
+\end{equation}
+
+Após definidas essas bases, podemos considerar a minimização a seguir, utilizando a norma TV \cite{chen2015compressed}.
+\begin{equation}
+    \mat{X'} = \underset{\mat{M}}{argmin} \lVert \mat{M} \rVert_{TV} 
+    \hspace{1em} \text{sujeito a} \hspace{1em}
+    \lVert \vec{y} - A(\mat{M}) \rVert_2 \le \epsilon,
+\end{equation}
+tal que $A$ seleciona medidas e vetoriza, $\vec{y} = A(\mat{X}) + \vec{e}$ são as medidas com ruído $\vec{e}$,
+sendo que $\lVert \vec{e} \rVert_2 \le \epsilon$.
+
+O ganho na representação de imagens se dá pelo fato de que não se cria uma representação esparsa da imagem
+diretamente, mas sim do gradiente da imagem, o que torna a mesma mais suave e remove artefatos com alta
+frequência.
+Resultados utilizando a norma TV já foram observados em diversos trabalhos.
+Por exemplo, entre os primeiros ótimos resultados que motivaram o surgimento dessa área de estudo está
+o trabalho proposto por \citet{CandesMRI}, no qual, com aproximadamente $5\%$ das medidas de imagens de
+ressonância magnética, foi possível recuperar toda a imagem, como é possível visualizar na figura 
+abaixo.
+\begin{figure}[H]
+    \caption{Exemplo de recuperação por norma TV. Em (a) a imagem de teste.
+    (b) Amostragem no domínio frequência. (c) Reconstrução via \textit{Filtered BackProjection}
+    (d) Reconstrução utilizando a norma TV.}
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{img//candesmri}
+    \end{center}
+    \legend{Fonte: \citet{CandesMRI}}
+    \label{fig:l1ball}
+\end{figure}
+
 \subsection{Resultados com dicionários coerentes}
 A utilização de matrizes de amostragens incoerentes, ou dicionários incoerentes, limita a aplicação de 
 Compressed Sensing em algumas áreas, ou para alguns problemas cuja base de solução dos mesmos era baseada
@@ -582,19 +659,19 @@ e $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$ as medidas, $\vec{e}$ o erro.
 tal que $\lVert \vec{e} \rVert_2 \le \epsilon $.
 
 \citet{CANDESDICTS} também redefiniu a RIP, chamando de D-RIP como segue. 
-Dado um operador de amostragem $\mathbf{\Phi}$, ele satisfaz o D-RIP para um determinado 
+Dado um operador de amostragem $\mathbf{\Phi}$, ele satisfaz a D-RIP para um determinado 
 dicionário $\mathbf{D}$ de ordem $s$ se:
 \begin{equation}
     (1 - \delta_s)\lVert \mathbf{D}\vec{x} \rVert\SPSB{2}{2} \le \lVert \mathbf{\Phi} \mathbf{D}\vec{x} \rVert \SPSB{2}{2} \le 
     (1 + \delta_s)\lVert \mathbf{D}\vec{x} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso } \vec{x}.
 \end{equation}
-para algum $\delta_s$, por exemplo $\delta_s \le 0.08$.
+para algum $\delta_s$, por exemplo $\delta_s \le 0,08$.
 
 Tomando a nova definição, \citet{CANDESDICTS} provou o seguinte teorema sobre a recuperação do sinal.
 \begin{teorema}
     \cite{CANDESDICTS}
     Dado $\mathbf{D}$ um dicionário e supondo um operador de amostragem $\mathbf{\Phi}$ que satisfaz
-    o D-RIP de ordem $s$.
+    a D-RIP de ordem $s$.
     Então, a solução $\vec{f'}$ para a análise $\ell_1$ satisfaz:
     \begin{equation*}
         \lVert \vec{f'} - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \mathbf{D}^* \vec{f} - \left( \mathbf{D}^* \vec{f} \right)_s}{\sqrt{s}} \right],
@@ -817,6 +894,7 @@ imagens, principalmente \cite{MairalSparse}:
 
 \section{Codificação de Vídeo}
 
+\section{Introdução a CUDA}
 
 \chapter{Trabalhos Relacionados}
 
