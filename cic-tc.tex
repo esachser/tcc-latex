@@ -59,6 +59,9 @@
 \renewcommand{\vec}[1]{\bm{#1}}
 \newcommand{\mat}[1]{\bm{#1}}
 
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
 % 
 % Informações gerais
 % 
@@ -942,11 +945,22 @@ forma geral.
     \legend{Fonte: O Autor.}
 \end{figure}
 
+Entende-se que os frames processados estarão no formato de imagem colorida,
+pixel a pixel, RGB (Red, Green, Blue). Ou seja, a entrada para essa etapa é um frame 
+$m \times n \times 3$,
+sendo a resolução do vídeo $m \times n$. No caso do sistema criado, a ordem dos pixels é 
+com linha a linha, ou seja, primeiro a linha $0$, depois a $1$, e assim por diante.
+Em contraste com essa definição poderíamos ter a imagem coluna por coluna, o que alteraria
+alguns cálculos internos, mas é possível adaptar o sistema desenvolvido de forma bastante simples.
+
 Nas seções seguintes serão descritas mais a fundo cada uma das etapas, seguindo a ordem
 apresentada na imagem, além de explicitar a ligação entre cada um dos blocos funcionais
 do projeto.
 
+\section{Parâmetros do sistema}
+
 \section{Aprendizado de dicionário}
+\label{sec:learn}
 A parte de aprendizado do dicionário é essencial para que a qualidade da representação
 esparsa utilizada seja boa.
 Além disso, para o caso de treinamento a partir de frames de vídeos, caso em que se está
@@ -989,17 +1003,46 @@ Como parametrização....
 
 \section{\textit{Encoder}}
 \subsection{Aquisição do frame}
-Entende-se, nessa etapa, que o frame já está disponível, no formato de imagem colorida,
-pixel a pixel, RGB. Ou seja, a entrada para essa etapa é um frame $m \times n \times 3$,
-sendo a resolução do vídeo $m \times n$. No caso do sistema criado, a ordem dos pixels é 
-com linha a linha, ou seja, primeiro a linha $0$, depois a $1$, e assim por diante.
-Em contraste com essa definição poderíamos ter a imagem coluna por coluna, o que alteraria
-alguns cálculos internos, mas é possível adaptar o sistema de forma bastante simples.
+Essa etapa tem como entrada o frame a ser codificado, sendo que o histórico de frames já
+processados, para a posterior verificação de igualdade, está armazenado também neste
+subsistema.
 
 Já nesse ponto do processamento é necessário ter em vista o tamanho dos patches $p\times p$
 que será utilizado. A escolha deve seguir o parâmetro definido na escolha do dicionário.
-Valor típicos a serem escolhidos são $p=4$ ou $p=8$. No capítulo \ref{sec:results} serão 
+Valores típicos a serem escolhidos são $p=4$ ou $p=8$. No capítulo \ref{sec:results} serão 
 discutidos resultados alcançados com ambas escolhas de tamanho de patch.
+
+A escolha por processar patches se dá pela necessidade do processamento em tempo real, pois 
+os algoritmos relacionados a CS dependem diretamente do tamanho
+dos sinais envolvidos, do tamanho dos dicionários e da esparsidade.
+Porém, o tamanho dos dicionários e a esparsidade precisam ser maiores conforme maior for 
+o sinal, o que leva a um aumento de complexidade mais que linear com o aumento do tamanho dos
+patches, além de uma utilização maior de memória para o dicionário.
+Utilizar patches pequenos possibilita a paralelização dos cálculos.
+No caso do trabalho que está sendo apresentado, em que o processamento dos patches, que será 
+comentado na próxima seção, se dá utilizando a arquitetura da GPU, a utilização de maior 
+paralelismo tende a aumentar a velocidade de processamento.
+Como já comentado na seção \ref{sec:learn}, existe também um \textit{trade-off} entre 
+diminuir o tamanho do patch e aumentar a compressão.
+
+Tomada a imagem RGB $\mat{I}$ de dimensões $m \times n \times 3$, ela será separada em patches
+$p \times p \times 3$, sem sobreposição. Por exemplo, um dos patches iniciará em $\mat{I_{0,0}}$
+e terá parte em $p$ linhas e $p$ colunas, indo a $\mat{I_{p-1, p-1}}$. Em seguida, o próximo
+patch iniciará em $\mat{I_{0, p}}$ e terminará em $\mat{I_{p-1, 2p-1}}$.
+Nos finais de linha e de coluna, os valores de $m$ e $n$ podem não ser divisíveis por $p$,
+o que gera um resíduo. Nesse caso foi adotada a solução que o padrão JPEG utiliza de repetir
+o último pixel a esquerda para as colunas e o pixel acima para as linhas, até que chegue-se
+a um patch $p \times p$.
+Junto ao processo de tomada dos patches, estes são vetorizados, também no formato 
+de linhas antes e colunas depois, para cada pixel RGB.
+Como resultado final, pode-se dizer que a imagem $\mat{I}$ foi separada em 
+\begin{equation*}
+    K = \ceil*{\frac{m}{p}} \ceil*{\frac{n}{p}}
+\end{equation*}
+sinais de dimensão $L = 3p^2$. Podemos escrever esses sinais como uma matriz 
+$\mat{X}\in \mathbb{R}^{L\times K}$, 
+na qual cada coluna $\vec{x_i}$ da matriz representa um dos patches vetorizados.
+% Criar imagem para representar
 
 \subsection{Codificação esparsa dos patches}
 
@@ -1018,6 +1061,7 @@ discutidos resultados alcançados com ambas escolhas de tamanho de patch.
 \label{sec:results}
 
 \chapter{Conclusão}
+
 
 % referências
 % aqui será usado o environment padrao `thebibliography'; porém, sugere-se
