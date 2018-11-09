@@ -61,6 +61,8 @@
 
 \usepackage{mathtools}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
 
 % 
 % Informações gerais
@@ -188,10 +190,10 @@
 \end{listofabbrv}
 
 % idem para a lista de símbolos
-\begin{listofsymbols}{$\alpha\beta\pi\omega$}
-    \item[$\sum{\frac{a}{b}}$] Somatório do produtório
-    \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
-\end{listofsymbols}
+% \begin{listofsymbols}{$\alpha\beta\pi\omega$}
+%     \item[$\sum{\frac{a}{b}}$] Somatório do produtório
+%     \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
+% \end{listofsymbols}
 
 % sumario
 \tableofcontents
@@ -931,7 +933,8 @@ do trabalho de forma detalhada.
 
 O trabalho proposto visa desenvolver uma metodologia para codificação de vídeos em
 tempo real, utilizando pré-aprendidos dicionários relacionados ao próprio vídeo.
-Por ser um \textit{framework} com foco em tempo real, naturalmente se põe em questão 
+Por ser um \textit{framework} com foco em tempo real, transmissão e recepção, 
+naturalmente se põe em questão 
 a necessidade de definir as funções que serão desenvolvidas por parte do \textit{encoder}
 e por parte do \textit{decoder}.
 
@@ -950,15 +953,43 @@ Entende-se que os frames processados estarão no formato de imagem colorida,
 pixel a pixel, RGB (Red, Green, Blue). Ou seja, a entrada para essa etapa é um frame 
 $m \times n \times 3$,
 sendo a resolução do vídeo $m \times n$. No caso do sistema criado, a ordem dos pixels é 
-com linha a linha, ou seja, primeiro a linha $0$, depois a $1$, e assim por diante.
+linha a linha, ou seja, primeiro a linha $0$ e todas suas colunas, depois a $1$, e assim por diante.
 Em contraste com essa definição poderíamos ter a imagem coluna por coluna, o que alteraria
-alguns cálculos internos, mas é possível adaptar o sistema desenvolvido de forma bastante simples.
+alguns cálculos internos, sendo possível adaptar o sistema desenvolvido de forma bastante simples.
+
+Em seguida são definidas as nomenclaturas de alguns parâmetros importantes do
+\textit{framework} proposto.
+
+\section{Parâmetros do sistema}
+Nessa seção serão mostrados os parâmetros do sistema que serão utlizados nas próximas
+seções. 
+As escolhas e resultados obtidos com a alteração dos parâmetros serão discutidas no 
+capítulo \ref{sec:results}.
+
+\begin{table}[h]
+    \caption{Parâmetros do sistema}
+    % OBS: não use \begin{center}, pois este aumenta o espaçamento entre a caption/legend e a tabela
+    % Para figuras, a aparência é melhor com o espaçamento extra
+    \centering
+        \begin{tabular}{|c|p{10cm}|}
+          \hline
+          \multicolumn{1}{|c|}{\textit{Parâmetro}} & 
+            \multicolumn{1}{c|}{\textit{Descrição}}\\
+          \hline
+          \hline
+          $p$    & Tamanho do patch \\ 
+          $s$    & Valor máximo de esparsidade de cada patch \\     
+          $K$    & Número de átomos do dicionário \\
+          $q$    & Esparsidade de envio da informação, $q \le s$ \\
+          \hline
+        \end{tabular}
+    \legend{Fonte: O Autor}
+    \label{tbl:params}
+\end{table}
 
 Nas seções seguintes serão descritas mais a fundo cada uma das etapas, seguindo a ordem
 apresentada na imagem, além de explicitar a ligação entre cada um dos blocos funcionais
 do projeto.
-
-\section{Parâmetros do sistema}
 
 \section{Aprendizado de dicionário}
 \label{sec:learn}
@@ -1092,15 +1123,115 @@ $\mat{\Gamma_i} \in \mathbb{R}^{K \times s}$, sendo que cada coluna $(\mat{\Gamm
 j-esparsa.
 
 \subsection{Quantização e compressão}
+A partir da codificação esparsa apresentada na seção anterior, a ideia dessa seção é 
+fazer com que a codificação seja a mais comprimida possível, sem perdas tão sensíveis
+na representação do sinal.
+Além disso, ao final dessa seção, é necessário que haja uma representação em formato de 
+\textit{stream} de bytes, para ser enviada ou armazenada pelo pelo \textit{encoder}.
+
+Primeiramente, o sinal é quantizado uniformemente em 8bits. 
+Para isso, é necessário identificar-se os coeficientes máximo $u$ e mínimo $l$ em $\mat{\Gamma}$.
+Em seguida, cada coeficiente $c$ de $\mat{\Gamma}$ é quantizado de acordo com a seguinte equação:
+\begin{equation*}
+    c' = \floor*{0,5 + 255\frac{c - l}{u - l}}
+\end{equation*}
+
+Um dos parâmetros que entra em ação é o de esparsidade de envido da informação, $q$. 
+Ele é o responsável pela escolha de qual será o nível de esparsidade escolhido,
+dado que $1 \le q \le s$.
+A partir desse parâmetro escolhem-se as colunas $q$ de cada $\mat{\Gamma_i}$ (já quantizado), 
+formando $\mat{C} \in \mathbb{N}^{K \times T}$.
+Para representação de $\mat{C}$ são utilizadas as matrizes $\mat{V} \in \mathbb{N}^{q \times T}$ e
+$\mat{R} \in \mathbb{N}^{q \times T}$, sendo que $\mat{V}$ representa os coeficientes não nulos de
+$\mat{C}$ e $\mat{R}$ representa os índices dos mesmos.
+
+Para geração do \textit{bitstream}, são criados vetores a partir de $\mat{V}$ e $\mat{R}$.
+Uma consideração importante é que nem sempre os $q$ índices de um patch estarão completos.
+Nesse caso foi inserido um valor inválido no vetor de índices, enquanto o vetor de coeficientes
+mantém os valores.
+
+Como exemplo prático, selecione-se $q=3$ e $K=16$,
+\begin{equation*}
+    \mat{V} = 
+    \begin{bmatrix}
+        189 & 36 & 114 \\
+        45  & -1 & 32  \\
+        8   & -1 & -1
+    \end{bmatrix},
+    \mat{R} = 
+    \begin{bmatrix}
+        7 & 12 & 15 \\
+        1  & -1 & 3  \\
+        5   & -1 & -1
+    \end{bmatrix}
+\end{equation*}
+tal que as entradas com valor $-1$ correspondem a entradas que não foram necessárias. 
+Dessa forma, os vetores $\vec{v}$ e $\vec{r}$ serão os seguintes: 
+\begin{center}
+    $\vec{v} = \left[ 189, 45, 8, 36, 114, 32 \right]$ \\
+    $\vec{r} = \left[ 7,1,5,12,-1,15,3,-1 \right]$ 
+\end{center}
+
+Ainda em tempo, considerando que alguns dos patches não foram recalculados, estes 
+também não precisam ser reenviados. 
+Para marcar em que ponto isso acontece foi utilizado o valor $-2$ em $\vec{r}$, 
+seguido do número de patches não enviados.
+
+Esses vetores, mais a informação de máximo, mínimo e $q$ precisam ser empacotados 
+e comprimidos para enviar ao decoder.
+
+\textbf{ESCREVER SOBRE COMPRESSÃO!!!}
 
 \section{\textit{Decoder}}
 
 \subsection{Decompressão e dequantização}
+\label{sec:decdeq}
+
+\textbf{ESCREVER SOBRE DECOMPRESSÃO!!!}
+
+A partir do sinal decomprimido deve-se recuperar as matrizes $\mat{V}$ e $\mat{R}$
+tomandos os vetores $\vec{v}$ e $\vec{r}$ recebidos.
+
+Em seguida é necessário recompor os coeficientes quantizados 
+executando a operação inversa a de quantização.
+Considerando $c'$ cada coeficiente recebido, $u$ o maior valor e $l$ o menor, 
+valores todos recebidos,
+\begin{equation*}
+    c = \frac{c' (u - l)}{255} + l
+\end{equation*}
+
+Por fim, inicializada com zeros uma matriz $\mat{\Gamma} \in \mathbb{R}^{K \times T}$,
+basta associar $\mat{\Gamma_{\mat{R_{:,i}}, i}} = \mat{V_{:,i}}$ para todo $1 \le i \le T$.
+
+Vale lembrar que alguns dos patches podem não ter sido recebidos. 
+Essa informação deve ser passada adiante para que somente os patches modificados
+sejam reprocessados.
+
+Terminada essa etapa procede-se com a recuperação dos patches.
 
 \subsection{Recuperação dos patches}
+A recuperação dos patches por parte do \textit{decoder} é um processo muito simples,
+pois incorre somente em uma multiplicação entre o dicionário $\mat{D}$ e a 
+representação esparsa recebida $\mat{\Gamma}$.
+
+De tal modo, podemos definir que a matriz de patches $\mat{X} = \mat{D} \mat{\Gamma}$.
+Uma simplificação que pode aumentar a velocidade da decodificação é não criar a matriz $\mat{\Gamma}$,
+ou seja, utilizar as informações de $\mat{V}$ e $\mat{R}$ para formar $\mat{X}$. 
+Esse procedimento tende a ser mais eficiente, pois quando formada a matriz $\mat{\Gamma}$, 
+a maior parte dos coeficientes dessa matriz é nulo, por se tratar de uma representação esparsa.
+Porém, aplicando uma multiplicação da forma natural, esse fato é desconsiderado e acabam
+acontecendo mais operações de multiplicação do que o necessário.
 
 \subsection{Reconstrução do frame}
+A reconstrução do frame se dá exatamente da forma contrária a separação por patches.
 
+Vale notar que alguns dos patches não precisarão ser atualizados.
+Essa informação foi recebida pelo \textit{decoder} na etapa \ref{sec:decdeq} e repassada
+até essa etapa.
+
+Assim, cada um dos patches de $\mat{X}$, que estavam vetorizados, são novamente transformados
+em matrizes de dimensão $p \times p \times 3$, e colocados em sua devida posição, formando
+a imagem recebida $I$ de dimensões $m \times n$.
 
 \chapter{Resultados}
 \label{sec:results}
