@@ -526,6 +526,7 @@ Um dos principais algoritmos é o \textit{Orthogonal Matching Pursuit (OMP)}, an
 Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 
 \begin{algorithm}[H]
+\label{algo:omp}
 \caption{\textit{Orthogonal Matching Pursuit (OMP)}}
 \Entrada{Matriz de medidas $m \times d$ $\mathbf{\Phi}$, Vetor de $m$ medidas $\vec{y}$, nível de esparsidade $s$}
 \Saida{Estimativa do sinal ideal $\vec{f'} \in \mathbb{R}^d$}
@@ -993,12 +994,16 @@ A fase de aprendizado do dicionário, por envolver um tempo maior de processamen
 deve ser executada antes da transmissão de tempo real. Isso é possível, mesmo que não
 se conheça a transmissão em si, mas se conheça que tipo de conteúdo será transmitido.
 
-Um importante parâmetro que deve ser escolhido é o número de átomos do dicionário.
+Um importante parâmetro que deve ser escolhido é o número de átomos $K$ do dicionário.
 Escolhas de valores maiores tendem a proporcionar maior qualidade na representação do vídeo,
 porém com perda de desempenho. No capítulo \ref{sec:results} serão mostrados resultados
 de escolhas diferentes no número de átomos do dicionário.
 
 Como parametrização....
+
+
+O resultado final desse etapa será um dicionário $\mat{D} \in \mathbb{R}^{3p^2 \times K}$,
+que será utilizado nas etapas seguintes de codificação e decodificação.
 
 
 \section{\textit{Encoder}}
@@ -1037,14 +1042,54 @@ Junto ao processo de tomada dos patches, estes são vetorizados, também no form
 de linhas antes e colunas depois, para cada pixel RGB.
 Como resultado final, pode-se dizer que a imagem $\mat{I}$ foi separada em 
 \begin{equation*}
-    K = \ceil*{\frac{m}{p}} \ceil*{\frac{n}{p}}
+    T = \ceil*{\frac{m}{p}} \ceil*{\frac{n}{p}}
 \end{equation*}
 sinais de dimensão $L = 3p^2$. Podemos escrever esses sinais como uma matriz 
-$\mat{X}\in \mathbb{R}^{L\times K}$, 
+$\mat{X}\in \mathbb{R}^{L\times T}$, 
 na qual cada coluna $\vec{x_i}$ da matriz representa um dos patches vetorizados.
 % Criar imagem para representar
 
+Além do processo de vetorização, este subsistema também verifica se o patch atual $i$ é 
+igual ao anterior. Caso seja, marca um vetor $\vec{c}\in \mathbb{R}^T$, que indica os 
+patches que precisam ou não ser recalculados.
+A métrica considera que um patch deve ser recalculado caso qualquer um dos valores dos 
+pixels inseridos nele mudem.
+Esse simples cálculo sobre os patches garante que, para vídeos estáticos, o desempenho
+da aplicação seja acelerada.
+Grande parte dos vídeos possuem partes com essas características, e esse cálculo simples
+não aumenta significativamente a complexidade do sistema como um todo.
+
 \subsection{Codificação esparsa dos patches}
+A partir dos patches $\mat{X}$ da etapa anterior, do dicionário $\mat{D}$, e do parâmetro 
+de esparsidade desejada $s$, pode-se formular o problema de codificação esparsa, tal que 
+$\vec{\gamma_i}$ seja a representação esparsa de $\vec{x_i}$, como segue:
+\begin{equation}
+    \vec{\gamma_i} = \underset{\vec{\gamma}}{argmin} \lVert \vec{x_i} - \mat{D}\vec{\gamma} \rVert_2^2
+    \hspace{1em} \text{sujeito a} \hspace{1em}
+    \lVert \vec{\gamma} \rVert_0 \le s,
+    \text{ para todo } i.
+\end{equation}
+
+O problema acima, como citado anteriormente, pode ser resolvido via OMP.
+A implementação básica escolhida para o sistema foi baseada na biblioteca SPAMS.
+%% CIIIIIIIIIIIIITARRR
+A partir dela, foi desenvolvida uma versão em CUDA, focada em paralelizar o algoritmo
+OMP para cada $(\vec{x_i}, \vec{\gamma_i})$. Assim, foi possível calcular a representação
+em tempo suficiente para transmissão em tempo real, conforme será verificado no capítulo 
+de resultados \ref{sec:results}.
+
+Um importante fato a ser considerado pelo algoritmo \ref{algo:omp} é que, a cada iteração,
+ele descobre a melhor solução para essa esparsidade. Ou seja, se escolhida esparsidade $s=5$,
+por exemplo, é possível armazenar-se os resultados com esparsidade $s=1,...,5$. 
+A utlidade desse fato se dá no controle da taxa de transmissão, pois quanto mais esparsa a 
+representação, menor a taxa. 
+Portanto, com a aplicação do OMP, já se é possível gerar as melhores e piores representações.
+Imaginando múltiplas transmissões a partir do mesmo \textit{encoder}, cada uma poderia ter 
+uma taxa diferente sem ser necessários mais cálculos nessa etapa.
+
+Como resultado final dessa etapa, teremos, para cada patch $i$, uma matriz de representação
+$\mat{\Gamma_i} \in \mathbb{R}^{K \times s}$, sendo que cada coluna $(\mat{\Gamma_i})_j$ é 
+j-esparsa.
 
 \subsection{Quantização e compressão}
 
