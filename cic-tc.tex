@@ -202,124 +202,6 @@
 
 % introducao
 \chapter{Introdução}
-No início dos tempos, Donald E. Knuth criou o \TeX. Algum tempo depois, Leslie Lamport criou o \LaTeX. Graças a eles, não somos obrigados a usar o Word nem o LibreOffice.
-
-\section{Figuras e tabelas}
-
-\begin{figure}[h]
-    \caption{Descrição da Figura deve ir no topo}
-    \begin{center}
-        % Aqui vai um includegraphics , um picture environment ou qualquer
-        % outro comando necessário para incorporar o formato de imagem
-        % utilizado.        
-        \begin{picture}(100,100)
-            \put(0,0){\line(0,1){100}}
-            \put(0,0){\line(1,0){100}}
-            \put(100,100){\line(0,-1){100}}
-            \put(100,100){\line(-1,0){100}}
-            \put(10,50){Uma Imagem}
-        \end{picture}    
-    \end{center}
-    \label{fig:estrutura}
-    \legend{Fonte: Os Autores}
-\end{figure}
-
-
-% \begin{figure}
-%     \caption{Exemplo de figura importada de um arquivo e também exemplo de caption muito grande que ocupa mais de uma linha na Lista~de~Figuras}
-%     \begin{center}
-%         \includegraphics[width=8em]{fig}
-%     \end{center}
-%     \legend{Fonte: Os Autores}
-%     \label{fig:ex1}
-% \end{figure}
-
-% o `[h]' abaixo é um parâmetro opcional que sugere que o LaTeX coloque a
-% figura exatamente neste ponto do texto. Somente preocupe-se com esse tipo
-% de formatação quando o texto estiver completamente pronto (uma frase a mais
-% pode fazer o LaTeX mudar completamente de idéia sobre onde colocar as
-% figuras e tabelas)
-% \begin{figure}[h]
-\begin{figure}
-    \caption{Exemplo de figura desenhada com o environment \texttt{picture}.}
-    \begin{center}
-        \setlength{\unitlength}{.1em}
-        \begin{picture}(100,100)
-            \put(20,20){\circle{20}}
-            \put(20,20){\small\makebox(0,0){a}}
-            \put(80,80){\circle{20}}
-            \put(80,80){\small\makebox(0,0){b}}
-            \put(28,28){\vector(1,1){44}}
-        \end{picture}
-    \end{center}
-    \legend{Fonte: Os Autores}
-    \label{fig:ex2}
-\end{figure}
-
-Tabelas são construídas com praticamente os mesmos comandos. Ver a tabela \ref{tbl:ex1}.
-
-\begin{table}[h]
-    \caption{Uma tabela de Exemplo}
-    % OBS: não use \begin{center}, pois este aumenta o espaçamento entre a caption/legend e a tabela
-    % Para figuras, a aparência é melhor com o espaçamento extra
-    \centering
-        \begin{tabular}{c|c|p{5cm}}
-          \hline
-          \textit{Col 1}  &   \textit{Col 2}  &   \textit{Col 3} \\
-          \hline
-          \hline
-          Val 1           &   Val 2           & Esta coluna funciona como um parágrafo, tendo uma margem definida em 5cm. Quebras de linha funcionam como em qualquer parágrafo do tex. \\
-          Valor Longo     & Val 2             & Val 3 \\
-          \hline
-        \end{tabular}
-    \legend{Fonte: Os Autores}
-    \label{tbl:ex1}
-\end{table}
-
-\subsection{Formato de Figuras}
-\label{sec:fig_format}
-
-O LaTeX permite utilizar vários formatos de figuras, entre eles \emph{eps}, \emph{pdf}, \emph{jpeg} e \emph{png}. Programas de diagramação como Inkscape (e mesmo LibreOffice) permitem gerar arquivos de imagens vetoriais que podem ser utilizados pelo LaTeX sem dificuldade. Pacotes externos permitem utilizar SVG e outros formatos.
-
-Dia e xfig são programas utilizados por dinossauros para gerar figuras vetoriais. Se possível, evite-os.
-
-\subsection{Classificação dos etc.}
-
-O formato do instituo de informática define 5 níveis: capítulo, seção, subseção e outros 2 sem nome.
-
-\subsubsection{Subsubseção}
-Exemplo de uma subsubseção.
-
-\paragraph{Parágrafo}
-Exemplo de um parágrafo.
-
-\section{Sobre as referências bibliográficas}
-
-A classe \emph{iiufrgs} faz uso do pacote \emph{abnTeX2} com algumas alterações
-feitas por Sandro Rama Fiorini. Culpe ele se algo der errado. Agradeça a ele
-pelo que der certo. As modificações dão uma camada de tinta NATBIB-style,
-já que o abntex2 usa uns comandos de citação feitos para alienígenas de 5 braços
-wtf. Exemplos de citação:
-
-\begin{itemize}
-    \item \emph{cite}: Unicórnios são verdes \cite{WirelessXiangCai};
-    \item \emph{citep}:Unicórnios são verdes \citep{WirelessXiangCai};
-    \item \emph{citet}: Segundo \citet{WirelessXiangCai}, unicórnios são
-    verdes.
-    \item \emph{citen or citenum}: Segundo \citen{WirelessXiangCai},
-    unicórnios são verdes.
-    \item \emph{citeauthor e citeyearpar}: Segundo artigos de
-    \citeauthor{WirelessXiangCai} , unicórnios são verdes
-    \citeyearpar{WirelessXiangCai}.
-
-\end{itemize}
-
-O estilo abnt fornecido antigamente pelo UTUG não é mais recomendado, pois não
-produz saída de acordo com as exigências da biblioteca.
-
-Recomenda-se o uso de bibtex para gerenciar as referências (veja o arquivo
-biblio.bib).
-
 
 \chapter{Referencial Teórico}
 
@@ -902,13 +784,19 @@ imagens, principalmente \cite{MairalSparse}:
 \section{Codificação de Huffman}
 
 \section{Codificação de Vídeo}
+\label{sec:codvideo}
 
 \section{Introdução a CUDA}
 
 \chapter{Trabalhos Relacionados}
 Neste capítulo serão abordados alguns trabalhos que se relacionam com a proposta apresentada.
-O foco principal da proposta está na codificação esparsa de frames utilizando dicionários
-previamente treinados, focando em vídeos e buscando fazer o processo em tempo real.
+O foco principal da proposta está na codificação esparsa de frames de vídeos utilizando dicionários
+previamente treinados, buscando executar o processo em tempo real.
+
+Todos os trabalhos encontrados, bem como os padrões de vídeo existentes,
+utilizam a técnida de separar os frames em blocos, ou \textit{patches},
+para que a aplicação das técnicas de transformação e compressão sejam 
+mais eficientes.
 
 \citet{BRYTFACEKSVD}, em seu trabalho, fizeram a compressão de imagens de faces, 
 utilizando o algoritmo K-SVD para aprendizado de um dicionário. 
@@ -921,11 +809,40 @@ de 512 átomos. A partir dessas definições, \citet{BRYTFACEKSVD} chegaram a re
 com alta taxa de compressão, e ótimas qualidades de recuperação da imagem.
 Os resultados alcançados pelos autores indicam a possibilidade de se utilizar essa
 metodologia de forma menos restritiva, com, possivelmente, resultados menos impressionantes
-em qualidade ou em compressão.
+tanto em qualidade quanto em compressão.
 
+Alguns trabalhos utilizam as teorias de CS para enviarem amostragens dos blocos
+dos vídeos por parte do \textit{encoder}, utilizando-se dos teoremas provados pela teoria.
+\citet{NebotDVC} apresentou um trabalho exatamente nesse sentido.
+Seguindo o mesmo caminho, e buscando aprimorar a técnica apresentada por \citeauthor{NebotDVC}, 
+\citet{DoDISCOS} propõe uma mescla entre os métodos tradicionais de codificação de vídeos
+e a utilização de CS, conseguindo bons resultados e abrindo horizontes nesse sentido.
+Em ambos trabalhos, a etapa de CS deve ser executada por parte do \textit{decoder}, 
+o que é bastante custoso do ponto de vista de vídeos de maior resolução.
 
-% Continuar e terminar...
+\citet{ZhangVideoCS} propõe um método que também mescla os métodos existentes
+com a ideia de enviar amostragens. 
+No trabalho proposto, apresenta uma forma de definir como cada bloco será codificado,
+se utilizando amostragem ou DCT.
+Os blocos que utlizam amostragem executam o processo de minimização da norma TV, 
+enquanto os demais blocos aplicam a DCT inversa, por parte do \textit{decoder}.
+A técnica foi incorporada a codificação H.264, chegando a ganhos significativos na
+codificação \cite{ZhangVideoCS}.
 
+Além destes trabalhos, o uso de CS para aprimorar vídeos de baixa qualidade foi 
+apresentado por \citet{WirelessXiangCai}, com foco em distribuição de vídeos para
+redes Wireless.
+O uso de CS, nesse caso, se dá com o intuito de, além de melhorar os vídeos de baixa
+qualidade e \textit{bitrate}, fornecer um canal capaz de lidar com ruído, 
+tal qual a teoria de CS prevê.
+
+Todos os trabalhos citados anteriormente utilizam como dicionário a DCT.
+No sentido de utilizar técnicas de aprendizado de dicionários, 
+\citet{chen2010dictionary} apresenta uma proposta baseada na de \citet{ZhangVideoCS},
+porém, por parte do \textit{decoder}, ao invés de utilizar algum dicionário conhecida,
+utilizar um aprendido.
+
+% Ler o Lima e falar sobre com mais intensidade...
 
 \chapter{Proposta}
 Após considerar o desenvolvimento da área de CS e de aprendizado de dicionários e 
@@ -938,6 +855,11 @@ Por ser um \textit{framework} com foco em tempo real, transmissão e recepção,
 naturalmente se põe em questão 
 a necessidade de definir as funções que serão desenvolvidas por parte do \textit{encoder}
 e por parte do \textit{decoder}.
+
+% A proposta foca na codificação de frames a partir de dicionários previamente treinados,
+% apresentando um novo olha sobre a transformação aplicada aos frames.
+% As técnicas apresentadas de forma resumida na seção \ref{sec:codvideo} podem ser 
+% aplicadas juntamente a metodologia apresentada.
 
 A imagem a seguir apresenta um diagrama geral de blocos, dividindo entre \textit{encoder}
 e \textit{decoder}, além de representar blocos funcionais de cada uma das partes de 
