@@ -16,8 +16,9 @@ trabalho, bem como dúvidas e conclusões.
 [ x ] Compressed Sensing \
 [ x ] Dictionary Learning \
 [ _ ] Codificação de vídeos \
-[ _ ] Trabalhos relacionados \
-[ _ ] Proposta \
+[ _ ] CUDA \
+[ x ] Trabalhos relacionados \
+[ x ] Proposta \
 [ _ ] Resultados \
 [ _ ] Conclusão
 

@@ -92,7 +92,7 @@
 % \renewcommand{\nominataReitname}{Reitora}
 % \renewcommand{\nominataPRE}{Prof.~Jos{\'e} Carlos Ferraz Hennemann}
 % \renewcommand{\nominataPREname}{Pr{\'o}-Reitor de Ensino}
-% \renewcommand{\nominataPRAPG}{Prof\textsuperscript{a}.~Joc{\'e}lia Grazia}
+\renewcommand{\nominataPRAPG}{Prof.~Vladimir Pinheiro do Nascimento}
 % \renewcommand{\nominataPRAPGname}{Pr{\'o}-Reitora Adjunta de P{\'o}s-Gradua{\c{c}}{\~a}o}
 % \renewcommand{\nominataDir}{Prof.~Philippe Olivier Alexandre Navaux}
 % \renewcommand{\nominataDirname}{Diretor do Instituto de Inform{\'a}tica}
@@ -842,7 +842,28 @@ No sentido de utilizar técnicas de aprendizado de dicionários,
 porém, por parte do \textit{decoder}, ao invés de utilizar algum dicionário conhecida,
 utilizar um aprendido.
 
-% Ler o Lima e falar sobre com mais intensidade...
+% Ler o Lima e falar sobre com mais intensidade... OK
+\citet{lima2012codificaccao} apresenta em seu trabalho um codec de vídeo bastante 
+próximo ao proposto.
+Em sua proposta, o autor utiliza o algoritmo K-SVD para treinamento de um dicionário
+de 256 átomos, seguindo a proposta de \citeauthor{BRYTFACEKSVD}, conforme descrito
+anteriomente.
+Para a decomposição, também utiliza o algoritmo OMP, utilizando blocos $8\times8$,
+sem sobreposição.
+As principais diferenças entre o trabalho descrito e o proposto
+estão no uso do ODL como algoritmo de treinamento de dicionários, 
+além da forma como são processados os blocos.
+No trabalho descrito, \citeauthor{lima2012codificaccao} utiliza a diferença entre o
+bloco anterior e o atual ou somente o atual, dado um limite. 
+No trabalho proposto, sempre será utilizado o bloco atual.
+Porém, quando a diferença não for significativa, não recalculará a representação do bloco.
+A escolha se dá pelo fato de que o dicionário base foi treinado para os blocos 
+não residuais, e que, portanto, espera-se que a representação tenha melhores resultados 
+para estes.
+
+No próximo capítulo será detalhada a proposta do trabalho, explicitando detalhes
+da implementação.
+Em seguida, testes e resultados serão apresentados com base na proposta.
 
 \chapter{Proposta}
 Após considerar o desenvolvimento da área de CS e de aprendizado de dicionários e 
