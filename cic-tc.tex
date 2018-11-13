@@ -42,6 +42,10 @@
 \usepackage{amsthm}      % Teoremas
 \usepackage{thmtools}    % Front end para amsthm (\declaretheorem)
 \usepackage{icomma}
+\usepackage{listings}
+\usepackage{tcolorbox}
+
+\newcommand{\lstfont}[1]{\color{#1}\scriptsize\ttfamily}
 
 \declaretheorem[style=definition,name=Definição,parent=chapter,qed=\textemdash]{definicao}
 \declaretheorem[style=plain,name=Teorema,qed=\textnormal{\textemdash}]{teorema}
@@ -58,10 +62,30 @@
 
 \renewcommand{\vec}[1]{\bm{#1}}
 \newcommand{\mat}[1]{\bm{#1}}
+\newcommand{\reg}{\textsuperscript{\textregistered}}
 
 \usepackage{mathtools}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+
+\lstset{
+    language=[ANSI]C++,
+    showstringspaces=false,
+    backgroundcolor=\color{white},
+    basicstyle=\lstfont{black},
+    identifierstyle=\lstfont{black},
+    keywordstyle=\lstfont{blue!95},
+    numberstyle=\lstfont{black},
+    stringstyle=\lstfont{cyan},
+    commentstyle=\lstfont{green!90},
+    emph={
+        cudaMalloc, cudaFree,
+        __global__, __shared__, __device__, __host__,
+        __syncthreads,
+    },
+    emphstyle={\lstfont{green!60!black}}
+}
 
 
 % 
@@ -187,6 +211,7 @@
     \item[CoSaMP] Compressive Sampling Matching Pursuit 
     \item[ODL] Online Dictionary Learning 
     \item[DCT] Discrete Cosine Transform 
+    \item[GPU] Graphical Processing Unit
 \end{listofabbrv}
 
 % idem para a lista de símbolos
@@ -562,7 +587,7 @@ Tomando a nova definição, \citet{CANDESDICTS} provou o seguinte teorema sobre 
     a D-RIP de ordem $s$.
     Então, a solução $\vec{f'}$ para a análise $\ell_1$ satisfaz:
     \begin{equation*}
-        \lVert \vec{f'} - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \mathbf{D}^* \vec{f} - \left( \mathbf{D}^* \vec{f} \right)_s}{\sqrt{s}} \right],
+        \lVert \vec{f'} - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \mathbf{D}^* \vec{f} - \left( \mathbf{D}^* \vec{f} \right)_s \rVert_1}{\sqrt{s}} \right],
     \end{equation*}
     tal que $\left( \mathbf{D}^* \vec{f} \right)_s$ denota o vetor com os $s$ maiores coeficientes em 
     magnitude de $\mathbf{D}^* \vec{f}$ e $C$ é uma constante tal que $C \ge 0$.
@@ -786,7 +811,94 @@ imagens, principalmente \cite{MairalSparse}:
 \section{Codificação de Vídeo}
 \label{sec:codvideo}
 
-\section{Introdução a CUDA}
+
+\section{Introdução a CUDA\reg}
+CUDA\reg é uma plataforma de programação paralela, bem como um modelo de programação, 
+desenvolvido pela NVIDIA para aplicações computacional em geral poderem ser executadas
+em GPU's.
+Sua primeira versão foi lançada em 2006.
+Desde então, diversas empresas e trabalhos acadêmicos utilizaram a plataforma.
+Além da forte utilização, também bibliotecas baseadas na plataforma surgiram, 
+com o intuito de prover funções para aplicações já conhecidas como paralelizáveis.
+Exemplos de tais plataformas são cuFFT, para aplicações com transformada de Fourier,
+cuBLAS, para álgebra linear básica, NPP, para processamento de vídeo, imagens e 
+sinais em geral.
+
+A plataforma tem ótimos resultados para algoritmos, procedimentos, que possam utilizar
+fortemente o paralelismo.
+Atualmente, GPU's podem possuir mais de 4000 cores, por exemplo, a Nvidia Geforce RTX 2080 Ti,
+além de serem capazes de rodarem 32 threads simultaneamente.
+Todos os cores, ou pelo menos aqueles que forem designados para determinada aplicação,
+devem estar rodando o mesmo código, porém com valores de variáveis que podem ser diferentes.
+
+A arquitetura de CUDA\reg se dá como na figura abaixo.
+Ao ser executado um determinado \textit{kernel}, este é distribuído em um \textit{grid}
+com $B$ blocos, cada blocs com $T$ threads.
+Dentro de um bloco pode ser compartilhada memória de rápido acesso, enquanto para 
+acesso fora do bloco precisa-se de memória global.
+\begin{figure}[H]
+    \caption{Arquitetura de CUDA\reg}
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{img/CUDAarch.png}
+    \end{center}
+    \legend{Fonte: CUDA.....}
+\end{figure}
+
+Os resultados que CUDA\reg apresenta são muito consistentes para algoritmos claramente
+paralelizáveis, como é possível verificar no gráfico abaixo, que apresenta o 
+\emph{speedup} alcançado por funções da cuBLAS em comparação com as mesmas funções 
+executadas na CPU.
+\begin{figure}[H]
+    \caption{Speedup de cuBLAS (GPU) em relação a MKL BLAS (CPU)}
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{img/cublas9_2.png}
+    \end{center}
+    \legend{Fonte: CUDA.....}
+\end{figure}
+
+
+Em geral o uso da interface com CUDA, através de alguma das linguagens de programação 
+que permitem o uso, tais quais Python, C++, Fortran, se dá nas seguintes etapas:
+\begin{enumerate}
+    \item Alocação inicial de memória da GPU;
+    \item Envio dos dados para a GPU;
+    \item Processamento das informações;
+    \item Aquisição dos dados;
+    \item Liberação de memória da GPU.
+\end{enumerate}
+
+Os passos de alocação e liberação de memória demandam bastante tempo de CPU.
+Em geral, para ganhos de performance, tenta-se alocar memória somente no início da
+execução da aplicação, enviando, processando e recuperando as computações executadas 
+sem gerar novas alocações.
+
+Para exemplificar o quão simples é executar programas claramente paralelos em 
+CUDA\reg, a seguir está descrito um \textit{kernel} que soma duas matrizes,
+$\mat{A}$ e $\mat{B}$, colocando o resultado em $\mat{C}$.
+\begin{center}
+    \begin{lstlisting}
+        __global__ void MatAdd(float A[N][N], float B[N][N],
+                               float C[N][N])
+        {
+            int i = threadIdx.x;
+            int j = threadIdx.y;
+            C[i][j] = A[i][j] + B[i][j];
+        }
+        \end{lstlisting}
+\end{center}
+
+É possível perceber que, além da simplicidade do código, a sintaxe é muito próxima ao C. 
+Esse fato pode ser considerado uma ajuda para a popularização da plataforma.
+Também é possível verificar como se dá o paralelismo. 
+Através dos parâmetros $x$ e $y$ de $threadIdx$, seleciona-se qual parte da matriz que 
+será somada. 
+Nesse caso, por simplicidade, é considerado que o \textit{kernel} será criado com apenas
+$1$ bloco, de forma que somente é necessário utilizar o número da thread para definir 
+os índices operados.
+
+A plataforma CUDA\reg foi utlizada no trabalho proposto para a paralelização do algoritmo
+OMP (\ref{algo:omp}), conforme será discutido nos próximos capítulos.
+
 
 \chapter{Trabalhos Relacionados}
 Neste capítulo serão abordados alguns trabalhos que se relacionam com a proposta apresentada.
