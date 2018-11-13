@@ -803,6 +803,10 @@ imagens, principalmente \cite{MairalSparse}:
     \item \textit{Up-scaling}: aumento da resolução de imagens.
 \end{itemize}
 
+Estas aplicações fogem ao escopo do trabalho apresentado, portanto não serão
+aprofundadas nesse referencial, porém são amplamente desenvolvidas por diversos
+autores da área.
+
 % \section{Codificação de Imagens}
 % Decidir se terá ou não
 
@@ -810,10 +814,89 @@ imagens, principalmente \cite{MairalSparse}:
 
 \section{Codificação de Vídeo}
 \label{sec:codvideo}
+A comunicação através de vídeo, nas últimas décadas, tem sido uma das principais formas
+de comunicação, sob as mais diversas formas.
+\citet{SullivanH264} apresenta alguns cenários onde a vídeos digitais são aplicados:
+\begin{itemize}
+    \item Transmissão televisiva via satélite, ou cabo;
+    \item Serviços de conversação via internet;
+    \item Streaming de vídeos;
+    \item Gravação e armazenamento de vídeos, por exemplo DVD.
+\end{itemize}
 
+Se imaginar-se armazenar, por exemplo, apenas uma imagem 720p, RGB, $1280\times720$, 
+sem nenhuma compressão, utilizando $1$ byte por cor, a quantidade de bytes necessários 
+para tal tarefa seria $1280\cdot720\cdot3 = 2764800$ bytes, ou, aproximadamente, $2,7Mb$
+por imagem.
+Expandindo a ideia, um vídeo de $10min$, ou $600s$, utilizando uma taxa de $30$ frames por segundo,
+precisaria de quase $50Gb$ para ser armazenado!
+
+Com esse pequeno exemplo, fica clara a necessidade de codificar os vídeos de forma a
+reduzir substancialmente a quantidade de informação necessária para armazená-los.
+A partir disso, serão descritas algumas características de \textit{codecs} 
+(\emph{\textbf{co}der} e \emph{\textbf{dec}oder} de vídeo) precisam observar.
+
+Um dos princípios básicos utilizados na codificação de vídeos é a de que o olho humano
+é mais sensível ao brilho do que a cor diretamente \cite{SullivanH264}.
+Ou seja, pode ser utilizada mais informação para representar o brilho, enquanto a cor
+pode ser representada com menor precisão.
+De fato é isso que acontece na maioria dos \emph{codecs}. 
+Em geral, é utilizada o espaço de cor Y, Cb, Cr, no qual Y, chamado componente \emph{lumma},
+ou o brilho, em geral é codificado com dimensão 4 vezes maior que Cb e Cr, componentes 
+\emph{chroma} do cinza para o azul (Cb) e do cinza para o vermelho (Cr).
+
+Em alguns \emph{codecs} de vídeo existe a possibilidade de utilizar os formatos
+\emph{progressive} e \emph{interlaced} \cite{SullivanH264}.
+No caso de \emph{progressive}, todo frame é salvo em sequência.
+Já no formato \emph{interlaced}, podem ser utilizados campos entrelaçados.
+Por exemplo, um primeiro campo pode ser as linhas pares do frame, enquanto o segundo
+as linhas ímpares \cite{SullivanH264}.
+No seguimento do texto será utilizado o termo imagem sem diferenciação entre os 
+formatos apresentados.
+
+Técnicas para compressão digital, não somente para vídeos, mas para aplicações em geral,
+podem ser classificadas como segue \cite{SullivanH264}:
+\begin{itemize}
+    \item \textbf{Predição:} Processo no qual são criadas predições sobre a informação 
+    que virá. Caso a predição for de boa qualidade, a diferença entre a predição e a 
+    imagem em si, ou resíduo, será pequena, e, em geral, fácil de codificar, além de mais
+    comprimida.
+    \item \textbf{Transformações:} Este processo é o de buscar outras formas de representar
+    os dados, em geral mais esparsas (ou comprimidas). Por exemplo, para imagens a DCT 
+    fornece uma transformação mais compressível que a utilização da imagem bruta.
+    \item \textbf{Quantização:} O processo de quantização se refere a representar os dados
+    com menor quantidade de informação, ou seja, menos bits. Um exemplo é trocar uma representação 
+    em ponto flutuante por uma representação em inteiros com 8bits.
+    \item \textbf{Codificação de entropia:} Processo que utiliza a redundância de informação para 
+    criar uma tabela de representação na qual a informação mais redundante é codificada
+    com menos bits e a mais, com mais bits. A codificação de Huffman é um exemplo desse processo.
+\end{itemize}
+
+Uma forma simples de fazer compressão de vídeos se dá por tomar cada imagem do vídeos
+separadamente e comprimi-la utilizando técnicas relativas a imagens, por exemplo JPEG \cite{SullivanH264}.
+Essas técnicas atingem certo grau de compressão, porém vídeos possuem grande correlação temporal
+entre seus frames, ou seja, o frame do instante $t$ está fortemente correlato ao frame $t-1$ e
+ao frame $t+1$, em geral.
+Utilizar a forma anterior não aproveita esse fato, o que leva a se imaginar buscar metodologias
+que façam codificação intra-frame e inter-frame.
+
+Um conceito que aproveita a dependência temporal é o MCP (\textit{Motion-compensated prediction}).
+O MCP considera que, muitas vezes, as mudanças durante os vídeos acontecem devido ao movimento.
+Dessa forma, se for possível estimar um vetor de movimento, seria possível fazer uma predição
+de compensação de movimento, uma estimativa de movimento \cite{SullivanH264}. 
+
+Diversas formas de executar-se o MCP foram desenvolvidas pela literatura, unindo ganhos
+na complexidade a ganhos em compressividade e qualidade, utilizando um ou mais imagens 
+do passado como base para criar predições de movimento.
+
+A seguir será explicado, de forma superficial, o funcionamento do codec H.264, com o qual 
+serão feitas comparações nesse trabalho.
+
+\subsection{Codec H.264}
+O codec H.264 foi lançado como padrão em 2003.
 
 \section{Introdução a CUDA\reg}
-CUDA\reg é uma plataforma de programação paralela, bem como um modelo de programação, 
+CUDA\reg~é uma plataforma de programação paralela, bem como um modelo de programação, 
 desenvolvido pela NVIDIA para aplicações computacional em geral poderem ser executadas
 em GPU's.
 Sua primeira versão foi lançada em 2006.
@@ -831,7 +914,7 @@ além de serem capazes de rodarem 32 threads simultaneamente.
 Todos os cores, ou pelo menos aqueles que forem designados para determinada aplicação,
 devem estar rodando o mesmo código, porém com valores de variáveis que podem ser diferentes.
 
-A arquitetura de CUDA\reg se dá como na figura abaixo.
+A arquitetura de CUDA\reg~se dá como na figura abaixo.
 Ao ser executado um determinado \textit{kernel}, este é distribuído em um \textit{grid}
 com $B$ blocos, cada blocs com $T$ threads.
 Dentro de um bloco pode ser compartilhada memória de rápido acesso, enquanto para 
@@ -844,7 +927,7 @@ acesso fora do bloco precisa-se de memória global.
     \legend{Fonte: CUDA.....}
 \end{figure}
 
-Os resultados que CUDA\reg apresenta são muito consistentes para algoritmos claramente
+Os resultados que CUDA\reg~apresenta são muito consistentes para algoritmos claramente
 paralelizáveis, como é possível verificar no gráfico abaixo, que apresenta o 
 \emph{speedup} alcançado por funções da cuBLAS em comparação com as mesmas funções 
 executadas na CPU.
@@ -896,7 +979,7 @@ Nesse caso, por simplicidade, é considerado que o \textit{kernel} será criado 
 $1$ bloco, de forma que somente é necessário utilizar o número da thread para definir 
 os índices operados.
 
-A plataforma CUDA\reg foi utlizada no trabalho proposto para a paralelização do algoritmo
+A plataforma CUDA\reg~foi utlizada no trabalho proposto para a paralelização do algoritmo
 OMP (\ref{algo:omp}), conforme será discutido nos próximos capítulos.
 
 
