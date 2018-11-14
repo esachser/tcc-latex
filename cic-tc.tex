@@ -896,17 +896,59 @@ pelos numerais $1, 2, ..., N$.
 Algo que pode ser assumido, sem perda de generalidade, considerando $P(s)$ a probabilidade de um símbolo
 $s$ qualquer aparecer na mensagem, é que \cite{HuffmanCoding}:
 \begin{equation}
-    P(1) \ge P(2) \ge \cdots \ge P(N)
+    \label{eq:hufprob}
+    P(1) \ge P(2) \ge \cdots \ge P(N).
 \end{equation}
 
 Por consequência, se quisermos uma codificação ótima, o tamanho do código $L(s)$ 
 deve ser \cite{HuffmanCoding}:
 \begin{equation}
-    L(1) \le L(2) \le \cdots \le L(N)
+    \label{eq:huflen}
+    L(1) \le L(2) \le \cdots \le L(N).
 \end{equation}
 
+Pode-se definir, a partir de \eqref{eq:hufprob} e \eqref{eq:huflen} o tamanho $L$ da mensagem 
+codificada:
+\begin{equation*}
+    L = \sum_{i=1}^N {P(i)L(i)}.
+\end{equation*}
 
+É importante ressaltar que:
+\begin{equation*}
+    \sum_{i=1}^N {P(i)} = 1.
+\end{equation*}
 
+Por fim, \citet{HuffmanCoding} apresentou três restrições iniciais resumidas, além das iniciais.
+Considere-se $D$ o número de valores que um dígito do código pode assumir.
+\begin{enumerate}
+    \item $L(1) \le L(2) \le \cdots \le L(N-1) = L(N)$.
+    \item Pelo menos $2$ e não mais que $D$ símbolos com código de tamanho $L(N)$ tem códigos 
+    com início idêntico, diferenciando-se por seus dígitos finais.
+    \item Cada possível sequência de $L(N)-1$ dígitos deve ser usada ou como código ou ser 
+    prefixo de outros códigos.
+\end{enumerate}
+
+Em seguida, serão explicados os passos do algoritmo apresentado em \citet{HuffmanCoding}.
+Por fim, será mostrado um exemplo.
+Para facilitar, vamos utilizar o problema de codificação binária, $D=2$, com valores 
+possíveis do dígito $0$ e $1$.
+
+A explanação partirá de que a tabela das probabilidades de cada símbolo já está pronta.
+Para gerar essa tabela, podem ser simplesmente contadas quantas vezes cada símbolo aparece
+em relação ao total dos símbolos da mensagem.
+
+Tomando a tabela de probabilidades ordenada, os dois símbolos de menor probabilidade 
+têm seus sufixos definidos por $0$ e $1$.
+Em seguida, esses símbolos podem ser considerados como apenas um, com probabilidade igual 
+a soma das duas probabilidades. 
+A tabela então é atualizada removendo-se os dois símbolos e adicionando o símbolo unido. 
+O processo volta a ser executado, iterativamente, até que haja somente um símbolo que seja 
+a união de todos com a probabilidade $1$.
+Cada vez que é definido o sufixo, considere-se que é inserido a frente do sufixo anterior 
+de cada símbolo o valor $0$ ou $1$.
+O exemplo a seguir mostrará o funcionamento do algoritmo de forma mais clara.
+
+% Escrever exemplo disso aí
 
 \section{Codificação de Vídeo}
 \label{sec:codvideo}
