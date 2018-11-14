@@ -15,8 +15,8 @@ trabalho, bem como dúvidas e conclusões.
 [ _ ] Representação de sinais \
 [ x ] Compressed Sensing \
 [ x ] Dictionary Learning \
-[ _ ] Codificação de vídeos \
-[ _ ] CUDA \
+[ x ] Codificação de vídeos \
+[ x ] CUDA \
 [ x ] Trabalhos relacionados \
 [ x ] Proposta \
 [ _ ] Resultados \

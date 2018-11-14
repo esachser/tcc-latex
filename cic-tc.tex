@@ -851,7 +851,7 @@ No caso de \emph{progressive}, todo frame é salvo em sequência.
 Já no formato \emph{interlaced}, podem ser utilizados campos entrelaçados.
 Por exemplo, um primeiro campo pode ser as linhas pares do frame, enquanto o segundo
 as linhas ímpares \cite{SullivanH264}.
-No seguimento do texto será utilizado o termo imagem sem diferenciação entre os 
+No prosseguimento do texto será utilizado o termo imagem sem diferenciação entre os 
 formatos apresentados.
 
 Técnicas para compressão digital, não somente para vídeos, mas para aplicações em geral,
@@ -874,11 +874,22 @@ podem ser classificadas como segue \cite{SullivanH264}:
 
 Uma forma simples de fazer compressão de vídeos se dá por tomar cada imagem do vídeos
 separadamente e comprimi-la utilizando técnicas relativas a imagens, por exemplo JPEG \cite{SullivanH264}.
+Ainda podem ser utilizadas técnicas de predição intra-frame, visando melhorar a codificação.
 Essas técnicas atingem certo grau de compressão, porém vídeos possuem grande correlação temporal
 entre seus frames, ou seja, o frame do instante $t$ está fortemente correlato ao frame $t-1$ e
 ao frame $t+1$, em geral.
 Utilizar a forma anterior não aproveita esse fato, o que leva a se imaginar buscar metodologias
-que façam codificação intra-frame e inter-frame.
+que façam codificação inter-frame.
+
+A imagem a seguir apresenta a ideia do funcionamento geral de um \textit{encoder} de vídeo,
+mostrando, em conceito macro, o funcionamento do mesmo.
+\begin{figure}[H]
+    \caption{\textit{Encoder} de vídeo híbrido (em especial H.264).}
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{img/HybridCodec.png}
+    \end{center}
+    \legend{Fonte: \citet{SullivanH264}.}
+\end{figure}
 
 Um conceito que aproveita a dependência temporal é o MCP (\textit{Motion-compensated prediction}).
 O MCP considera que, muitas vezes, as mudanças durante os vídeos acontecem devido ao movimento.
@@ -886,7 +897,7 @@ Dessa forma, se for possível estimar um vetor de movimento, seria possível faz
 de compensação de movimento, uma estimativa de movimento \cite{SullivanH264}. 
 
 Diversas formas de executar-se o MCP foram desenvolvidas pela literatura, unindo ganhos
-na complexidade a ganhos em compressividade e qualidade, utilizando um ou mais imagens 
+na complexidade a ganhos em compressividade e qualidade, utilizando uma ou mais imagens 
 do passado como base para criar predições de movimento.
 
 A seguir será explicado, de forma superficial, o funcionamento do codec H.264, com o qual 
@@ -894,6 +905,56 @@ serão feitas comparações nesse trabalho.
 
 \subsection{Codec H.264}
 O codec H.264 foi lançado como padrão em 2003.
+Ele incorporou funcionalidades de codecs anteriores, como H.262 e H.263, mas também
+trouxe novas funcionalidades.
+
+Antes de entrar mais especificamente nas funcionalidades, é necessário entender-se o 
+funcionamento geral do codec.
+Em primeiro lugar, podemos dividir o codec em network abstraction layer (NAL), a parte
+relativa a configuração da rede pela qual o video será transmitido,
+e a video coding layer (VCL), que diz respeito a forma como será representado o vídeo 
+e seus frames.
+Neste resumo o foco será nas funcionalidades relativas a codificação de vídeo, 
+por tratarem de um assunto mais próximo a proposta do trabalho.
+
+Sendo assim, a seguir serão listadas funcionalidades presentes no codec.
+Basicamente, a VCL separa cada imagem porções com uma quantidade variável de macroblocos 
+de dimensão $16\times16$.
+Estes, por sua vez, podem ser divididos em sub-blocos de $16\times8$, $8\times16$,
+$8\times8$, $8\times4$, $4\times8$ e $4\times4$.
+A partir dos sub-blocos, dos macroblocos e das porções é que a codificação de vídeo 
+é executada, levando em consideração o MCP.
+
+Segundo \citet{WiegangH264}, as principais funcionalidades relativas a eficiência
+da codificação são as seguintes:
+\begin{itemize}
+    \item \textbf{Motion Compensation (MC) com blocos de tamanho variável:}
+    Dentro do macrobloco, cada um dos sub-blocos pode fazer MC.
+    \item \textbf{MC com acurácia de um quarto de amostra:} A maioria dos codecs anteriores 
+    provia MC com acurácia de um meio de amostra. O codec H.264 aumenta o poder 
+    de acurácia para um quarto.
+    \item \textbf{Vetores de movimento nas bordas da imagem:} Já presente como opcional
+    no padrão H.263, permite que bordas também tenham vetores de movimento, utilizando
+    técnicas de extrapolação das bordas.
+    \item \textbf{Imagens de referência para MC múltiplas:} Permite que o \textit{encoder}
+    escolha entre múltiplas imagens as referências para fazer MC.
+    \item \textbf{Possibilidade de utilizar imagens preditas como referência:} Em alguns 
+    codecs anteriores não era permitido utilizar imagens preditas como referência para o 
+    processo de MC. O H.264 remove essa restrição.
+    \item \textbf{Predição com pesos:} Permite que o MCP atribua pesos e offsets aos 
+    sinais de referência utilizados.
+    \item \textbf{Melhorias na predição intra-imagem:} Foram aprimoradas técnicas de
+    extrapolação de arestas para a predição intra-imagem.
+    \item \textbf{DCT aplicada a blocos menores:} No H.264 a DCT é aplicada a blocos de 
+    dimensão $4\times4$, utilizando uma transformada inteira. Porém é possível aplicar 
+    a DCT de mesma dimensão novamente a blocos maiores, de forma hierárquica.
+    \item \textbf{Melhorias na codificação de entropia:} Foi melhorada a codificação de 
+    entropia utilizando um método chamado \emph{arithmetic coding}.
+\end{itemize}
+
+Essa subseção buscou apresentar os conceitos básicos utlizados na codificação de vídeos, 
+dando enfoque principal ao padrão H.264, fortemente utilizado no meio.
+% Buscar terminar melhor essa parte....
 
 \section{Introdução a CUDA\reg}
 CUDA\reg~é uma plataforma de programação paralela, bem como um modelo de programação, 
