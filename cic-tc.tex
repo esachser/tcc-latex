@@ -230,7 +230,67 @@
 
 \chapter{Referencial Teórico}
 
-\section{Representação de Sinais}
+\section{Introdução a Sinais e Sistemas}
+O trabalho apresentará uma metodologia para compressão de vídeos.
+Porém, vídeos são, particularmente, uma sequência de imagens.
+Já imagens, por sua vez, são um exemplo de sinais bidimensionais.
+Vídeos, portanto, sinais tridimensionais.
+Fica claro, a partir do posto acima, que há a necessidade de observar-se 
+o que é um sinal e alguns resultados importantes, primeiramente, para 
+em seguida aprimorarem-se os estudos acerca de outros conceitos.
+
+"Um sinal é formalmente definido como uma função de uma ou mais variáveis, 
+a qual veicula informações sobre a natureza de um fenômeno físico" \cite{haykin2001sinais}.
+Também segundo \citet{haykin2001sinais}, os sinais são chamados unidimensionais quando
+dependem de apenas uma variável, e multidimensionais quando dependem de mais que uma.
+Exemplo de multidimensionais foram citadas anteriormente, imagens e vídeos. 
+Já unidimensionais, podemos tomar como exemplo os sinais de som, dependentes apenas da variável tempo.
+
+Além disso, temos de definir o que é um sistema. 
+Segundo \citet{haykin2001sinais}, "Um sistema é definido como uma entidade que manipula
+um ou mais sinais para realizar uma função, produzindo novos sinais".
+Um exemplo simples poderia ser o controle de volume de um aparelho de som,
+que gera um novo sinal proporcional ao sinal de entrada.
+Podemos considerar sistemas bem mais complexos também, como um reconhecedor 
+de faces, que precisa tomar como sinais as faces já conhecidas e a que se 
+deseja reconhecer, e fornece como saída o nome ou as informações da face reconhecida.
+
+Sinais podem ser contínuos, ou analógicos, ou digitais.
+Na verdade, em geral, sinais da natureza são contínuos, mas são digitalizados 
+para que seja possível armazenamento, envio e processamento por meios digitais.
+Dessa forma, \citet{haykin2001sinais} apresenta os passos geralmente executados 
+para digitalizar sinais analógicos:
+\begin{enumerate}
+    \item \emph{Amostragem:} O sinal analógico é amostrado com determinada taxa de amostragem.
+    \item \emph{Quantização:} Cada uma das amostras é transformada para um valor digital em um intervalo definido.
+    \item \emph{Codificação:} Os valores quantizados são salvos de alguma forma.
+    \item \emph{Redundância:} Podem ser geradas informações de redundância para armazenamento do sinal.
+\end{enumerate} 
+
+De uma forma geral, a aquisição ou até mesmo a transmissão de um sinal podem conter ruído.
+Dessa forma, pode se imaginar que um sinal amostrado é composto pelo próprio sinal somado ao ruído,
+$\vec{f} = \vec{y} + \vec{e}$, no qual $\vec{f}$ é a amostragem, $\vec{y}$ é o sinal real, 
+e $\vec{e}$ é o erro.
+
+
+Uma definição importante para o prosseguimento do trabalho é a de energia de um sinal $\vec{f} \in \mathbb{R}^m$,
+$E$, como segue:
+\begin{equation}
+    E = \sum_{i=1}^m \vec{f_i}^2
+\end{equation}
+
+Por fim, um resultado clássico sobre amostragem de sinais no domínio tempo, o teorema Shannon-Nyquist.
+\begin{teorema}
+    \cite{NyquistSampling}.
+    Um sinal contínuo pode ser apropriadamente amostrado somente se ele não contiver 
+    componentes em frequência $f_{max}$ acima de metade da frequência de amostragem $f_s$.
+    \begin{equation*}
+        f_{max} \le \frac{f_s}{2}.
+    \end{equation*}
+\end{teorema}
+
+A partir desse pequeno resumo focado em amostragem de sinais digitais,
+as próximas seções utilizarão os conceitos apresentados para formularem outros novos.
 
 \section{Compressed Sensing}
 \subsection{O modelo de Compressed Sensing}
@@ -811,6 +871,42 @@ autores da área.
 % Decidir se terá ou não
 
 \section{Codificação de Huffman}
+Dentre os diversos tipos de codificação de dados que existem, algumas delas 
+permitem a representação compacta dos dados sem perdas de compressão.
+Esse é o caso da codificação de Huffman, um algoritmo de compressão por entropia,
+ou seja, que se aproveita da repetibilidade dos dados e de sua distribuição, 
+pois, em geral, a informação possui bastante redundância.
+
+O método foi apresentado em 1952, e continua sendo amplamente utilizado. 
+Em primeiro lugar, considere-se que deseja-se comprimir uma sequência de 
+símbolos, ou mensagem, utilizando códigos de tamanho variável, um para cada símbolo.
+Segundo \citet{HuffmanCoding}, duas restrições básicas são impostas para 
+a codificação de mensagens:
+\begin{enumerate}
+    \item Dois símbolos diferentes não podem ter o mesmo código;
+    \item Os códigos das mensagem precisam ser construídos de forma que não seja necessário 
+    identificar onde começa ou termina um código.
+\end{enumerate}
+
+Um princípio básico utilizado é que o tamanho de um código nunca pode ser menor 
+do que o de outro menos provável \cite{HuffmanCoding}.
+
+Para facilitar as explicações, dados $N$ símbolos, eles serão representados 
+pelos numerais $1, 2, ..., N$.
+Algo que pode ser assumido, sem perda de generalidade, considerando $P(s)$ a probabilidade de um símbolo
+$s$ qualquer aparecer na mensagem, é que \cite{HuffmanCoding}:
+\begin{equation}
+    P(1) \ge P(2) \ge \cdots \ge P(N)
+\end{equation}
+
+Por consequência, se quisermos uma codificação ótima, o tamanho do código $L(s)$ 
+deve ser \cite{HuffmanCoding}:
+\begin{equation}
+    L(1) \le L(2) \le \cdots \le L(N)
+\end{equation}
+
+
+
 
 \section{Codificação de Vídeo}
 \label{sec:codvideo}
