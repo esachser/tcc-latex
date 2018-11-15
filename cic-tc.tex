@@ -524,7 +524,7 @@ $\vec{u}$ é um dos coeficientes esparsos de $\vec{f}$ \cite{chen2015compressed}
 Gilbert e Tropp ainda apresentam um teorema sobre o algoritmo.
 \begin{teorema}
     \cite{GilbertOMP}.
-    Dado $\mathbf{\Phi}$ uma matriz $m \times d$ subgaussiana de medidas tal que $m \ge C s log d$ e
+    Dado $\mathbf{\Phi}$ uma matriz $m \times d$ subgaussiana de medidas tal que $m \ge C s \log{d}$ e
     $\vec{f}$ um sinal s-esparso em $\mathbb{R}^d$.
     Então, com alta probabilidade, OMP reconstrui corretamente o sinal $\vec{f}$ a partir de suas
     medidas $\vec{y} = \mathbf{\Phi}\vec{f}$.
@@ -946,8 +946,33 @@ O processo volta a ser executado, iterativamente, até que haja somente um símb
 a união de todos com a probabilidade $1$.
 Cada vez que é definido o sufixo, considere-se que é inserido a frente do sufixo anterior 
 de cada símbolo o valor $0$ ou $1$.
-O exemplo a seguir mostrará o funcionamento do algoritmo de forma mais clara.
 
+O exemplo a seguir mostra o funcionamento do algoritmo de forma mais clara.
+Na figura abaixo, são mostrados os passos da codificação exemplificados por 
+\citet{HuffmanCoding}.
+
+\begin{figure}[H]
+    \caption{Execução dos passos de codificação de Huffman}
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{img/huffmanprocess.png}
+    \end{center}
+    \legend{Fonte: \citet{HuffmanCoding}}
+\end{figure}
+
+Os códigos binários para cada símbolo gerados foram os seguintes:
+\begin{figure}[H]
+    \caption{Códigos binários gerados pela codificação de Huffman}
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{img/huffmantable.png}
+    \end{center}
+    \legend{Fonte: \citet{HuffmanCoding}}
+\end{figure}
+
+O método apresentado é muito utilizado e possui variadas implementações na 
+literatura.
+Além disso, serve de base para diversos compressores de arquivos, também 
+estando presente em padrões de codificação de imagens, tal qual o JPEG, 
+ou de codificação de vídeo, por exemplo, o H.264.
 % Escrever exemplo disso aí
 
 \section{Codificação de Vídeo}
