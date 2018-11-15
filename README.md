@@ -12,7 +12,7 @@ trabalho, bem como dúvidas e conclusões.
 
 ### Controle do que foi feito
 [ _ ] Introdução \
-[ _ ] Representação de sinais \
+[ x ] Representação de sinais \
 [ x ] Compressed Sensing \
 [ x ] Dictionary Learning \
 [ x ] Codificação de vídeos \
