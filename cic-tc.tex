@@ -44,6 +44,8 @@
 \usepackage{icomma}
 \usepackage{listings}
 \usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{multirow}
 
 \newcommand{\lstfont}[1]{\color{#1}\scriptsize\ttfamily}
 
@@ -1560,15 +1562,18 @@ seguido do número de patches não enviados.
 
 Esses vetores, mais a informação de máximo, mínimo e $q$ precisam ser empacotados 
 e comprimidos para enviar ao decoder.
-
-\textbf{ESCREVER SOBRE COMPRESSÃO!!!}
+A compressão utlizada foi baseada em codificação de Huffman, e foi utilizada 
+a biblioteca \textit{Boost Gzip} para tal.
 
 \section{\textit{Decoder}}
 
 \subsection{Decompressão e dequantização}
 \label{sec:decdeq}
 
-\textbf{ESCREVER SOBRE DECOMPRESSÃO!!!}
+A primeira etapa necessária é e decompressão dos dados recebidos. 
+Foi executado o processo contrário a codificação de Huffman, 
+baseando-se na tabela de compressão gerada para recuperar os valores originais.
+A biblioteca \textit{Boost Gzip} foi utilizada novamente para tal.
 
 A partir do sinal decomprimido deve-se recuperar as matrizes $\mat{V}$ e $\mat{R}$
 tomandos os vetores $\vec{v}$ e $\vec{r}$ recebidos.
@@ -1616,6 +1621,117 @@ a imagem recebida $\mat{I}$ de dimensões $m \times n$.
 
 \chapter{Resultados}
 \label{sec:results}
+Durante a implementação da proposta, surgiram alguns parâmetros gerais da implementação
+que poderiam ser modificados, vide tabela \ref{tbl:params}. 
+Nas próximas seções serão discutidos os parâmetros e resultados alcançados com as 
+alterações dos mesmos.
+
+Os testes foram executados utilizando vídeos utilizados na literatura para testes,
+disponíveis em \url{https://media.xiph.org/video/derf/}.
+Os vídeos estão em formato de sequência de frames, sem compressão, ou somente com 
+compressão sem perdas.
+Alguns dos vídeos disponíveis foram escolhidos.
+Estes, por sua vez, foram, de forma empírica, separados em grupos: \textit{cartoon}, 
+monitoramento, esportes, \textit{indoor} e natureza, de forma que fosse possível 
+verificar se existe alguma diferença no uso da técnica para diferentes classes de vídeos.
+A tabela a seguir ilustra as escolhas.
+Os vídeos em negrito foram os escolhidos para a validação, enquanto os demais para treinamento.
+
+\begin{table}[h]
+    \caption{Vídeos utilizados para treinamento e validação}
+    \centering
+        \begin{tabular}{|c|l|c|c|}
+          \hline
+          \multicolumn{1}{|c}{\textit{Categoria}} & 
+          \multicolumn{1}{|c}{\textit{Vídeo}} & 
+          \multicolumn{1}{|c}{\textit{Resolução}} & 
+          \multicolumn{1}{|c|}{\textit{Nº de frames}}  \\
+          \hline
+          \hline
+          \multirow{3}{*}{Cartoon} & \textbf{big\_buck\_bunny} & 720p & $ 14315 $ \\
+          & elephants\_dream & 720p & $ 15691 $ \\
+          & sintel\_trailer & 720p & $ 1253 $ \\ \hline
+          \multirow{4}{*}{Monitoramento} & station & 1080p & $313$ \\
+          & bridge\_far & CIF & $2101$ \\
+          & bridge\_close & CIF & $2001$ \\
+          & \textbf{stockholm} & 720p & $604$ \\ \hline 
+          \multirow{3}{*}{Esportes} & \textbf{football} & NTSC & $360$ \\
+          & tennis & SIF & $150$ \\
+          & stefan & SIF & $300$ \\ \hline
+          \multirow{6}{*}{Indoor} & deadline & CIF & $1374$ \\
+          & carphone & QCIF & $382$ \\
+          & hall\_monitor & CIF & $300$ \\
+          & mother\_daughter & QCIF & $961$ \\
+          & foreman & CIF & $300$ \\
+          & \textbf{johnny} & 720p & $600$ \\ \hline
+          \multirow{6}{*}{Natureza} & \textbf{park\_joy} & 720p & $500$ \\
+          & ducks\_take\_off & 720p & $500$ \\
+          & park\_run & 720p & $504$ \\
+          & garden & SIF & $115$ \\
+          & in\_to\_tree & 720p & $500$ \\
+          & waterfall & CIF & $260$ \\
+          \hline
+        \end{tabular}
+    \legend{Fonte: O Autor}
+    \label{tbl:vidtrain}
+\end{table}
+
+A máquina utilizada para o treinamento e os testes possui um processador Intel i5 2.5 GHz e 4 cores físicos,
+e 8Gb de memória RAM.
+Além disso, a placa de vídeo é Nvidia Geforce GTX 1050Ti, com 4Gb de memória.
+
+Em seguida serão aprofundados os testes, bem como o treinamento utilizado para cada um dos testes.
+
+\section{Treinamento}
+Foi gerado um dicionário para cada classe de vídeos, e para cada variação em $K$ e $p$,
+utilizando o algoritmo ODL, da forma que foi descrito na proposta do trabalho.
+
+Para o treinamento foram utilizados os vídeos de cada classe, com exceção daquele
+que foi escolhido para teste.
+De cada um dos conjuntos de vídeos foram amostrados frames a cada $t$ segundos, variando
+o valor de $t$ para providenciar pelo menos $10$ e no máximo $100$ frames para o processo 
+de treinamento, aproximadamente.
+A ordem de processamento dos frames foi aleatória, para evitar viés para os últimos frames. 
+Cada frame foi então transformado em sequência de patches, com sobreposição.
+Essa sequência foi introduzida no algoritmo ODL, que tomou no máximo 2500 amostras por sequência
+para fazer o treinamento do dicionário.
+
+A tabela a seguir apresenta os parâmetros de cada dicionário criado para os testes subsequentes.
+Cada parametrização foi aplicada a todas as classes de vídeos.
+É importante recordar que o parâmetro $p$ trata do tamanho do patch $p \times p \times 3$, 
+enquanto $K$ representa o número de átomos do dicionário.
+\begin{table}[h]
+    \caption{Parâmetros $p$ e $K$ utilizados para treinamento e validação}
+    \centering
+        \begin{tabular}{|c|c|}
+          \hline
+          \multicolumn{1}{|c}{\textit{$p$}} & 
+          \multicolumn{1}{|c|}{\textit{$K$}} \\
+          \hline
+          \hline
+          4 & 12 \\
+          4 & 16 \\
+          4 & 24 \\
+          4 & 32 \\
+          4 & 48 \\
+          4 & 64 \\
+          \hline
+          8 & 32 \\
+          8 & 64 \\
+          8 & 128 \\
+          8 & 192 \\
+          \hline
+        \end{tabular}
+    \legend{Fonte: O Autor}
+    \label{tbl:testparams}
+\end{table}
+
+Em seguida serão apresentados os resultados alcançados com as diferentes parametrizações 
+e diferentes classes de vídeos.
+
+\section{Alterações em $K$ e $p$}
+
+\section{Comparação com codec H.264}
 
 \chapter{Conclusão}
 
