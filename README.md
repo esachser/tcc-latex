@@ -11,7 +11,7 @@ Também nessa página terei o controle geral do que está sendo executado no
 trabalho, bem como dúvidas e conclusões.
 
 ### Controle do que foi feito
-[ _ ] Introdução \
+[ x ] Introdução \
 [ x ] Representação de sinais \
 [ x ] Compressed Sensing \
 [ x ] Dictionary Learning \
@@ -19,7 +19,7 @@ trabalho, bem como dúvidas e conclusões.
 [ x ] CUDA \
 [ x ] Trabalhos relacionados \
 [ x ] Proposta \
-[ _ ] Resultados \
+[ p ] Resultados \
 [ _ ] Conclusão
 
 ### Controle de dúvidas

@@ -214,6 +214,8 @@
     \item[ODL] Online Dictionary Learning 
     \item[DCT] Discrete Cosine Transform 
     \item[GPU] Graphical Processing Unit
+    \item[PSNR] Peak signal-noise ratio 
+    \item[CoDec] Coding and Decoding  
 \end{listofabbrv}
 
 % idem para a lista de símbolos
@@ -229,8 +231,105 @@
 
 % introducao
 \chapter{Introdução}
+O processo de globalização vem acontecendo em todo mundo, 
+e uma grande aliada desse processo é a internet.
+Essa jovem e promissora tecnologia tem transformado a vida das pessoas.
+Em especial, a internet trouxe novas formas de comunicação.
+
+Hoje em dia é possível comunicar-se mesmo em longas distâncias, 
+através da internet.
+Reuniões podem ser feitas através de videoconferências, transmissões 
+em tempo real de eventos, streaming de vídeo e áudio passam por 
+inúmeros dispositivos conectados a grande rede.
+Tais dispositivos vão desde grandes datacenters, passando por computadores 
+pessoais, laptops, smartphones, e até câmeras de monitoramento instaladas
+em cidades, todos estes com capacidade de receber e enviar informações 
+pela internet.
+
+Segundo a revista Forbes \cite{VideoMarketing}, mais de 500 milhões de horas são assistidos 
+diariamente no Youtube. 
+Também segundo a revista, até 2021, 17.000 horas de conteúdo de vídeo passarão 
+pela internet, por segundo.
+
+Essa grandiosa utilização de vídeos somente é possível graças a eficiência 
+dos padrões de transmissão de vídeo e áudio criados ao longo dos anos, 
+e ainda sendo estudados e melhorados.
+Diversos padrões foram criados, e com o avanço tecnológico, mais tecnologias
+são possíveis de serem aplicadas a novos padrões, permitindo que mais informação
+trafegue na rede com menor quantidade de dados sendo necessários.
+
+Dentro desse contexto, o trabalho que segue buscará discutir como novos 
+campos do conhecimento tais quais compressed sensing e aprendizado de 
+dicionários (\emph{dictionary learning}), apresentando uma proposta de 
+codificação de vídeos em tempo real baseada nesses assuntos, bem como 
+métricas e avaliações do funcionamento da proposta.
+
+O capítulo \autoref{cap:ref} trará o referencial teórico que serviu de base
+para a elaboração da proposta do trabalho,
+abordando assuntos relativos a processamento de sinais, compressed sensing, 
+aprendizado de dicionários, codificação de vídeos e uma breve introdução 
+a plataforma CUDA\reg.
+No capítulo seguinte discutir-se-ão alguns trabalhos que inspiraram a 
+proposta ou que apresentam diferentes óticas para o mesmo problema.
+A seguir, será detalhada a proposta. 
+Baseando-se na mesma, serão apresentados alguns resultados de medidas 
+aplicadas ao objeto do trabalho, encerrando com conclusões tiradas com 
+base na proposta, nos trabalhos relacionados, e nas medidas executadas. 
+
+\section{Objetivos}
+Este trabalho tem os seguintes objetivos:
+\begin{itemize}
+    \item Apresentar uma proposta de codificação de decodificação de vídeos
+    em tempo real baseada em técnicas de compressed sensing e aprendizado de 
+    dicionários.
+    \item Realizar medidas comparativas entre as diversas possibilidades 
+    de parametrização do objeto do trabalho proposto.
+    \item Realizar medidas comparativas com outros padrões conhecidos de 
+    codecs de vídeo.
+\end{itemize}
+
+\section{Notações Utilizadas}
+Algumas notações serão utilizadas ao longo de todo o trabalho.
+Para representar matrizes, serão utilizadas letras gregas ou romanas, 
+maiúsculas e em negrito, por exemplo $\mat{X}$.
+As colunas de $\mat{X}$ serão representadas pela letra correspondente 
+minúscula em negrito, com o indexador da coluna, $\vec{x_i}$, também em negrito.
+Outra forma possível de representar partes de uma matriz podem ser $\mat{X_{:,i}}$,
+que representa todas as linhas da coluna $i$, e $\mat{X_{i,:}}$, que representa 
+todas as colunas da linha $i$.
+Um valor qualquer da matriz é descrito como $\mat{X_{i,j}}$.
+Letras minúsculas em negrito representarão vetores.
+A indexação de vetores acontecerá no formato $x_i$, não utilizando negrito. % Revisar todo o texto
+
+%Apresentar normas e (t)
+Alguns algoritmos calculam variáveis relacionadas a uma determinada iteração $t$.
+Nesses algorimos, seguindo as notações anteriormente apresentadas, $\mat{X_{(t)}}$ 
+representa a matriz $\mat{X}$ da iteração de número $t$.
+O mesmo acontece com vetores, por exemplo, $\vec{x_{(t)}}$.
+
+Por fim, vale lembrar a definição da norma $\ell_p$ para um vetor $\vec{x} \in \mathbb{R}^m$:
+\begin{equation*}
+    \lVert \vec{x} \rVert_p = 
+    \left( \sum_{i=1}^m {|x_i|^p} \right)^{\frac{1}{p}}
+\end{equation*}
+podendo escrever, portanto, a norma $\ell_2$, por exemplo, como:
+\begin{equation*}
+    \lVert \vec{x} \rVert_2 = 
+    \sqrt{\sum_{i=1}^m {x_i^2}}
+\end{equation*}
+e a norma $\ell_1$:
+\begin{equation*}
+    \lVert \vec{x} \rVert_1 = 
+    \sum_{i=1}^m {|x_i|}
+\end{equation*}
+
+As normas acima apresentadas, bem como as notações, serão amplamente utilizadas
+em todo o texto. 
+Outras definições serão agregadas ao continuar a leitura, somando-se as atuais, 
+que foram apresentadas por serem aplicadas em toda a extensão do trabalho.
 
 \chapter{Referencial Teórico}
+\label{cap:ref}
 
 \section{Introdução a Sinais e Sistemas}
 O trabalho apresentará uma metodologia para compressão de vídeos.
@@ -278,7 +377,7 @@ e $\vec{e}$ é o erro.
 Uma definição importante para o prosseguimento do trabalho é a de energia de um sinal $\vec{f} \in \mathbb{R}^m$,
 $E$, como segue:
 \begin{equation}
-    E = \sum_{i=1}^m \vec{f_i}^2
+    E = \sum_{i=1}^m f_i^2
 \end{equation}
 
 Por fim, um resultado clássico sobre amostragem de sinais no domínio tempo, o teorema Shannon-Nyquist.
@@ -735,7 +834,7 @@ uma reformulação somente trocando a norma $\ell_0$ pela norma $\ell_1$ \cite{c
 Aprendizado de dicionários tem ligação com diversas outras áreas do conhecimento. 
 Em especial, e que será utilizado no decorrer do desenvolvimento do trabalho, está sua ligação
 com CS, da forma que foi explicitada no início da seção, e com processamento de imagens,
-o que será melhor abordados na seção \ref{sec:codesparsa}.
+o que será melhor abordados na seção \autoref{sec:codesparsa}.
 
 \subsection{\textit{Online Dictionary Learning}}
 \label{sec:odl}
@@ -757,7 +856,7 @@ relativos a $\vec{x_{(t)}}$ e $\mat{D_{(t-1)}}$, resovendo o problema de codific
     \lambda \lVert \vec{\gamma} \rVert_1
 \end{equation}
 sendo que $\lambda$ é um parâmetro de configuração do algoritmo. Esse problema pode ser resolvido algum dos 
-algortimos discutidos na seção \ref{sec:csalgo}. Também é possível alterar-se a norma $\ell_1$ pela $\ell_0$,
+algortimos discutidos na seção \autoref{sec:csalgo}. Também é possível alterar-se a norma $\ell_1$ pela $\ell_0$,
 de forma que algum algoritmo guloso de CS possa ser utilizado. O mesmo se dará para o passo seguinte.
 
 No segundo passo do algoritmo, definimos o novo dicionário $\mat{D_{(t)}}$ através dos vetores de coeficientes
@@ -850,7 +949,7 @@ $\vec{x_i}$ em relação a $\mat{D}$, temos a seguinte formulação.
 \end{equation}
 tal que $s$ é o número máximo de valores não nulos da representação $\vec{\gamma_i} \in \mathbb{R}^m$.
 Para resolver essa formulação, pode-se utilizar algum dos algoritmos apresentados na
-seção \ref{sec:greedy}, por exemplo o OMP. 
+seção \autoref{sec:greedy}, por exemplo o OMP. 
 Para que a representação seja esparsa, precisa-se garantir que $s \ll L$.
 Por exemplo, tomando uma imagem $I$ e separando em patches de $8\times 8$, ou seja,
 $L = 64$, poderia ser escolhido um valor de $s = 8$ ou $s=12$, independente do valor 
@@ -1206,7 +1305,7 @@ $1$ bloco, de forma que somente é necessário utilizar o número da thread para
 os índices operados.
 
 A plataforma CUDA\reg~foi utlizada no trabalho proposto para a paralelização do algoritmo
-OMP (\ref{algo:omp}), conforme será discutido nos próximos capítulos.
+OMP (\autoref{algo:omp}), conforme será discutido nos próximos capítulos.
 
 
 \chapter{Trabalhos Relacionados}
@@ -1300,7 +1399,7 @@ e por parte do \textit{decoder}.
 
 % A proposta foca na codificação de frames a partir de dicionários previamente treinados,
 % apresentando um novo olha sobre a transformação aplicada aos frames.
-% As técnicas apresentadas de forma resumida na seção \ref{sec:codvideo} podem ser 
+% As técnicas apresentadas de forma resumida na seção \autoref{sec:codvideo} podem ser 
 % aplicadas juntamente a metodologia apresentada.
 
 A imagem a seguir apresenta um diagrama geral de blocos, dividindo entre \textit{encoder}
@@ -1331,7 +1430,7 @@ Em seguida são definidas as nomenclaturas de alguns parâmetros importantes do
 Nessa seção serão mostrados os parâmetros do sistema que serão utlizados nas próximas
 seções. 
 As escolhas e resultados obtidos com a alteração dos parâmetros serão discutidas no 
-capítulo \ref{sec:results}.
+capítulo \autoref{sec:results}.
 
 \begin{table}[h]
     \caption{Parâmetros do sistema}
@@ -1366,7 +1465,7 @@ de uma grande quantidade de dados de treinamento.
 
 Considerando isso e o desempenho apresentado por \citet{MairalOnlineDictLearn}, foi escolhido
 como algoritmo de treinamento do dicionário o \textit{Online Dictionary Learning},
-descrito em \ref{sec:odl},
+descrito em \autoref{sec:odl},
 pois esse apresenta bom resultado para grande número de sinais de treinamento.
 
 O treinamento foi executado da seguinte forma:
@@ -1378,8 +1477,8 @@ O treinamento foi executado da seguinte forma:
     \item Cada frame foi separado em patches com tamanho $p \times p$, sendo $p$ o tamanho de
     patch escolhido para o sistema. \textbf{CITAR RESULTADO COM ESCOLHA DE TAMANHO DE PATCH}.
     Para o treinamento, foram utilizados patches com sobreposição. Por fim, todos os patches
-    foram vetorizados da mesma forma que em \ref{sec:frameaquisition}.
-    \item Executado algoritmo do ODL, conforme Algoritmo \ref{algo:odl}.
+    foram vetorizados da mesma forma que em \autoref{sec:frameaquisition}.
+    \item Executado algoritmo do ODL, conforme Algoritmo \autoref{algo:odl}.
 \end{enumerate}
 
 Vale ressaltar que para vídeos muito especializados, pode-se utilizar um treinamento
@@ -1393,7 +1492,7 @@ se conheça a transmissão em si, mas se conheça que tipo de conteúdo será tr
 
 Um importante parâmetro que deve ser escolhido é o número de átomos $K$ do dicionário.
 Escolhas de valores maiores tendem a proporcionar maior qualidade na representação do vídeo,
-porém com perda de desempenho. No capítulo \ref{sec:results} serão mostrados resultados
+porém com perda de desempenho. No capítulo \autoref{sec:results} serão mostrados resultados
 de escolhas diferentes no número de átomos do dicionário.
 
 Como parametrização do ODL, utiliza-se o valor $s$ como esparsidade desejada e
@@ -1420,7 +1519,7 @@ subsistema.
 
 Já nesse ponto do processamento é necessário ter em vista o tamanho dos patches $p\times p$
 que será utilizado. A escolha deve seguir o parâmetro definido na escolha do dicionário.
-Valores típicos a serem escolhidos são $p=4$ ou $p=8$. No capítulo \ref{sec:results} serão 
+Valores típicos a serem escolhidos são $p=4$ ou $p=8$. No capítulo \autoref{sec:results} serão 
 discutidos resultados alcançados com ambas escolhas de tamanho de patch.
 
 A escolha por processar patches se dá pela necessidade do processamento em tempo real, pois 
@@ -1433,7 +1532,7 @@ Utilizar patches pequenos possibilita a paralelização dos cálculos.
 No caso do trabalho que está sendo apresentado, em que o processamento dos patches, que será 
 comentado na próxima seção, se dá utilizando a arquitetura da GPU, a utilização de maior 
 paralelismo tende a aumentar a velocidade de processamento.
-Como já comentado na seção \ref{sec:learn}, existe também um \textit{trade-off} entre 
+Como já comentado na seção \autoref{sec:learn}, existe também um \textit{trade-off} entre 
 diminuir o tamanho do patch e aumentar a compressão.
 
 Tomada a imagem RGB $\mat{I}$ de dimensões $m \times n \times 3$, ela será separada em patches
@@ -1487,12 +1586,12 @@ $\vec{\gamma_i}$ seja a representação esparsa de $\vec{x_i}$, como segue:
 
 O problema acima, como citado anteriormente, pode ser resolvido via OMP.
 A implementação básica escolhida para o sistema foi baseada na biblioteca SPAMS \cite{SPAMS}.
-A partir dela, foi desenvolvida uma versão em CUDA, focada em paralelizar o algoritmo
+A partir dela, foi desenvolvida uma versão em CUDA\reg, focada em paralelizar o algoritmo
 OMP para cada $(\vec{x_i}, \vec{\gamma_i})$. Assim, foi possível calcular a representação
 em tempo suficiente para transmissão em tempo real, conforme será verificado no capítulo 
-de resultados \ref{sec:results}.
+de resultados \autoref{sec:results}.
 
-Um importante fato a ser considerado pelo algoritmo \ref{algo:omp} é que, a cada iteração,
+Um importante fato a ser considerado pelo algoritmo \autoref{algo:omp} é que, a cada iteração,
 ele descobre a melhor solução para essa esparsidade. Ou seja, se escolhida esparsidade $s=5$,
 por exemplo, é possível armazenar-se os resultados com esparsidade $s=1,...,5$. 
 A utlidade desse fato se dá no controle da taxa de transmissão, pois quanto mais esparsa a 
@@ -1612,7 +1711,7 @@ acontecendo mais operações de multiplicação do que o necessário.
 A reconstrução do frame se dá exatamente da forma contrária a separação por patches.
 
 Vale notar que alguns dos patches não precisarão ser atualizados.
-Essa informação foi recebida pelo \textit{decoder} na etapa \ref{sec:decdeq} e repassada
+Essa informação foi recebida pelo \textit{decoder} na etapa \autoref{sec:decdeq} e repassada
 até essa etapa.
 
 Assim, cada um dos patches de $\mat{X}$, que estavam vetorizados, são novamente transformados
@@ -1622,7 +1721,7 @@ a imagem recebida $\mat{I}$ de dimensões $m \times n$.
 \chapter{Resultados}
 \label{sec:results}
 Durante a implementação da proposta, surgiram alguns parâmetros gerais da implementação
-que poderiam ser modificados, vide tabela \ref{tbl:params}. 
+que poderiam ser modificados, vide tabela \autoref{tbl:params}. 
 Nas próximas seções serão discutidos os parâmetros e resultados alcançados com as 
 alterações dos mesmos.
 
@@ -1726,10 +1825,91 @@ enquanto $K$ representa o número de átomos do dicionário.
     \label{tbl:testparams}
 \end{table}
 
+Os parâmetros para teste foram escolhidos com base na implementação, também considerando 
+o padrão H.264, que utiliza, na etapa de transformação, patches de $4\times4$, 
+e o padrão JPEG, cujos patches são $8\times8$.
+
 Em seguida serão apresentados os resultados alcançados com as diferentes parametrizações 
 e diferentes classes de vídeos.
 
 \section{Alterações em $K$ e $p$}
+Nessa seção serão apresentados e discutidos resultados alcançados na compressão e 
+decompressão dos vídeos escolhidos de cada classe para os parâmetros definidos na 
+tabela \autoref{tbl:testparams}.
+
+No total foram 10 parametrizações diferentes para cada uma das 5 classes de vídeos, 
+totalizando 50 combinações diferentes para serem testadas.
+
+Quando olha-se para o algoritmo OMP (\autoref{algo:omp}), tem-se que sua complexidade teórica 
+é $O(s m d)$, tal que, nesse caso, $m = K$ e $d = 3p^2$.
+Os resultados mostram o que a teoria espera, um aumento linear no tempo de processamento,
+pois no caso considerado, foi mantido $s$ e $d$ fixos, enquanto a variação ocorreu em $m$.
+Vale ressaltar que o processamento de cada patch foi individual e utilizando a plataforma 
+CUDA\reg, que paraleliza as operações.
+Porém, por mais que patches possam ser executados em paralelo, seu tempo individualmente, 
+no processamento do OMP, aumenta conforme o aumento do dicionário.
+
+\begin{figure}[h]
+    \caption{Tempo médio por frame para $p=4$.}
+    \begin{center}
+        \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_etime.png}
+        \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_dtime.png}
+    \end{center}
+    \legend{Fonte: O autor.}
+    \label{fig:timep4}
+\end{figure}
+
+Na figura acima (\autoref{fig:timep4}) também pode-se constatar que a decodificação tem tempos iguais, independentes
+do tamanho do dicionário.
+Isso se dá pelo fato de que não é feita a multiplicação pelo método formal, mas sim tomando
+somente cada um dos $s$ valores não nulos do vetor.
+O mesmo pode ser constatado na figura abaixo, que apresenta os resultados alcançados com $p=8$.
+
+\begin{figure}[h]
+    \caption{Tempo médio por frame para $p=8$.}
+    \begin{center}
+        \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_etime.png}
+        \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_dtime.png}
+    \end{center}
+    \legend{Fonte: O autor.}
+    \label{fig:timep8}
+\end{figure}
+
+Um fato importante a ser detalhado é de que a classe esportes teve menor tempo médio por frame.
+Esse fato está simplesmente ligado a resolução do vídeo utilizado por essa classe, NTSC, que é 
+aproximadamente $2,63$ vezes menor que 720p.
+
+Outro detalhe que vem a tona é o tempo médio do vídeo de cartoon, que é levemente menor.
+Uma explicação que pode ser encontrada para tal é que o vídeo de cartoon possui diversas 
+partes nas quais o fundo é fixo, havendo apenas movimento em pequenas partes do vídeo. 
+O sistema simples criado para idenficação de patches sem a necessidade de recálculo 
+acaba por marcar diversos pontos, tendo assim menos processamento para fazer em diversas 
+partes do vídeo.
+
+\textbf{VERIFICAR O PORQUÊ DE ERRO NOS ESPORTES PARA P=8.}
+
+Também foi verificada a qualidade dos utilizando o PSNR. 
+Os resultados mostram que o PSNR não se alterou significativamente para os diversos tamanhos
+de dicionário, o que indica que é possível utilizar valores baixos de $K$ sem perdas significativas
+na qualidade da representação.
+
+\begin{figure}[H]
+    \caption{PSNR médio em função de $K$.}
+    \begin{center}
+        \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_psnr.png}
+        \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_psnr.png}
+    \end{center}
+    \legend{Fonte: O autor.}
+    \label{fig:psnr8bit}
+\end{figure}
+
+Na verdade o que se pode verificar é que essa variabilidade verificada no PSNR se dá devido 
+a quantização.
+Para melhorar esse fato, poderiam ser utilizados inteiros de 16bits ao invés de 8bits na 
+representação comprimida, considerando que a representação perde significativamente em 
+compressibilidade.
+
+\textbf{EXECUTAR TESTES NESSE SENTIDO.}
 
 \section{Comparação com codec H.264}
 
