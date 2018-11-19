@@ -1417,7 +1417,7 @@ A imagem a seguir apresenta um diagrama geral de blocos, dividindo entre \textit
 e \textit{decoder}, além de representar blocos funcionais de cada uma das partes de 
 forma geral.
 \begin{figure}[H]
-    \caption{Diagrama geral da solução proposta}
+    \caption{Diagrama geral da solução proposta.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/DiagramaFinal.png}
     \end{center}
@@ -1516,8 +1516,6 @@ de cada frame.
 Para determinar isso, foram executados testes de qualidade com diversos valores
 (\ref{sec:parametrizacao}).
 Foi utilizada a implementação da biblioteca SPAMS \cite{SPAMS} do algoritmo ODL.
-
-% INSERIR IMAGEM DE DICIONÁRIO, CITANDO K e p
 
 O resultado final desse etapa será um dicionário $\mat{D} \in \mathbb{R}^{3p^2 \times K}$,
 que será utilizado nas etapas seguintes de codificação e decodificação.
@@ -1870,6 +1868,17 @@ e o padrão JPEG, cujos patches são $8\times8$.
 O valor de $s$ foi fixo para os valores de $p$. 
 Sendo assim, para $p=4$, $s=5$, e para $p=8$, $s=14$.
 
+% INSERIR IMAGEM DE DICIONÁRIO, CITANDO K e p
+\begin{figure}[H]
+    \caption{Dicionários aprendidos. O primeiro, $K=192$ e $p=8$, classe cartoon. 
+    O segundo, $K=32$ e $p=4$, classe indoor.}
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/cartoon_p8_d192.png}
+        \includegraphics[width=0.4\textwidth]{img/indoor_p4_d32.png}
+    \end{center}
+    \legend{Fonte: O Autor.}
+\end{figure}
+
 Em seguida serão apresentados os resultados alcançados com as diferentes parametrizações 
 e diferentes classes de vídeos.
 
@@ -2093,6 +2102,42 @@ agregados a melhorias que possam ser executadas, pode gerar resultados ainda mel
 
 \section{Resultado visual}
 \label{sec:resultadovisual}
+Para encerrar o capítulo de resultados, serão observados alguns resultado visuais relativos 
+ao codec.
+
+\begin{figure}[H]
+    \caption{Vídeo johnny, $p=4$, $K=32$, $s=5$, quantizado 8bit. O primeiro, frame de referência. 
+    O segundo, resultado com codec proposto}
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/johnnyref.png}
+        \includegraphics[width=\textwidth]{img/johnnyres.png}
+    \end{center}
+    \legend{Fonte: O Autor.}
+    \label{fig:johnnyres}
+\end{figure}
+
+Nesse primeira comparação pode-se verificar que altas frequências foram adicionadas a imagem, o que, 
+em geral, se deve a erros relacionados a quantização.
+
+\begin{figure}[H]
+    \caption{Vídeo big\_buck\_bunny, $p=4$, $K=16$, $s=5$, quantizado 8bit. O primeiro, frame de referência. 
+    O segundo, resultado com codec proposto}
+    \begin{center}
+        \includegraphics[width=0.49\textwidth]{img/bbbref.png}
+        \includegraphics[width=0.49\textwidth]{img/bbbres.png}
+    \end{center}
+    \legend{Fonte: O Autor.}
+    \label{fig:bbbres}
+\end{figure}
+
+Já nesse caso, o frame resultado é bem próximo ao original. 
+O que se nota, apesar disso, é que em alguns pontos da imagem foram criados artefatos devido ao 
+uso de patches sem sobreposição.
+A imagem foi recortada para melhor visualização do efeito.
+Para reduzir um pouco os efeitos, mas sem causar ofuscamento na imagem, foi utilizado um filtro 
+bilateral parametrizado para não surtir tanto efeito.
+Esta não é a solução ideal, dado que existem algoritmos para especificamente filtrar esses blocos,
+porém na versão final do codec não foi implementada essa funcionalidade.
 
 \chapter{Conclusão}
 O trabalho apresentou uma proposta de codec utlizando métodos de compressed sensing
