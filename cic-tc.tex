@@ -93,7 +93,7 @@
 % 
 % Informações gerais
 % 
-\title{Utilização de compressed sensing para compressão de frames e transmissão de vídeos em tempo real.}
+\title{Aplicação de técnicas de compressed sensing e dictionary learning para codificação de vídeos em tempo real.}
 
 \author{Sachser}{Eduardo}
 % alguns documentos podem ter varios autores:
@@ -244,7 +244,7 @@ em tempo real de eventos, streaming de vídeo e áudio passam por
 inúmeros dispositivos conectados a grande rede.
 Tais dispositivos vão desde grandes datacenters, passando por computadores 
 pessoais, laptops, smartphones, e até câmeras de monitoramento instaladas
-em cidades, todos estes com capacidade de receber e enviar informações 
+em cidades, todos com a capacidade de receber e enviar informações 
 pela internet.
 
 Segundo a revista Forbes \cite{VideoMarketing}, mais de 500 milhões de horas são assistidos 
@@ -357,7 +357,7 @@ Podemos considerar sistemas bem mais complexos também, como um reconhecedor
 de faces, que precisa tomar como sinais as faces já conhecidas e a que se 
 deseja reconhecer, e fornece como saída o nome ou as informações da face reconhecida.
 
-Sinais podem ser contínuos, ou analógicos, ou digitais.
+Sinais podem ser contínuos - ou analógicos - e digitais.
 Na verdade, em geral, sinais da natureza são contínuos, mas são digitalizados 
 para que seja possível armazenamento, envio e processamento por meios digitais.
 Dessa forma, \citet{haykin2001sinais} apresenta os passos geralmente executados 
@@ -378,7 +378,7 @@ e $\vec{e}$ é o erro.
 Uma definição importante para o prosseguimento do trabalho é a de energia de um sinal $\vec{f} \in \mathbb{R}^m$,
 $E$, como segue:
 \begin{equation}
-    E = \sum_{i=1}^m f_i^2
+    E = \sum_{i=1}^m f_i^2 = \lVert \vec{f} \rVert_2^2
 \end{equation}
 
 Por fim, um resultado clássico sobre amostragem de sinais no domínio tempo, o teorema Shannon-Nyquist.
@@ -406,7 +406,7 @@ fez com que os métodos conhecidos de processamento de sinais não tivessem boa 
 (\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, p. 2, tradução própria).
 As formas tradicionais de aquisição de sinais baseadas nos teoremas de Shannon e Nyquist acabam por causar o descarte
 de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: é possível haver 
-uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? 
+uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? \cite{chen2015compressed}.
 
 O modelo de Compressed Sensing surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
 de sinais, poucas amostras são necessárias para representar o sinal com acurácia \cite{chen2015compressed}.
@@ -570,7 +570,7 @@ uma das possíveis soluções do problema \eqref{eq:problem}.
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/l1ball}
     \end{center}
-    \legend{Fonte: O Autor}
+    \legend{Fonte: O Autor.}
     \label{fig:l1ball}
 \end{figure}
 
@@ -590,7 +590,7 @@ intensidade do ruído, como segue.
 
 \subsubsection{Métodos utilizando algoritmos gulosos}
 \label{sec:greedy}
-Depois da formalização do problema de CS, unido ao estouro da novo assunto que se apresentou,
+Depois da formalização do problema de CS, gerando a demanda para uma solução,
 surgiram os primeiros algoritmos que, de forma iterativa, resolvem o problema \eqref{eq:problem}. 
 Um dos principais algoritmos é o \textit{Orthogonal Matching Pursuit (OMP)}, analisado por Gilbert e Tropp \cite{GilbertOMP}.
 
@@ -603,7 +603,7 @@ Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 \Saida{Estimativa do sinal ideal $\vec{f'} \in \mathbb{R}^d$}
 $\vec{r_{(0)}} \leftarrow \vec{y}$\;
 $t \leftarrow 1$\;
-$\Lambda_{(0)} \leftarrow ()$\;
+$\Lambda_{(0)} \leftarrow \emptyset$\;
 $\vec{f'} \leftarrow \vec{0}$\;
 \While{$t \le s$}{
     $\lambda_{(t)} = \underset{j=1,...,d}{argmax}|\langle\vec{r_{(t-1)}}, \vec{\phi_j}\rangle|$\;
@@ -620,7 +620,7 @@ $\vec{f'}_{\Lambda_{(t-1)}} \leftarrow \vec{x_{(t-1)}}$\;
 Uma importante observação relativa ao sucesso do algoritmo OMP é que, dado que a matriz $\mathbf{\Phi}$ é incoerente,
 seu conjugado transposto multiplicado por si mesmo é próximo a identidade, ou seja, 
 $\vec{u} = \mathbf{\Phi}^* \vec{y} = \mathbf{\Phi}^* \mathbf{\Phi} \vec{f}$ 
-é, de certa forma, muito próximo a $\vec{f}$. Logo, o OMP considera que o mais alto coeficiente de 
+é muito próximo a $\vec{f}$. Logo, o OMP considera que o mais alto coeficiente de 
 $\vec{u}$ é um dos coeficientes esparsos de $\vec{f}$ \cite{chen2015compressed}.
 
 Gilbert e Tropp ainda apresentam um teorema sobre o algoritmo.
@@ -689,7 +689,7 @@ O ganho na representação de imagens se dá pelo fato de que não se cria uma r
 diretamente, mas sim do gradiente da imagem, o que torna a mesma mais suave e remove artefatos com alta
 frequência.
 Resultados utilizando a norma TV já foram observados em diversos trabalhos.
-Por exemplo, entre os primeiros ótimos resultados que motivaram o surgimento dessa área de estudo está
+Por exemplo, entre os primeiros resultados que motivaram o surgimento dessa área de estudo está
 o trabalho proposto por \citet{CandesMRI}, no qual, com aproximadamente $5\%$ das medidas de imagens de
 ressonância magnética, foi possível recuperar toda a imagem, como é possível visualizar na figura 
 abaixo.
@@ -706,9 +706,9 @@ abaixo.
 
 \subsection{Resultados com dicionários coerentes}
 A utilização de matrizes de amostragens incoerentes, ou dicionários incoerentes, limita a aplicação de 
-Compressed Sensing em algumas áreas, ou para alguns problemas cuja base de solução dos mesmos era baseada
+compressed sensing em algumas áreas, ou para alguns problemas cuja base de solução dos mesmos é baseada
 em dicionários coerentes, que podem ser, por exemplo, um dicionário supercompleto, com mais colunas que linhas. 
-"Coerência é, de certa forma, uma propriedade natural para Compressed Sensing, 
+"Coerência é, de certa forma, uma propriedade natural para compressed sensing, 
 porque se duas colunas são muito correlatas, será impossível em geral distinguir se a energia do sinal
 vem de uma ou da outra" 
 \footnote{"Coherence is in some sense a natural property in the compressed sensing framework, for if two
@@ -722,7 +722,7 @@ Matematicamente falando, imagine-se um sinal $\vec{f} = \mathbf{D}\vec{x}$, no q
 $\vec{y} = \mathbf{\Phi}\vec{f} = \mathbf{\Phi}\mathbf{D}\vec{x}$, se o dicionário $\mathbf{D}$ for
 coerente, não é possível recuperar os coeficientes $\vec{x}$, mas é possível recuperar $\vec{f}$ \cite{CANDESDICTS}.
 
-A partir desses estudos, \citet{CANDESDICTS} gerou uma nova definição para o problema de CS, 
+A partir desses estudos, \citet{CANDESDICTS} apresentou uma nova definição para o problema de CS, 
 baseado na solução utilizando a norma $\ell_1$, considerando $\vec{f} = \mathbf{D}\vec{x}$ o sinal
 e $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$ as medidas, $\vec{e}$ o erro.
 \begin{equation}
@@ -763,7 +763,7 @@ para outros campos do conhecimento.
 % Decidir se terá ou não
 
 \section{Aprendizado de Dicionários}
-A área de aprendizado de dicionários, do inglês \textit{Dictionary Learning}, busca, através
+A área de aprendizado de dicionários, do inglês \textit{dictionary learning}, busca, através
 dos dados já conhecidos de uma classe de sinais, prover novos dicionários nos quais os sinais 
 serão capazes de se conformar com maior esparsidade. 
 Sob o ponto de vista de CS, um dicionário $\mat{D}$ normalmente é escolhido de forma aleatória,
@@ -823,6 +823,7 @@ Unificando as duas formulações \eqref{eq:dlgeneral} e \eqref{eq:dleps}, chega-
     \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
     \sum_{i=1}^{n} {\lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2} + \lambda \lVert \vec{\gamma_i} \rVert_0}
 \end{equation}
+no qual $\lambda$ é um parâmetro de balanceamento.
 
 Porém, utilizando-se a norma $\ell_0$, o problema é usualmente NP-difícil. Dessa forma, pode-se gerar
 uma reformulação somente trocando a norma $\ell_0$ pela norma $\ell_1$ \cite{chen2015compressed}.
@@ -841,8 +842,9 @@ o que será melhor abordados na seção \autoref{sec:codesparsa}.
 \label{sec:odl}
 Um dos principais algoritmos de aprendizado de dicionários, com aplicação em processamento de imagens
 é o algoritmo \textit{Online Dictionary Learning (ODL)}. Um de seus principais diferenciais
-se dá pela possibilidade de utilizar um conjunto de treinamente bastante volumoso com bom 
+se dá pela possibilidade de utilizar um conjunto de treinamento bastante volumoso, mantendo bom 
 desempenho \cite{MairalOnlineDictLearn}.
+Por isso, pode-se dizer que o ODL possui boa escalabilidade.
 
 O ODL, como o próprio nome retrata, é um algoritmo \textit{online}, ou seja, a cada nova iteração $t$
 é gerada uma nova versão do dicionário $\mat{D_{(t)}}$ a partir de uma nova amostra $\vec{x_{(t)}}$.
@@ -856,8 +858,8 @@ relativos a $\vec{x_{(t)}}$ e $\mat{D_{(t-1)}}$, resovendo o problema de codific
     \frac{1}{2} \lVert \vec{x_{(t)}} - \mat{D_{(t-1)}}\vec{\gamma} \rVert\SPSB{2}{2} +
     \lambda \lVert \vec{\gamma} \rVert_1
 \end{equation}
-sendo que $\lambda$ é um parâmetro de configuração do algoritmo. Esse problema pode ser resolvido algum dos 
-algortimos discutidos na seção \autoref{sec:csalgo}. Também é possível alterar-se a norma $\ell_1$ pela $\ell_0$,
+sendo que $\lambda$ é um parâmetro de configuração do algoritmo. Esse problema pode ser resolvido por algum dos 
+algoritmos discutidos na seção \autoref{sec:csalgo}. Também é possível alterar-se a norma $\ell_1$ pela $\ell_0$,
 de forma que algum algoritmo guloso de CS possa ser utilizado. O mesmo se dará para o passo seguinte.
 
 No segundo passo do algoritmo, definimos o novo dicionário $\mat{D_{(t)}}$ através dos vetores de coeficientes
@@ -870,7 +872,7 @@ Dessa forma, e considerando que os valores de $\vec{\gamma_i}$ são fixos, pode-
     \frac{1}{t} \sum_{i=1}^t \lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2}.
 \end{equation}
 
-Processando o problema anterior, chega-se em que ele pode ser resolvido utilizando-se o método do 
+Processando o problema anterior, chega-se ao resultado de que ele pode ser resolvido utilizando-se o método do 
 gradiente descendente. Para isso, primeiramente precisamos definir as matrizes a seguir \cite{chen2015compressed}.
 \begin{equation}
     \mat{A_{(t)}} = \sum_{i=1}^t \vec{\gamma_i}\vec{\gamma_i^T} \in \mathbb{R}^{m \times m},
@@ -923,7 +925,7 @@ No caso que será estudado, o foco será em codificação esparsa de imagens, bu
 embasar os estudos para a proposta do trabalho em questão.
 
 É necessário considerar que imagens não são usualmente esparsas no domínio tempo.
-Porém, no domínio da Transformada do Cosseno, ou no domínio da DCT, \textit{Discrete Cosine Transform}, 
+Porém, no domínio da transformada do cosseno, ou no domínio da DCT (\textit{Discrete Cosine Transform}), 
 imagens são, em geral, compressíveis, vide \eqref{eq:compressiblesignal}, fato 
 que permite, por exemplo, gerar representações da imagem com alta fidelidade, mesmo
 utilizando baixa quantidade de informação.
@@ -953,8 +955,8 @@ Para resolver essa formulação, pode-se utilizar algum dos algoritmos apresenta
 seção \autoref{sec:greedy}, por exemplo o OMP. 
 Para que a representação seja esparsa, precisa-se garantir que $s \ll L$.
 Por exemplo, tomando uma imagem $I$ e separando em patches de $8\times 8$, ou seja,
-$L = 64$, poderia ser escolhido um valor de $s = 8$ ou $s=12$, independente do valor 
-de $m$, garantido $s < m$, cujo valor escolhido, por exemplo, poderia ser $m = 256$.
+$L = 64$, poderia ser escolhido um valor de $s = 4$ ou $s=6$, independente do valor 
+de $m$, garantido $s \le m$, cujo valor escolhido, por exemplo, poderia ser $m = 256$.
 
 Existem diversas outras aplicações de aprendizado de dicionários no campo de processamento de
 imagens, principalmente \cite{MairalSparse}:
@@ -973,17 +975,17 @@ autores da área.
 % Decidir se terá ou não
 
 \section{Codificação de Huffman}
-Dentre os diversos tipos de codificação de dados que existem, algumas delas 
+Dentre os diversos tipos de codificação de dados que existem, alguns deles 
 permitem a representação compacta dos dados sem perdas de compressão.
 Esse é o caso da codificação de Huffman, um algoritmo de compressão por entropia,
 ou seja, que se aproveita da repetibilidade dos dados e de sua distribuição, 
-pois, em geral, a informação possui bastante redundância.
+pois, em geral, sinais que carregam informação possuem bastante redundância.
 
 O método foi apresentado em 1952, e continua sendo amplamente utilizado. 
 Em primeiro lugar, considere-se que deseja-se comprimir uma sequência de 
 símbolos, ou mensagem, utilizando códigos de tamanho variável, um para cada símbolo.
 Segundo \citet{HuffmanCoding}, duas restrições básicas são impostas para 
-a codificação de mensagens:
+a codificação de mensagens proposta pelo autor:
 \begin{enumerate}
     \item Dois símbolos diferentes não podem ter o mesmo código;
     \item Os códigos das mensagem precisam ser construídos de forma que não seja necessário 
@@ -1020,7 +1022,7 @@ codificada:
     \sum_{i=1}^N {P(i)} = 1.
 \end{equation*}
 
-Por fim, \citet{HuffmanCoding} apresentou três restrições iniciais resumidas, além das iniciais.
+Por fim, \citet{HuffmanCoding} apresentou três novas restrições, além das iniciais.
 Considere-se $D$ o número de valores que um dígito do código pode assumir.
 \begin{enumerate}
     \item $L(1) \le L(2) \le \cdots \le L(N-1) = L(N)$.
@@ -1045,7 +1047,7 @@ Em seguida, esses símbolos podem ser considerados como apenas um, com probabili
 a soma das duas probabilidades. 
 A tabela então é atualizada removendo-se os dois símbolos e adicionando o símbolo unido. 
 O processo volta a ser executado, iterativamente, até que haja somente um símbolo que seja 
-a união de todos com a probabilidade $1$.
+a união de todos, com probabilidade $1$.
 Cada vez que é definido o sufixo, considere-se que é inserido a frente do sufixo anterior 
 de cada símbolo o valor $0$ ou $1$.
 
@@ -1081,7 +1083,7 @@ ou de codificação de vídeo, por exemplo, o H.264.
 \label{sec:codvideo}
 A comunicação através de vídeo, nas últimas décadas, tem sido uma das principais formas
 de comunicação, sob as mais diversas formas.
-\citet{SullivanH264} apresenta alguns cenários onde a vídeos digitais são aplicados:
+\citet{SullivanH264} apresentam alguns cenários onde a vídeos digitais são aplicados:
 \begin{itemize}
     \item Transmissão televisiva via satélite, ou cabo;
     \item Serviços de conversação via internet;
@@ -1116,7 +1118,7 @@ No caso de \emph{progressive}, todo frame é salvo em sequência.
 Já no formato \emph{interlaced}, podem ser utilizados campos entrelaçados.
 Por exemplo, um primeiro campo pode ser as linhas pares do frame, enquanto o segundo
 as linhas ímpares \cite{SullivanH264}.
-No prosseguimento do texto será utilizado o termo imagem sem diferenciação entre os 
+Na sequência do texto será utilizado o termo imagem sem diferenciação entre os 
 formatos apresentados.
 
 Técnicas para compressão digital, não somente para vídeos, mas para aplicações em geral,
@@ -1175,9 +1177,9 @@ trouxe novas funcionalidades.
 
 Antes de entrar mais especificamente nas funcionalidades, é necessário entender-se o 
 funcionamento geral do codec.
-Em primeiro lugar, podemos dividir o codec em network abstraction layer (NAL), a parte
+Em primeiro lugar, podemos dividir o codec em Network Abstraction Layer (NAL), a parte
 relativa a configuração da rede pela qual o video será transmitido,
-e a video coding layer (VCL), que diz respeito a forma como será representado o vídeo 
+e a Video Coding Layer (VCL), que diz respeito a forma como será representado o vídeo 
 e seus frames.
 Neste resumo o foco será nas funcionalidades relativas a codificação de vídeo, 
 por tratarem de um assunto mais próximo a proposta do trabalho.
@@ -1189,6 +1191,10 @@ Estes, por sua vez, podem ser divididos em sub-blocos de $16\times8$, $8\times16
 $8\times8$, $8\times4$, $4\times8$ e $4\times4$.
 A partir dos sub-blocos, dos macroblocos e das porções é que a codificação de vídeo 
 é executada, levando em consideração o MCP.
+
+Cada um dos frames pode somente fazer predição intra-frame (I-frames), utilizar 
+predição inter-frames (P-frames) com uma imagem de referência, ou utilizar 
+duas imagens de referência, com pesos diferenciados (B-frames).
 
 Segundo \citet{WiegangH264}, as principais funcionalidades relativas a eficiência
 da codificação são as seguintes:
@@ -1223,7 +1229,7 @@ dando enfoque principal ao padrão H.264, fortemente utilizado no meio.
 
 \section{Introdução a CUDA\reg}
 CUDA\reg~é uma plataforma de programação paralela, bem como um modelo de programação, 
-desenvolvido pela NVIDIA para aplicações computacional em geral poderem ser executadas
+desenvolvido pela Nvidia para aplicações computacionais em geral poderem ser executadas
 em GPU's.
 Sua primeira versão foi lançada em 2006.
 Desde então, diversas empresas e trabalhos acadêmicos utilizaram a plataforma.
@@ -1234,7 +1240,7 @@ cuBLAS, para álgebra linear básica, NPP, para processamento de vídeo, imagens
 sinais em geral.
 
 A plataforma tem ótimos resultados para algoritmos, procedimentos, que possam utilizar
-fortemente o paralelismo.
+fortemente o paralelismo \cite{CUDAMAIN}.
 Atualmente, GPU's podem possuir mais de 4000 cores, por exemplo, a Nvidia Geforce RTX 2080 Ti,
 além de serem capazes de rodarem 32 threads simultaneamente.
 Todos os cores, ou pelo menos aqueles que forem designados para determinada aplicação,
@@ -1242,7 +1248,7 @@ devem estar rodando o mesmo código, porém com valores de variáveis que podem 
 
 A arquitetura de CUDA\reg~se dá como na figura abaixo.
 Ao ser executado um determinado \textit{kernel}, este é distribuído em um \textit{grid}
-com $B$ blocos, cada blocs com $T$ threads.
+com $B$ blocos, cada bloco com $T$ threads.
 Dentro de um bloco pode ser compartilhada memória de rápido acesso, enquanto para 
 acesso fora do bloco precisa-se de memória global.
 \begin{figure}[H]
@@ -1250,7 +1256,7 @@ acesso fora do bloco precisa-se de memória global.
     \begin{center}
         \includegraphics[width=0.5\textwidth]{img/CUDAarch.png}
     \end{center}
-    \legend{Fonte: CUDA.....}
+    \legend{Fonte: \cite{CUDACGUIDE}}
 \end{figure}
 
 Os resultados que CUDA\reg~apresenta são muito consistentes para algoritmos claramente
@@ -1262,7 +1268,7 @@ executadas na CPU.
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/cublas9_2.png}
     \end{center}
-    \legend{Fonte: CUDA.....}
+    \legend{Fonte: \cite{CUBLAS}}
 \end{figure}
 
 
@@ -1283,7 +1289,7 @@ sem gerar novas alocações.
 
 Para exemplificar o quão simples é executar programas claramente paralelos em 
 CUDA\reg, a seguir está descrito um \textit{kernel} que soma duas matrizes,
-$\mat{A}$ e $\mat{B}$, colocando o resultado em $\mat{C}$.
+$\mat{A}$ e $\mat{B}$, e põe o resultado em $\mat{C}$.
 \begin{center}
     \begin{lstlisting}
         __global__ void MatAdd(float A[N][N], float B[N][N],
@@ -1296,7 +1302,8 @@ $\mat{A}$ e $\mat{B}$, colocando o resultado em $\mat{C}$.
         \end{lstlisting}
 \end{center}
 
-É possível perceber que, além da simplicidade do código, a sintaxe é muito próxima ao C. 
+É possível perceber que, além da simplicidade do código, a sintaxe é muito próxima a
+da linguagem C. 
 Esse fato pode ser considerado uma ajuda para a popularização da plataforma.
 Também é possível verificar como se dá o paralelismo. 
 Através dos parâmetros $x$ e $y$ de $threadIdx$, seleciona-se qual parte da matriz que 
@@ -1304,6 +1311,9 @@ será somada.
 Nesse caso, por simplicidade, é considerado que o \textit{kernel} será criado com apenas
 $1$ bloco, de forma que somente é necessário utilizar o número da thread para definir 
 os índices operados.
+Caso fossem utilizados mais blocos, deveriam ser considerados os valores de $blockIdx$, 
+que corresponde ao identificador de que bloco está sendo processado, e $blockDim$, que 
+representa o tamanho do bloco.
 
 A plataforma CUDA\reg~foi utlizada no trabalho proposto para a paralelização do algoritmo
 OMP (\autoref{algo:omp}), conforme será discutido nos próximos capítulos.
@@ -1360,7 +1370,7 @@ tal qual a teoria de CS prevê.
 Todos os trabalhos citados anteriormente utilizam como dicionário a DCT.
 No sentido de utilizar técnicas de aprendizado de dicionários, 
 \citet{chen2010dictionary} apresenta uma proposta baseada na de \citet{ZhangVideoCS},
-porém, por parte do \textit{decoder}, ao invés de utilizar algum dicionário conhecida,
+porém, por parte do \textit{decoder}, ao invés de utilizar algum dicionário conhecido,
 utilizar um aprendido.
 
 % Ler o Lima e falar sobre com mais intensidade... OK
@@ -1378,9 +1388,9 @@ No trabalho descrito, \citeauthor{lima2012codificaccao} utiliza a diferença ent
 bloco anterior e o atual ou somente o atual, dado um limite. 
 No trabalho proposto, sempre será utilizado o bloco atual.
 Porém, quando a diferença não for significativa, não recalculará a representação do bloco.
-A escolha se dá pelo fato de que o dicionário base foi treinado para os blocos 
-não residuais, e que, portanto, espera-se que a representação tenha melhores resultados 
-para estes.
+% A escolha se dá pelo fato de que o dicionário base foi treinado para os blocos 
+% não residuais, e que, portanto, espera-se que a representação tenha melhores resultados 
+% para estes.
 
 No próximo capítulo será detalhada a proposta do trabalho, explicitando detalhes
 da implementação.
@@ -1423,13 +1433,16 @@ No caso do sistema criado, a ordem dos pixels é
 linha a linha, ou seja, primeiro a linha $0$ e todas suas colunas, depois a $1$, e assim por diante.
 Em contraste com essa definição o frame em memória poderia ser coluna por coluna, o que alteraria
 alguns cálculos internos, sendo possível adaptar o sistema desenvolvido de forma bastante simples.
+Essa é uma diferença para com os codecs conhecidos, que utilizam comumente o espaço de cor YCbCr
+para processamento.
+O codec proposto não necessita fazer tal transformação, pois a transformação executada pelas 
+técnicas de aprendizado de dicionários absorve a transformação no espaço de cor.
 
 Em seguida são definidas as nomenclaturas de alguns parâmetros importantes do
 \textit{framework} proposto.
 
 \section{Parâmetros do sistema}
-Nessa seção serão mostrados os parâmetros do sistema que serão utlizados nas próximas
-seções. 
+Os parâmetros modificáveis do sistema proposto como um todo estão na tabela a seguir. 
 As escolhas e resultados obtidos com a alteração dos parâmetros serão discutidas no 
 capítulo \autoref{sec:results}.
 
@@ -1448,7 +1461,7 @@ capítulo \autoref{sec:results}.
           $q$    & Esparsidade de envio da informação, $q \le s$ \\
           \hline
         \end{tabular}
-    \legend{Fonte: O Autor}
+    \legend{Fonte: O Autor.}
     \label{tbl:params}
 \end{table}
 
@@ -1476,13 +1489,13 @@ O treinamento foi executado da seguinte forma:
     \item Os frames foram sorteados, de forma a garantir que um comportamento dos últimos frames
     não prepondere sobre todo o dicionário.
     \item Cada frame foi separado em patches com tamanho $p \times p$, sendo $p$ o tamanho de
-    patch escolhido para o sistema. \textbf{CITAR RESULTADO COM ESCOLHA DE TAMANHO DE PATCH}.
+    patch escolhido para o sistema.
     Para o treinamento, foram utilizados patches com sobreposição. Por fim, todos os patches
     foram vetorizados da mesma forma que em \autoref{sec:frameaquisition}.
-    \item Executado algoritmo do ODL, conforme Algoritmo \autoref{algo:odl}.
+    \item Executado algoritmo do ODL, conforme o algoritmo \autoref{algo:odl}.
 \end{enumerate}
 
-Vale ressaltar que para vídeos muito especializados, pode-se utilizar um treinamento
+Vale ressaltar que, para vídeos muito especializados, pode-se utilizar um treinamento
 mais especializado. Por exemplo, uma transmissão esportiva, que seja de somente um tipo
 de esporte, pode treinar um dicionário somente com frames desse determinado esporte.
 
@@ -1501,8 +1514,10 @@ $K$ como número de átomos do dicionário.
 O algoritmo ainda precisa saber o número de amostras que devem ser selecionadas aleatoriamente
 de cada frame.
 Para determinar isso, foram executados testes de qualidade com diversos valores
-\textbf{CITAR RESULTADOS}.
+(\ref{sec:parametrizacao}).
 Foi utilizada a implementação da biblioteca SPAMS \cite{SPAMS} do algoritmo ODL.
+
+% INSERIR IMAGEM DE DICIONÁRIO, CITANDO K e p
 
 O resultado final desse etapa será um dicionário $\mat{D} \in \mathbb{R}^{3p^2 \times K}$,
 que será utilizado nas etapas seguintes de codificação e decodificação.
@@ -1520,19 +1535,20 @@ subsistema.
 
 Já nesse ponto do processamento é necessário ter em vista o tamanho dos patches $p\times p$
 que será utilizado. A escolha deve seguir o parâmetro definido na escolha do dicionário.
-Valores típicos a serem escolhidos são $p=4$ ou $p=8$. No capítulo \autoref{sec:results} serão 
+Valores típicos a serem escolhidos são $p=4$ ou $p=8$. Na seção \ref{sec:parametrizacao} serão 
 discutidos resultados alcançados com ambas escolhas de tamanho de patch.
 
 A escolha por processar patches se dá pela necessidade do processamento em tempo real, pois 
 os algoritmos relacionados a CS dependem diretamente do tamanho
 dos sinais envolvidos, do tamanho dos dicionários e da esparsidade.
 Porém, o tamanho dos dicionários e a esparsidade precisam ser maiores conforme maior for 
-o sinal, o que leva a um aumento de complexidade mais que linear com o aumento do tamanho dos
+o sinal, o que leva a um aumento de complexidade maior que linear com o aumento do tamanho dos
 patches, além de uma utilização maior de memória para o dicionário.
 Utilizar patches pequenos possibilita a paralelização dos cálculos.
 No caso do trabalho que está sendo apresentado, em que o processamento dos patches, que será 
 comentado na próxima seção, se dá utilizando a arquitetura da GPU, a utilização de maior 
 paralelismo tende a aumentar a velocidade de processamento.
+Resultados nesse sentido serão discutidos na seção \ref{sec:parametrizacao}.
 Como já comentado na seção \autoref{sec:learn}, existe também um \textit{trade-off} entre 
 diminuir o tamanho do patch e aumentar a compressão.
 
@@ -1571,7 +1587,7 @@ A métrica considera que um patch deve ser recalculado caso qualquer um dos valo
 pixels inseridos nele mudem.
 Esse simples cálculo sobre os patches garante que, para vídeos estáticos, o desempenho
 da aplicação seja acelerado.
-Grande parte dos vídeos possuem partes com essas características, e esse cálculo simples
+Parte considerável dos vídeos possuem partes com essas características, e esse cálculo simples
 não aumenta significativamente a complexidade do sistema como um todo.
 
 \subsection{Codificação esparsa dos patches}
@@ -1590,13 +1606,13 @@ A implementação básica escolhida para o sistema foi baseada na biblioteca SPA
 A partir dela, foi desenvolvida uma versão em CUDA\reg, focada em paralelizar o algoritmo
 OMP para cada $(\vec{x_i}, \vec{\gamma_i})$. Assim, foi possível calcular a representação
 em tempo suficiente para transmissão em tempo real, conforme será verificado no capítulo 
-de resultados \autoref{sec:results}.
+de resultados.
 
-Um importante fato a ser considerado pelo algoritmo \autoref{algo:omp} é que, a cada iteração,
-ele descobre a melhor solução para essa esparsidade. Ou seja, se escolhida esparsidade $s=5$,
+Um importante fato a ser considerado sobre o algoritmo \autoref{algo:omp} é que, a cada iteração $i$,
+ele descobre a melhor solução para a esparsidade $i$. Ou seja, se escolhida esparsidade $s=5$,
 por exemplo, é possível armazenar-se os resultados com esparsidade $s=1,...,5$. 
-A utlidade desse fato se dá no controle da taxa de transmissão, pois quanto mais esparsa a 
-representação, menor a taxa. 
+A utilidade desse fato se dá no controle da taxa de transmissão, pois quanto mais esparsa a 
+representação, menor o bitrate. 
 Portanto, com a aplicação do OMP, já se é possível gerar as melhores e piores representações.
 Imaginando múltiplas transmissões a partir do mesmo \textit{encoder}, cada uma poderia ter 
 uma taxa diferente sem a necessidade de mais cálculos nessa etapa.
@@ -1648,7 +1664,8 @@ Como exemplo prático, selecione-se $q=3$ e $K=16$,
         5   & -1 & -1
     \end{bmatrix}
 \end{equation*}
-tal que as entradas com valor $-1$ correspondem a entradas que não foram necessárias. 
+tal que as entradas com valor $-1$ correspondem a entradas que não foram necessárias, 
+e cada coluna representa um patch $\vec{\gamma_i}$. 
 Dessa forma, os vetores $\vec{v}$ e $\vec{r}$ serão os seguintes: 
 \begin{center}
     $\vec{v} = \left[ 189, 45, 8, 36, 114, 32 \right]$, \\
@@ -1662,8 +1679,8 @@ seguido do número de patches não enviados.
 
 Esses vetores, mais a informação de máximo, mínimo e $q$ precisam ser empacotados 
 e comprimidos para enviar ao decoder.
-A compressão utlizada foi baseada em codificação de Huffman, e foi utilizada 
-a biblioteca \textit{Boost Gzip} para tal.
+A compressão utilizada foi baseada em codificação de Huffman, e foi utilizada 
+a biblioteca \textit{Boost Gzip} \cite{Boost} para tal.
 
 \section{\textit{Decoder}}
 
@@ -1673,15 +1690,15 @@ a biblioteca \textit{Boost Gzip} para tal.
 A primeira etapa necessária é e decompressão dos dados recebidos. 
 Foi executado o processo contrário a codificação de Huffman, 
 baseando-se na tabela de compressão gerada para recuperar os valores originais.
-A biblioteca \textit{Boost Gzip} foi utilizada novamente para tal.
+A biblioteca \textit{Boost Gzip} \cite{Boost} foi utilizada novamente com esse objetivo.
 
 A partir do sinal decomprimido deve-se recuperar as matrizes $\mat{V}$ e $\mat{R}$
-tomandos os vetores $\vec{v}$ e $\vec{r}$ recebidos.
+tomando os vetores $\vec{v}$ e $\vec{r}$ recebidos.
 
 Em seguida é necessário recompor os coeficientes quantizados 
 executando a operação inversa a de quantização.
 Considerando $c'$ cada coeficiente recebido, $u$ o maior valor e $l$ o menor, 
-valores todos recebidos,
+valores todos recebidos no \textit{bitstream},
 \begin{equation*}
     c = \frac{c' (u - l)}{255} + l
 \end{equation*}
@@ -1719,15 +1736,34 @@ Assim, cada um dos patches de $\mat{X}$, que estavam vetorizados, são novamente
 em matrizes de dimensão $p \times p \times 3$, e colocados em sua devida posição, formando
 a imagem recebida $\mat{I}$ de dimensões $m \times n$.
 
+\section{Implementação}
+A implementação do codec se deu utilizando a linguagem de programação Python para a etapa 
+de aprendizado de dicionários, e, como já citado, a biblioteca SPAMS \cite{SPAMS}.
+
+Para o \emph{encoder} e \emph{decoder} foi escolhida a linguagem C++. 
+O carregamento de vídeos utilizou a biblioteca OpenCV \cite{OpenCV}.
+Já para o processamento matricial não executado pela plataforma CUDA\reg, a biblioteca 
+Eigen \cite{Eigen} foi a selecionada.
+
+O programa para testes executa os processos de codificação e decodificação, realizando 
+métricas de tempo e qualidade para ambas etapas.
+Além disso, a parte de codificação salva um arquivo comprimido com o resultado da mesma.
+Um programa que somente desempacota os dados e decodifica também foi desenvolvido.
+
+Além disso, foram criados alguns subprogramas com o intuito de facilitar os testes e 
+execuções, bem como analisar outras possibilidades, e executar métricas em paralelo ao 
+desenvolvimento do codec.
+
 \chapter{Resultados}
 \label{sec:results}
 Durante a implementação da proposta, surgiram alguns parâmetros gerais da implementação
-que poderiam ser modificados, vide tabela \autoref{tbl:params}. 
+que poderiam ser modificados, vide tabela \ref{tbl:params}. 
 Nas próximas seções serão discutidos os parâmetros e resultados alcançados com as 
 alterações dos mesmos.
 
-Os testes foram executados utilizando vídeos utilizados na literatura para testes,
+Os testes foram executados com vídeos utilizados na literatura para testes,
 disponíveis em \url{https://media.xiph.org/video/derf/}.
+% Criar citação
 Os vídeos estão em formato de sequência de frames, sem compressão, ou somente com 
 compressão sem perdas.
 Alguns dos vídeos disponíveis foram escolhidos.
@@ -1772,7 +1808,7 @@ Os vídeos em negrito foram os escolhidos para a validação, enquanto os demais
           & waterfall & CIF & $260$ \\
           \hline
         \end{tabular}
-    \legend{Fonte: O Autor}
+    \legend{Fonte: O Autor.}
     \label{tbl:vidtrain}
 \end{table}
 
@@ -1793,8 +1829,10 @@ o valor de $t$ para providenciar pelo menos $10$ e no máximo $100$ frames para 
 de treinamento, aproximadamente.
 A ordem de processamento dos frames foi aleatória, para evitar viés para os últimos frames. 
 Cada frame foi então transformado em sequência de patches, com sobreposição.
-Essa sequência foi introduzida no algoritmo ODL, que tomou no máximo 2500 amostras por sequência
+Essa sequência foi introduzida no algoritmo ODL, que tomou no máximo $2500$ amostras por sequência
 para fazer o treinamento do dicionário.
+Como dicionários iniciais foram utilizados valores randômicos com distribuição normal de 
+média aproximadamente $0$.
 
 A tabela a seguir apresenta os parâmetros de cada dicionário criado para os testes subsequentes.
 Cada parametrização foi aplicada a todas as classes de vídeos.
@@ -1822,7 +1860,7 @@ enquanto $K$ representa o número de átomos do dicionário.
           8 & 192 \\
           \hline
         \end{tabular}
-    \legend{Fonte: O Autor}
+    \legend{Fonte: O Autor.}
     \label{tbl:testparams}
 \end{table}
 
@@ -1836,17 +1874,18 @@ Em seguida serão apresentados os resultados alcançados com as diferentes param
 e diferentes classes de vídeos.
 
 \section{Alterações em $K$, $p$ e $s$}
+\label{sec:parametrizacao}
 Nessa seção serão apresentados e discutidos resultados alcançados na compressão e 
 decompressão dos vídeos escolhidos de cada classe para os parâmetros definidos na 
-tabela \autoref{tbl:testparams}.
+tabela \ref{tbl:testparams}.
 
 No total foram 10 parametrizações diferentes para cada uma das 5 classes de vídeos, 
 totalizando 50 combinações diferentes para serem testadas.
 
-Quando olha-se para o algoritmo OMP (\autoref{algo:omp}), tem-se que sua complexidade teórica 
-é $O(s m d)$, tal que, nesse caso, $m = K$ e $d = 3p^2$.
+Ao observar o algoritmo OMP (\autoref{algo:omp}), verifica-se que sua complexidade teórica 
+é $O(s m d)$, tal que, nesse caso, $m = K$ e $d = 3p^2$, portanto, $O(s K p^2)$.
 Os resultados mostram o que a teoria espera, um aumento linear no tempo de processamento,
-pois no caso considerado, foi mantido $s$ e $d$ fixos, enquanto a variação ocorreu em $m$.
+pois no caso considerado, foram mantidos $s$ e $d$ fixos, enquanto a variação ocorreu em $m$.
 Vale ressaltar que o processamento de cada patch foi individual e utilizando a plataforma 
 CUDA\reg, que paraleliza as operações.
 Porém, por mais que patches possam ser executados em paralelo, seu tempo individualmente, 
@@ -1858,7 +1897,7 @@ no processamento do OMP, aumenta conforme o aumento do dicionário.
         \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_etime.png}
         \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_dtime.png}
     \end{center}
-    \legend{Fonte: O autor.}
+    \legend{Fonte: O Autor.}
     \label{fig:timep4}
 \end{figure}
 
@@ -1874,7 +1913,7 @@ O mesmo pode ser constatado na figura abaixo, que apresenta os resultados alcan�
         \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_etime.png}
         \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_dtime.png}
     \end{center}
-    \legend{Fonte: O autor.}
+    \legend{Fonte: O Autor.}
     \label{fig:timep8}
 \end{figure}
 
@@ -1889,7 +1928,7 @@ O sistema simples criado para idenficação de patches sem a necessidade de rec�
 acaba por marcar diversos pontos, tendo assim menos processamento para fazer em diversas 
 partes do vídeo.
 
-Também foi verificada a qualidade dos utilizando o PSNR. 
+Também foi verificada a qualidade dos vídeos utilizando o PSNR médio. 
 Os resultados mostram que o PSNR não se alterou significativamente para os diversos tamanhos
 de dicionário, o que indica que é possível utilizar valores baixos de $K$ sem perdas significativas
 na qualidade da representação.
@@ -1900,16 +1939,17 @@ na qualidade da representação.
         \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_psnr.png}
         \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_psnr.png}
     \end{center}
-    \legend{Fonte: O autor.}
+    \legend{Fonte: O Autor.}
     \label{fig:psnr8bit}
 \end{figure}
 
-Na verdade o que se pode verificar é que essa variabilidade verificada no PSNR se dá devido 
+Na verdade o que se pode verificar é que existe uma variabilidade no PSNR médio devido 
 a quantização.
 Para melhorar esse fato, poderiam ser utilizados inteiros de 16bits ao invés de 8bits na 
 representação comprimida, considerando que a representação perde significativamente em 
 compressibilidade.
-A figura abaixo mostra que o PSNR é bem mais estável utilizando uma representação de 16bit.
+A figura abaixo mostra que o PSNR médio é bem mais estável utilizando uma representação 
+de 16bit, com exceção da classe cartoon, que manteve uma considerável variação.
 
 \begin{figure}[H]
     \caption{PSNR médio em função de $K$, com quantização de 16bit.}
@@ -1917,15 +1957,15 @@ A figura abaixo mostra que o PSNR é bem mais estável utilizando uma representa
         \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_psnr_16bit.png}
         \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_psnr_16bit.png}
     \end{center}
-    \legend{Fonte: O autor.}
+    \legend{Fonte: O Autor.}
     \label{fig:psnr16bit}
 \end{figure}
 
-Apesar da percepção de que alcança maior estabilidade utilizando 16bit na quantização, 
+Apesar da percepção de que se alcança maior estabilidade utilizando 16bit na quantização, 
 também é possível verificar que não acontece grande alteração no PSNR devido ao uso 
 dos 16bit, nem mesmo devido ao aumento de $K$.
-Claramente é necessário ressaltar o caso dos vídeos indoor, que apresentam bastante diferença de
-PSNR na relação 8bit para 16bit.
+% Claramente é necessário ressaltar o caso dos vídeos indoor, que apresentam bastante diferença de
+% PSNR na relação 8bit para 16bit.
 Partindo desse fato, pode-se constatar que utilizar um dicionário menor não compromete
 significativamente a qualidade do vídeo.
 
@@ -1934,35 +1974,43 @@ pouca variação nas cenas, para avaliar as mudanças no PSNR médio em função
 de $s$.
 Também foi escolhido o vídeo de esportes, usando a mesma configuração, este pelo fato 
 de que possui patches com grama, que é uma imagem com alta frequência.
-Sumarizando, foram escolhidos $p=4$, $K=32$, e $s=3,4,5,6$.
+Sumarizando, foram escolhidos $p=4$, $K=32$, e $s=1,2,3,4,5,6$.
 
 \begin{figure}[H]
     \caption{PSNR médio em função de $s$.}
     \begin{center}
         \includegraphics[width=0.6\textwidth]{img/graficos/p4d32_sv_psnr.png}
     \end{center}
-    \legend{Fonte: O autor.}
+    \legend{Fonte: O Autor.}
     \label{fig:psnrsvar}
 \end{figure}
 
 O que se pode perceber é que conforme o valor de $s$ aumenta, o PSNR médio também, 
 mas não de forma linear.
-Os pontos $s=4,5,6$ do vídeo indoor apresentaram leves baixas no PSNR. 
-Isso se deve ao erro de quantização envolvido no processo.
+Os pontos $s=4,5,6$ de ambos vídeos não apresentam tão importantes melhoras no 
+PSNR médio na relação entre eles. 
+Inclusive, para $s=6$, o vídeo indoor apresentou degradação em relação a $s=5$, 
+causada pelos erros de quantização envolvidos.
+Dadas essas constatações, pode-se verificar que o aumento do valor de $s$ faz com 
+que a representação seja capaz de aprimorar as altas frequências, muito semelhante 
+ao uso da DCT.
 
 Por fim, foi aplicada a métrica de \emph{bitrate},
-que consiste em calcular quandos bits por segundo a representação compactada 
+que consiste em calcular quantos bits por segundo a representação compactada 
 de cada vídeo conseguiu alcançar.
 
-Foi percebido que a melhor compressão aconteceu com $p=8$ e $K=192$, para todos 
+A partir da codificação salva dos vídeos codificados,
+foi percebido que a melhor compressão aconteceu com $p=8$ e $K=192$, para todos 
 os vídeos testados. 
 Além disso, é possível verificar que o PSNR médio não tem tantas mudanças em relação 
-a mudança do tamanho do patch ou do dicionário.
+a mudança do tamanho do patch ou do dicionário, como já citado anteriormente,
+o que proporciona a possibilidade de se escolher a representação mais compacta para 
+comparar com o codec H.264.
 Portando, foi calculado o bitrate usando essa configuração.
 
 % Tabela do bitrate
 \begin{table}[h]
-    \caption{Bitrate calculado para vídeos de teste com $p=8$ e $K=192$.}
+    \caption{Bitrate calculado para vídeos de teste com $p=8$, $K=192$ e $s=14$.}
     \centering
         \begin{tabular}{|l|c|c|c|c|}
           \hline
@@ -1980,7 +2028,7 @@ Portando, foi calculado o bitrate usando essa configuração.
           stockholm & $604$ & $59,94$ & $12.014.763$ & $9386,5$ \\
           \hline
         \end{tabular}
-    \legend{Fonte: O Autor}
+    \legend{Fonte: O Autor.}
     \label{tbl:bitrate}
 \end{table}
 
@@ -1991,7 +2039,7 @@ de um arquivo por teste com a codificação apresentada na proposta do trabalho.
 o bitrate degrada consideravelmente, chamando a atenção da necessidade de se agregar possivelmente
 algum tipo de detecção de movimento.
 Em especial é possível notar que o maior vídeo teve maior compressão.
-Além de ser o maior vídeo, o mesmo também possui diversas partes com a "câmera" parada, 
+Além de ser o maior vídeo, o mesmo também possui diversas partes com a câmera parada, 
 o que facilita a compressão devido ao método proposto.
 
 Fica claro que, quando se deseja tempo real na codificação, deve-se utilizar valores 
@@ -2001,11 +2049,13 @@ O valor de $s$ é capaz de controlar a qualidade, a compressão e até mesmo a v
 da codificação, sendo então necessário considerar várias possibilidades para seus valores.
 
 \section{Comparação com codec H.264}
-Para a comparação com o codec H.264 foi utilizado o software FFMPEG, tendo como entrada
+Para a comparação com o codec H.264 foi utilizado o software FFmpeg \cite{FFmpeg}, tendo como entrada
 as mesmas sequências que serviram para os testes executados. 
 O software permite que se gere arquivos de saída com aproximadamente um bitrate desejado.
 Dessa forma, foi executado o programa para alcançar os mesmos bitrates que os apresentados 
-na tabela \autoref{tbl:bitrate}.
+na tabela \ref{tbl:bitrate}.
+O codec H.264 permite diversas parametrizações.
+Por questão de simplicidade, foi utilizada a configuração padrão, apenas forçando o bitrate desejado.
 Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
 
 % Usar novos testes para chegar ao valores
@@ -2026,11 +2076,82 @@ Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
           stockholm        & $23,63$ & $32,80$ \\
           \hline
         \end{tabular}
-    \legend{Fonte: O Autor}
+    \legend{Fonte: O Autor.}
     \label{tbl:bitrateh264}
 \end{table}
 
+Os resultados obtidos foram, para todos os casos, com exceção do vídeo de natureza, piores 
+para o codec proposto em $3dB$ ou mais.
+A exceção que chama a atenção é a classe natureza, na qual houve um resultado 
+melhor utilizando o codec proposto.
+É interessante avaliar que praticamente não houveram patches sem recálculo, o que, como citado 
+acima, aumentou significativamente o bitrate.
+Mesmo assim, a proposta conseguir apresentar um PSNR médio maior que o codec H.264.
+
+Os valores amostrados indicam que a opção pelo uso das técnicas propostas,
+agregados a melhorias que possam ser executadas, pode gerar resultados ainda melhores.
+
+\section{Resultado visual}
+\label{sec:resultadovisual}
+
 \chapter{Conclusão}
+O trabalho apresentou uma proposta de codec utlizando métodos de compressed sensing
+aliados a aprendizado de dicionários. 
+
+Na fase de execução de testes e geração de resultados foi possível constatar o funcionamento 
+do codec para 5 tipos diferentes de classes de vídeos.
+Ficou clara também a relação entre execução em tempo real, compressibilidade do vídeo e 
+qualidade com os parâmetros $K$ (número de átomos do dicionário), $p$ (tamanho do bloco), 
+e $s$ (esparsidade da representação).
+
+Mudanças no valor de $K$ acarretam em pouca diferença na qualidade do vídeo, desde que 
+o valor não seja muito pequeno. 
+Por outro lado, o valor de $K$ altera linearmente o tempo de codificação dos frames, como 
+pode ser verificado nas figuras \ref{fig:timep4} e \ref{fig:timep8}.
+Também nas figuras anteriores se percebe que o tempo de decodificação não se altera.
+A compressibilidade é alterada pelo valor de $K$, sendo que valores maiores correspondem 
+a maior capacidade de compressão.
+Resumindo, se o objetivo for maior compressão, deve-se escolher valores maiores de $K$.
+Se a ideia é tempo real, valores menores são necessários.
+Vale lembrar que os dicionários precisam ser previamente treinados. 
+O que pode valer a pena, nesse caso, é escolher, para determinada classe, um dicionário para 
+tempo real e outro para compressão, através de testes.
+
+Quanto ao parâmetro $p$, ele produz dois distúrbios no codec.
+Em primeiro lugar, ao observar $p=4$ e $p=8$, fica claro que, para tempo real, $p=4$ é a 
+solução. Para compressão, $p=8$. 
+Seria interessante serem executados testes com valores de $p$ maiores que $8$, 
+no sentido de verificar a capacidade de compressão.
+Para isso, em primeiro lugar, deve-se trabalhar em tornar mais veloz a codificação, tanto 
+melhorando a implementação do algoritmo utilizado, ou buscando outras soluções.
+Por exemplo, durante a execução do trabalho, não foi possível verificar o funcionamento 
+paralelo do algoritmo IHT \cite{BLUMENSATHIHT}, que claramente apresenta características
+interessantes para um algoritmo paralelizável.
+Um detalhe importante é que o tamanho do patch não altera significativamente a qualidade 
+da representação, podendo ser alcançados boa qualidade com tamanhos diferentes. 
+Porém, vale ressaltar um problema relacionado com o uso de patches sem sobreposição, os 
+artefatos visuais. 
+Para aprimorar nesse sentido foram criados algoritmos para \emph{deblocking}, que poderiam 
+ser aplicados a solução apresentada.
+
+Já no que diz respeito ao parâmetro $s$, ficou claro que ele altera a qualidade da representação 
+e também a compressibilidade.
+Quanto a compressibilidade, o resultado pode ser verificado pela própria representação dos dados.
+Considere um frame 720p usando $p=4$, utilizando $1$ byte para o valor e $1$ para o índice em cada 
+patch, e que são $57600$ patches, $112,5$ kbytes serão utilizados aproximadamente a cada incremento
+em $s$.
+
+Por fim, as comparações com o codec H.264 mostraram que existem muitos pontos que podem ser 
+aprimorados, mas também mostra que a proposta apresentada pode ser construtiva.
+Em relação aos padrões já existentes, fica clara a necessidade de maior desenvolvimento em 
+todas as dimensões do codec, pois o que foi apresentado ilustra a ideia principal.
+Um caminho a ser seguido é combinar as metodologias já existentes para predição intra-frame 
+e inter-frame com o aprendizado de dicionários, além de estruturar essa relação.
+Além disso, é necessário verificar formas de implementar a camada de rede do codec baseando-se 
+nos padrões já existentes.
+
+De forma resumida, o trabalho proposto apresentou um caminho para a codificação de vídeos 
+utilizando aprendizado de dicionários e técnicas de compressed sensing.
 
 
 % referências
