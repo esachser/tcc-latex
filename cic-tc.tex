@@ -1970,14 +1970,14 @@ Portando, foi calculado o bitrate usando essa configuração.
           \multicolumn{1}{|c}{\textit{Nº frames}} & 
           \multicolumn{1}{|c}{\textit{FPS}} & 
           \multicolumn{1}{|c}{\textit{Tam. arquivo (bytes)}} & 
-          \multicolumn{1}{|c|}{\textit{Bitrate}} \\
+          \multicolumn{1}{|c|}{\textit{Bitrate}(kbit/s)} \\
           \hline
           \hline
-          big\_buck\_bunny & $14315$ & $24$ & $33.286.469$ &  \\
-          football &  $360$ & $30$ & $3.822.334$ & \\
-          johnny  &   $600$ & $60$ & $8.576.773$ & \\
-          park\_joy & $500$ & $50$ & $12.456.469$ & \\
-          stockholm & $604$ & $59,94$ & $12.014.763$ & \\
+          big\_buck\_bunny & $14315$ & $24$ & $33.286.469$ & $436$ \\
+          football &  $360$ & $30$ & $3.822.334$ & $2488,5$ \\
+          johnny  &   $600$ & $60$ & $8.576.773$ & $6700,6$ \\
+          park\_joy & $500$ & $50$ & $12.456.469$ & $9731,6$ \\
+          stockholm & $604$ & $59,94$ & $12.014.763$ & $9386,5$ \\
           \hline
         \end{tabular}
     \legend{Fonte: O Autor}
@@ -1986,6 +1986,13 @@ Portando, foi calculado o bitrate usando essa configuração.
 
 A informação de quantos bytes a representação possui foi verificada através do salvamento
 de um arquivo por teste com a codificação apresentada na proposta do trabalho.
+
+É possível visualizar que, para vídeos com a câmera em movimento, caso dos dois últimos vídeos,
+o bitrate degrada consideravelmente, chamando a atenção da necessidade de se agregar possivelmente
+algum tipo de detecção de movimento.
+Em especial é possível notar que o maior vídeo teve maior compressão.
+Além de ser o maior vídeo, o mesmo também possui diversas partes com a "câmera" parada, 
+o que facilita a compressão devido ao método proposto.
 
 Fica claro que, quando se deseja tempo real na codificação, deve-se utilizar valores 
 de $p$, $s$ e $K$ mais baixos, enquanto para que haja melhor compressão, devem ser 
