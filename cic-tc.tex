@@ -1970,7 +1970,7 @@ Portando, foi calculado o bitrate usando essa configuração.
           \multicolumn{1}{|c}{\textit{Nº frames}} & 
           \multicolumn{1}{|c}{\textit{FPS}} & 
           \multicolumn{1}{|c}{\textit{Tam. arquivo (bytes)}} & 
-          \multicolumn{1}{|c|}{\textit{Bitrate}(kbit/s)} \\
+          \multicolumn{1}{|c|}{\textit{Bitrate (kbit/s)}} \\
           \hline
           \hline
           big\_buck\_bunny & $14315$ & $24$ & $33.286.469$ & $436$ \\
@@ -2001,6 +2001,34 @@ O valor de $s$ é capaz de controlar a qualidade, a compressão e até mesmo a v
 da codificação, sendo então necessário considerar várias possibilidades para seus valores.
 
 \section{Comparação com codec H.264}
+Para a comparação com o codec H.264 foi utilizado o software FFMPEG, tendo como entrada
+as mesmas sequências que serviram para os testes executados. 
+O software permite que se gere arquivos de saída com aproximadamente um bitrate desejado.
+Dessa forma, foi executado o programa para alcançar os mesmos bitrates que os apresentados 
+na tabela \autoref{tbl:bitrate}.
+Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
+
+% Usar novos testes para chegar ao valores
+\begin{table}[h]
+    \caption{Comparação PSNR médio para mesmo bitrate.}
+    \centering
+        \begin{tabular}{|l|c|c|}
+          \hline
+          \multicolumn{1}{|c}{\textit{Vídeo}} & 
+          \multicolumn{1}{|c}{\textit{PSNR Proposta (dB)}} & 
+          \multicolumn{1}{|c|}{\textit{PSNR H.264 (dB)}} \\
+          \hline
+          \hline
+          big\_buck\_bunny &  & \\
+          football         &  & \\
+          johnny           &  & \\
+          park\_joy        &  & \\
+          stockholm        &  & \\
+          \hline
+        \end{tabular}
+    \legend{Fonte: O Autor}
+    \label{tbl:bitrate}
+\end{table}
 
 \chapter{Conclusão}
 
