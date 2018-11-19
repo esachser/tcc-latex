@@ -216,6 +216,7 @@
     \item[GPU] Graphical Processing Unit
     \item[PSNR] Peak signal-noise ratio 
     \item[CoDec] Coding and Decoding  
+    \item[FPS] Frames por segundo
 \end{listofabbrv}
 
 % idem para a lista de símbolos
@@ -1828,11 +1829,13 @@ enquanto $K$ representa o número de átomos do dicionário.
 Os parâmetros para teste foram escolhidos com base na implementação, também considerando 
 o padrão H.264, que utiliza, na etapa de transformação, patches de $4\times4$, 
 e o padrão JPEG, cujos patches são $8\times8$.
+O valor de $s$ foi fixo para os valores de $p$. 
+Sendo assim, para $p=4$, $s=5$, e para $p=8$, $s=14$.
 
 Em seguida serão apresentados os resultados alcançados com as diferentes parametrizações 
 e diferentes classes de vídeos.
 
-\section{Alterações em $K$ e $p$}
+\section{Alterações em $K$, $p$ e $s$}
 Nessa seção serão apresentados e discutidos resultados alcançados na compressão e 
 decompressão dos vídeos escolhidos de cada classe para os parâmetros definidos na 
 tabela \autoref{tbl:testparams}.
@@ -1886,8 +1889,6 @@ O sistema simples criado para idenficação de patches sem a necessidade de rec�
 acaba por marcar diversos pontos, tendo assim menos processamento para fazer em diversas 
 partes do vídeo.
 
-\textbf{VERIFICAR O PORQUÊ DE ERRO NOS ESPORTES PARA P=8.}
-
 Também foi verificada a qualidade dos utilizando o PSNR. 
 Os resultados mostram que o PSNR não se alterou significativamente para os diversos tamanhos
 de dicionário, o que indica que é possível utilizar valores baixos de $K$ sem perdas significativas
@@ -1908,8 +1909,89 @@ a quantização.
 Para melhorar esse fato, poderiam ser utilizados inteiros de 16bits ao invés de 8bits na 
 representação comprimida, considerando que a representação perde significativamente em 
 compressibilidade.
+A figura abaixo mostra que o PSNR é bem mais estável utilizando uma representação de 16bit.
 
-\textbf{EXECUTAR TESTES NESSE SENTIDO.}
+\begin{figure}[H]
+    \caption{PSNR médio em função de $K$, com quantização de 16bit.}
+    \begin{center}
+        \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_psnr_16bit.png}
+        \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_psnr_16bit.png}
+    \end{center}
+    \legend{Fonte: O autor.}
+    \label{fig:psnr16bit}
+\end{figure}
+
+Apesar da percepção de que alcança maior estabilidade utilizando 16bit na quantização, 
+também é possível verificar que não acontece grande alteração no PSNR devido ao uso 
+dos 16bit, nem mesmo devido ao aumento de $K$.
+Claramente é necessário ressaltar o caso dos vídeos indoor, que apresentam bastante diferença de
+PSNR na relação 8bit para 16bit.
+Partindo desse fato, pode-se constatar que utilizar um dicionário menor não compromete
+significativamente a qualidade do vídeo.
+
+Em seguida, foi escolhida a melhor representação do vídeo indoor, que apresenta 
+pouca variação nas cenas, para avaliar as mudanças no PSNR médio em função do valor 
+de $s$.
+Também foi escolhido o vídeo de esportes, usando a mesma configuração, este pelo fato 
+de que possui patches com grama, que é uma imagem com alta frequência.
+Sumarizando, foram escolhidos $p=4$, $K=32$, e $s=3,4,5,6$.
+
+\begin{figure}[H]
+    \caption{PSNR médio em função de $s$.}
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{img/graficos/p4d32_sv_psnr.png}
+    \end{center}
+    \legend{Fonte: O autor.}
+    \label{fig:psnrsvar}
+\end{figure}
+
+O que se pode perceber é que conforme o valor de $s$ aumenta, o PSNR médio também, 
+mas não de forma linear.
+Os pontos $s=4,5,6$ do vídeo indoor apresentaram leves baixas no PSNR. 
+Isso se deve ao erro de quantização envolvido no processo.
+
+Por fim, foi aplicada a métrica de \emph{bitrate},
+que consiste em calcular quandos bits por segundo a representação compactada 
+de cada vídeo conseguiu alcançar.
+
+Foi percebido que a melhor compressão aconteceu com $p=8$ e $K=192$, para todos 
+os vídeos testados. 
+Além disso, é possível verificar que o PSNR médio não tem tantas mudanças em relação 
+a mudança do tamanho do patch ou do dicionário.
+Portando, foi calculado o bitrate usando essa configuração.
+
+% Tabela do bitrate
+\begin{table}[h]
+    \caption{Bitrate calculado para vídeos de teste com $p=8$ e $K=192$.}
+    \centering
+        \begin{tabular}{|l|c|c|c|c|}
+          \hline
+          \multicolumn{1}{|c}{\textit{Vídeo}} & 
+          \multicolumn{1}{|c}{\textit{Nº frames}} & 
+          \multicolumn{1}{|c}{\textit{FPS}} & 
+          \multicolumn{1}{|c}{\textit{Tam. arquivo (bytes)}} & 
+          \multicolumn{1}{|c|}{\textit{Bitrate}} \\
+          \hline
+          \hline
+          big\_buck\_bunny & $14315$ & $24$ & $33.286.469$ &  \\
+          football &  $360$ & $30$ & $3.822.334$ & \\
+          johnny  &   $600$ & $60$ & $8.576.773$ & \\
+          park\_joy & $500$ & $50$ & $12.456.469$ & \\
+          stockholm & $604$ & $59,94$ & $12.014.763$ & \\
+          \hline
+        \end{tabular}
+    \legend{Fonte: O Autor}
+    \label{tbl:bitrate}
+\end{table}
+
+A informação de quantos bytes a representação possui foi verificada através do salvamento
+de um arquivo por teste com a codificação apresentada na proposta do trabalho.
+
+Fica claro que, quando se deseja tempo real na codificação, deve-se utilizar valores 
+de $p$, $s$ e $K$ mais baixos, enquanto para que haja melhor compressão, devem ser 
+utilizados valores mais altos.
+O valor de $s$ é capaz de controlar a qualidade, a compressão e até mesmo a velocidade 
+da codificação, sendo então necessário considerar várias possibilidades para seus valores.
 
 \section{Comparação com codec H.264}
 
