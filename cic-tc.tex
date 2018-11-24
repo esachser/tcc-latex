@@ -765,7 +765,7 @@ para outros campos do conhecimento.
 \section{Aprendizado de Dicionários}
 A área de aprendizado de dicionários, do inglês \textit{dictionary learning}, busca, através
 dos dados já conhecidos de uma classe de sinais, prover novos dicionários nos quais os sinais 
-serão capazes de se conformar com maior esparsidade. 
+serão capazes de se conformar de forma mais esparsa. 
 Sob o ponto de vista de CS, um dicionário $\mat{D}$ normalmente é escolhido de forma aleatória,
 desde que satisfaça a RIP.
 Aprendizado de dicionários, por outro lado, busca gerar modelos considerando os sinais envolvidos,
@@ -1455,10 +1455,10 @@ capítulo \autoref{sec:results}.
             \multicolumn{1}{c|}{\textit{Descrição}}\\
           \hline
           \hline
-          $p$    & Tamanho do patch \\ 
-          $s$    & Valor máximo de esparsidade de cada patch \\     
-          $K$    & Número de átomos do dicionário \\
-          $q$    & Esparsidade de envio da informação, $q \le s$ \\
+          $p$    & Tamanho do patch. \\ 
+          $s$    & Valor máximo de esparsidade de cada patch. Quantidade de valores não nulos da representação do patch. \\     
+          $K$    & Número de átomos do dicionário. \\
+          $q$    & Esparsidade de envio da informação, $q \le s$. \\
           \hline
         \end{tabular}
     \legend{Fonte: O Autor.}
@@ -1492,7 +1492,7 @@ O treinamento foi executado da seguinte forma:
     patch escolhido para o sistema.
     Para o treinamento, foram utilizados patches com sobreposição. Por fim, todos os patches
     foram vetorizados da mesma forma que em \autoref{sec:frameaquisition}.
-    \item Executado algoritmo do ODL, conforme o algoritmo \autoref{algo:odl}.
+    \item Executado algoritmo do ODL, conforme o algoritmo \ref{algo:odl}.
 \end{enumerate}
 
 Vale ressaltar que, para vídeos muito especializados, pode-se utilizar um treinamento
@@ -1506,7 +1506,7 @@ se conheça a transmissão em si, mas se conheça que tipo de conteúdo será tr
 
 Um importante parâmetro que deve ser escolhido é o número de átomos $K$ do dicionário.
 Escolhas de valores maiores tendem a proporcionar maior qualidade na representação do vídeo,
-porém com perda de desempenho. No capítulo \autoref{sec:results} serão mostrados resultados
+porém com perda de desempenho. No capítulo \ref{sec:results} serão mostrados resultados
 de escolhas diferentes no número de átomos do dicionário.
 
 Como parametrização do ODL, utiliza-se o valor $s$ como esparsidade desejada e
@@ -1782,27 +1782,36 @@ Os vídeos em negrito foram os escolhidos para a validação, enquanto os demais
           \multicolumn{1}{|c|}{\textit{Nº de frames}}  \\
           \hline
           \hline
-          \multirow{3}{*}{Cartoon} & \textbf{big\_buck\_bunny} & 720p & $ 14315 $ \\
-          & elephants\_dream & 720p & $ 15691 $ \\
-          & sintel\_trailer & 720p & $ 1253 $ \\ \hline
-          \multirow{4}{*}{Monitoramento} & station & 1080p & $313$ \\
-          & bridge\_far & CIF & $2101$ \\
-          & bridge\_close & CIF & $2001$ \\
-          & \textbf{stockholm} & 720p & $604$ \\ \hline 
-          \multirow{3}{*}{Esportes} & \textbf{football} & NTSC & $360$ \\
+          \multirow{3}{*}{Cartoon} 
+          & \textbf{sintel\_trailer} & $1024\times436$ & $ 1.253 $ \\ 
+          & big\_buck\_bunny & 720p & $ 14.315 $ \\
+          & elephants\_dream & $1024\times436$ & $ 15.691 $ \\
+          \hline
+          \multirow{4}{*}{Monitoramento} 
+          & \textbf{stockholm} & 720p & $604$ \\ 
+          & bridge\_close & CIF & $2.001$ \\
+          & bridge\_far & CIF & $2.101$ \\
+          & station & 1080p & $313$ \\
+          \hline 
+          \multirow{3}{*}{Esportes} 
+          & \textbf{football} & NTSC & $360$ \\
+          & stefan & SIF & $300$ \\ 
           & tennis & SIF & $150$ \\
-          & stefan & SIF & $300$ \\ \hline
-          \multirow{6}{*}{Indoor} & deadline & CIF & $1374$ \\
+          \hline
+          \multirow{6}{*}{Indoor} 
+          & \textbf{johnny} & 720p & $600$ \\ 
           & carphone & QCIF & $382$ \\
+          & deadline & CIF & $1.374$ \\
+          & foreman & CIF & $300$ \\
           & hall\_monitor & CIF & $300$ \\
           & mother\_daughter & QCIF & $961$ \\
-          & foreman & CIF & $300$ \\
-          & \textbf{johnny} & 720p & $600$ \\ \hline
-          \multirow{6}{*}{Natureza} & \textbf{park\_joy} & 720p & $500$ \\
+          \hline
+          \multirow{6}{*}{Natureza} 
+          & \textbf{park\_joy} & 720p & $500$ \\
           & ducks\_take\_off & 720p & $500$ \\
-          & park\_run & 720p & $504$ \\
           & garden & SIF & $115$ \\
           & in\_to\_tree & 720p & $500$ \\
+          & park\_run & 720p & $504$ \\
           & waterfall & CIF & $260$ \\
           \hline
         \end{tabular}
@@ -1827,7 +1836,7 @@ o valor de $t$ para providenciar pelo menos $10$ e no máximo $100$ frames para 
 de treinamento, aproximadamente.
 A ordem de processamento dos frames foi aleatória, para evitar viés para os últimos frames. 
 Cada frame foi então transformado em sequência de patches, com sobreposição.
-Essa sequência foi introduzida no algoritmo ODL, que tomou no máximo $2500$ amostras por sequência
+Essa sequência foi introduzida no algoritmo ODL, que tomou no máximo $2.500$ amostras por sequência
 para fazer o treinamento do dicionário.
 Como dicionários iniciais foram utilizados valores randômicos com distribuição normal de 
 média aproximadamente $0$.
@@ -1837,25 +1846,13 @@ Cada parametrização foi aplicada a todas as classes de vídeos.
 É importante recordar que o parâmetro $p$ trata do tamanho do patch $p \times p \times 3$, 
 enquanto $K$ representa o número de átomos do dicionário.
 \begin{table}[h]
-    \caption{Parâmetros $p$ e $K$ utilizados para treinamento e validação}
+    \caption{Parâmetros tamanho do patch $p$ e tamanho do dicionário $K$ utilizados para treinamento e validação}
     \centering
-        \begin{tabular}{|c|c|}
+        \begin{tabular}{|c|c c c c c c|c c c c|}
           \hline
-          \multicolumn{1}{|c}{\textit{$p$}} & 
-          \multicolumn{1}{|c|}{\textit{$K$}} \\
+          \emph{Tamanho do patch} & $4$ & $4$ & $4$ & $4$ & $4$ & $8$ & $8$ & $8$ & $8$ \\
           \hline
-          \hline
-          4 & 12 \\
-          4 & 16 \\
-          4 & 24 \\
-          4 & 32 \\
-          4 & 48 \\
-          4 & 64 \\
-          \hline
-          8 & 32 \\
-          8 & 64 \\
-          8 & 128 \\
-          8 & 192 \\
+          \emph{Tamanho do dicionário} & $16$ & $24$ & $32$ & $48$ & $64$ & $32$ & $64$ & $128$ & $192$ \\ 
           \hline
         \end{tabular}
     \legend{Fonte: O Autor.}
@@ -1865,8 +1862,8 @@ enquanto $K$ representa o número de átomos do dicionário.
 Os parâmetros para teste foram escolhidos com base na implementação, também considerando 
 o padrão H.264, que utiliza, na etapa de transformação, patches de $4\times4$, 
 e o padrão JPEG, cujos patches são $8\times8$.
-O valor de $s$ foi fixo para os valores de $p$. 
-Sendo assim, para $p=4$, $s=5$, e para $p=8$, $s=14$.
+O valor de $s$, que se trata da esparsidade (\autoref{tbl:params}) foi fixo para os valores de $p$. 
+Sendo assim, para $p=4$, $s=4$, e para $p=8$, $s=8$.
 
 % INSERIR IMAGEM DE DICIONÁRIO, CITANDO K e p
 \begin{figure}[H]
@@ -1882,16 +1879,16 @@ Sendo assim, para $p=4$, $s=5$, e para $p=8$, $s=14$.
 Em seguida serão apresentados os resultados alcançados com as diferentes parametrizações 
 e diferentes classes de vídeos.
 
-\section{Alterações em $K$, $p$ e $s$}
+\section{Alterações no tamanho do dicionário, no tamanho do patch e na esparsidade}
 \label{sec:parametrizacao}
 Nessa seção serão apresentados e discutidos resultados alcançados na compressão e 
 decompressão dos vídeos escolhidos de cada classe para os parâmetros definidos na 
 tabela \ref{tbl:testparams}.
 
-No total foram 10 parametrizações diferentes para cada uma das 5 classes de vídeos, 
-totalizando 50 combinações diferentes para serem testadas.
+No total foram 9 parametrizações diferentes para cada uma das 5 classes de vídeos, 
+totalizando 45 combinações diferentes para serem testadas.
 
-Ao observar o algoritmo OMP (\autoref{algo:omp}), verifica-se que sua complexidade teórica 
+Ao observar o algoritmo OMP (\ref{algo:omp}), verifica-se que sua complexidade teórica 
 é $O(s m d)$, tal que, nesse caso, $m = K$ e $d = 3p^2$, portanto, $O(s K p^2)$.
 Os resultados mostram o que a teoria espera, um aumento linear no tempo de processamento,
 pois no caso considerado, foram mantidos $s$ e $d$ fixos, enquanto a variação ocorreu em $m$.
@@ -1900,27 +1897,25 @@ CUDA\reg, que paraleliza as operações.
 Porém, por mais que patches possam ser executados em paralelo, seu tempo individualmente, 
 no processamento do OMP, aumenta conforme o aumento do dicionário.
 
-\begin{figure}[h]
-    \caption{Tempo médio por frame para $p=4$.}
+\begin{figure}[H]
+    \caption{Tempo médio por frame para tamanho do patch $4$.}
     \begin{center}
-        \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_etime.png}
-        \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_dtime.png}
+        \includegraphics[width=0.9\textwidth]{img/graficos/p4_ds_edtime.png}
     \end{center}
     \legend{Fonte: O Autor.}
     \label{fig:timep4}
 \end{figure}
 
-Na figura acima (\autoref{fig:timep4}) também pode-se constatar que a decodificação tem tempos iguais, independentes
+Na figura acima (\ref{fig:timep4}) também pode-se constatar que a decodificação tem tempos iguais, independentes
 do tamanho do dicionário.
 Isso se dá pelo fato de que não é feita a multiplicação pelo método formal, mas sim tomando
 somente cada um dos $s$ valores não nulos do vetor.
 O mesmo pode ser constatado na figura abaixo, que apresenta os resultados alcançados com $p=8$.
 
-\begin{figure}[h]
-    \caption{Tempo médio por frame para $p=8$.}
+\begin{figure}[H]
+    \caption{Tempo médio por frame para tamanho do patch $8$.}
     \begin{center}
-        \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_etime.png}
-        \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_dtime.png}
+        \includegraphics[width=0.9\textwidth]{img/graficos/p8_ds_edtime.png}
     \end{center}
     \legend{Fonte: O Autor.}
     \label{fig:timep8}
@@ -1929,13 +1924,13 @@ O mesmo pode ser constatado na figura abaixo, que apresenta os resultados alcan�
 Um fato importante a ser detalhado é de que a classe esportes teve menor tempo médio por frame.
 Esse fato está simplesmente ligado a resolução do vídeo utilizado por essa classe, NTSC, que é 
 aproximadamente $2,63$ vezes menor que 720p.
+O mesmo acontece com a classe cartoon, no qual o vídeo escolhido possui resolução menor e, portanto,
+menor tempo de codificação.
+Percebe-se, portanto, uma relação linear entre o tamanho do frame e o tempo de codificação.
 
-Outro detalhe que vem a tona é o tempo médio do vídeo de cartoon, que é levemente menor.
-Uma explicação que pode ser encontrada para tal é que o vídeo de cartoon possui diversas 
-partes nas quais o fundo é fixo, havendo apenas movimento em pequenas partes do vídeo. 
-O sistema simples criado para idenficação de patches sem a necessidade de recálculo 
-acaba por marcar diversos pontos, tendo assim menos processamento para fazer em diversas 
-partes do vídeo.
+Além disso, o vídeo de cartoon possui vários frames com partes que se repetem.
+O sistema simples que não recalcula os patches que são iguais entrou em ação, fazendo com que 
+o tempo médio para decodificação fosse ainda um pouco menor.
 
 Também foi verificada a qualidade dos vídeos utilizando o PSNR médio. 
 Os resultados mostram que o PSNR não se alterou significativamente para os diversos tamanhos
@@ -1943,10 +1938,9 @@ de dicionário, o que indica que é possível utilizar valores baixos de $K$ sem
 na qualidade da representação.
 
 \begin{figure}[H]
-    \caption{PSNR médio em função de $K$.}
+    \caption{PSNR médio em função do tamanho do dicionário.}
     \begin{center}
-        \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_psnr.png}
-        \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_psnr.png}
+        \includegraphics[width=0.9\textwidth]{img/graficos/ds_psnr.png}
     \end{center}
     \legend{Fonte: O Autor.}
     \label{fig:psnr8bit}
@@ -1954,39 +1948,42 @@ na qualidade da representação.
 
 Na verdade o que se pode verificar é que existe uma variabilidade no PSNR médio devido 
 a quantização.
-Para melhorar esse fato, poderiam ser utilizados inteiros de 16bits ao invés de 8bits na 
+Para melhorar esse fato, poderiam ser utilizados inteiros de 16 bits ao invés de 8 bits na 
 representação comprimida, considerando que a representação perde significativamente em 
 compressibilidade.
 A figura abaixo mostra que o PSNR médio é bem mais estável utilizando uma representação 
-de 16bit, com exceção da classe cartoon, que manteve uma considerável variação.
+de 16 bits, com exceção da classe cartoon, que manteve uma considerável variação.
 
 \begin{figure}[H]
-    \caption{PSNR médio em função de $K$, com quantização de 16bit.}
+    \caption{PSNR médio em função do tamanho do dicionário, com quantização de 16bit.}
     \begin{center}
-        \includegraphics[width=0.48\textwidth]{img/graficos/p4_ds_psnr_16bit.png}
-        \includegraphics[width=0.48\textwidth]{img/graficos/p8_ds_psnr_16bit.png}
+        \includegraphics[width=0.9\textwidth]{img/graficos/ds_psnr_16bit.png}
     \end{center}
     \legend{Fonte: O Autor.}
     \label{fig:psnr16bit}
 \end{figure}
 
-Apesar da percepção de que se alcança maior estabilidade utilizando 16bit na quantização, 
-também é possível verificar que não acontece grande alteração no PSNR devido ao uso 
-dos 16bit, nem mesmo devido ao aumento de $K$.
-% Claramente é necessário ressaltar o caso dos vídeos indoor, que apresentam bastante diferença de
-% PSNR na relação 8bit para 16bit.
-Partindo desse fato, pode-se constatar que utilizar um dicionário menor não compromete
-significativamente a qualidade do vídeo.
+Além de alcançar maior estabilidade utilizando 16 bits na quantização, 
+também é possível verificar que acontece alteração no PSNR devido ao uso 
+dos 16 bits, podendo ser uma alternativa para melhoria na representação.
+
+Pode-se verificar, ainda, com o uso de 16 bits, que o PSNR aumenta em função 
+do tamanho do dicionário, de uma forma geral.
+Uma exceção está nos vídeos indoor, que, para tamanho do patch $4$ e tamanho do dicionário $48$
+tem um resultado de PSNR médio um pouco pior.
+Porém, apesar da diferença de PSNR confrome o tamanho do dicionário, essa não é 
+tão grande, o que mostra que o uso de dicionários menores pode ser bastante útil,
+especialmente quando se leva em conta a velocidade de codificação.
 
 Em seguida, foi escolhida a melhor representação do vídeo indoor, que apresenta 
 pouca variação nas cenas, para avaliar as mudanças no PSNR médio em função do valor 
-de $s$.
+de esparsidade.
 Também foi escolhido o vídeo de esportes, usando a mesma configuração, este pelo fato 
 de que possui patches com grama, que é uma imagem com alta frequência.
 Sumarizando, foram escolhidos $p=4$, $K=32$, e $s=1,2,3,4,5,6$.
 
 \begin{figure}[H]
-    \caption{PSNR médio em função de $s$.}
+    \caption{PSNR médio em função da esparsidade $s$.}
     \begin{center}
         \includegraphics[width=0.6\textwidth]{img/graficos/p4d32_sv_psnr.png}
     \end{center}
@@ -2009,20 +2006,23 @@ que consiste em calcular quantos bits por segundo a representação compactada
 de cada vídeo conseguiu alcançar.
 
 A partir da codificação salva dos vídeos codificados,
-foi percebido que a melhor compressão aconteceu com $p=8$ e $K=192$, para todos 
-os vídeos testados. 
+foi percebido que as melhores compressões aconteceram com tamanho de patch $p=8$, 
+variando pouco em relação ao tamanho do dicionário.
 Além disso, é possível verificar que o PSNR médio não tem tantas mudanças em relação 
 a mudança do tamanho do patch ou do dicionário, como já citado anteriormente,
 o que proporciona a possibilidade de se escolher a representação mais compacta para 
 comparar com o codec H.264.
-Portando, foi calculado o bitrate usando essa configuração.
+Portando, foi calculado o bitrate usando o tamanho do patch em $8$ e o tamanho do dicionário
+em $128$.
 
 % Tabela do bitrate
 \begin{table}[h]
-    \caption{Bitrate calculado para vídeos de teste com $p=8$, $K=192$ e $s=14$.}
+    \caption{Bitrate calculado para vídeos de teste com tamanho do patch $8$, tamanho do 
+    dicionário $128$ e esparsidade $8$.}
     \centering
-        \begin{tabular}{|l|c|c|c|c|}
+        \begin{tabular}{|l|l|c|c|c|c|}
           \hline
+          \multicolumn{1}{|c}{\textit{Classe}} & 
           \multicolumn{1}{|c}{\textit{Vídeo}} & 
           \multicolumn{1}{|c}{\textit{Nº frames}} & 
           \multicolumn{1}{|c}{\textit{FPS}} & 
@@ -2030,11 +2030,11 @@ Portando, foi calculado o bitrate usando essa configuração.
           \multicolumn{1}{|c|}{\textit{Bitrate (kbit/s)}} \\
           \hline
           \hline
-          big\_buck\_bunny & $14315$ & $24$ & $33.286.469$ & $436$ \\
-          football &  $360$ & $30$ & $3.822.334$ & $2488,5$ \\
-          johnny  &   $600$ & $60$ & $8.576.773$ & $6700,6$ \\
-          park\_joy & $500$ & $50$ & $12.456.469$ & $9731,6$ \\
-          stockholm & $604$ & $59,94$ & $12.014.763$ & $9386,5$ \\
+          Cartoon & sintel\_trailer & $1.253$ & $24$ & $79.674.062$ & $11.922,5$ \\
+          Esportes & football &  $360$ & $30$ & $21.420.945$ & $13.945,9$ \\
+          Indoor & johnny  &   $600$ & $60$ & $72.782.464$ & $56.861,3$ \\
+          Monitoramento & stockholm & $604$ & $59,94$ & $82.818.027$ & $64.208,8$ \\
+          Natureza & park\_joy & $500$ & $50$ & $80.040.734$ & $62.531,8$ \\
           \hline
         \end{tabular}
     \legend{Fonte: O Autor.}
@@ -2052,9 +2052,9 @@ Além de ser o maior vídeo, o mesmo também possui diversas partes com a câmer
 o que facilita a compressão devido ao método proposto.
 
 Fica claro que, quando se deseja tempo real na codificação, deve-se utilizar valores 
-de $p$, $s$ e $K$ mais baixos, enquanto para que haja melhor compressão, devem ser 
-utilizados valores mais altos.
-O valor de $s$ é capaz de controlar a qualidade, a compressão e até mesmo a velocidade 
+de tamanho de patch, esparsidade e tamanho de dicionário mais baixos, enquanto para que haja melhor compressão, 
+devem ser utilizados valores mais altos.
+O valor de esparsidade $s$ é capaz de controlar a qualidade, a compressão e até mesmo a velocidade 
 da codificação, sendo então necessário considerar várias possibilidades para seus valores.
 
 \section{Comparação com codec H.264}
@@ -2071,18 +2071,20 @@ Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
 \begin{table}[h]
     \caption{Comparação PSNR médio para mesmo bitrate.}
     \centering
-        \begin{tabular}{|l|c|c|}
+        \begin{tabular}{|l|l|c|c|c|}
           \hline
+          \multicolumn{1}{|c}{\textit{Classe}} & 
           \multicolumn{1}{|c}{\textit{Vídeo}} & 
+          \multicolumn{1}{|c|}{\textit{Bitrate (kbit/s)}} &
           \multicolumn{1}{|c}{\textit{PSNR Proposta (dB)}} & 
           \multicolumn{1}{|c|}{\textit{PSNR H.264 (dB)}} \\
           \hline
           \hline
-          big\_buck\_bunny & $28,83$ & $33,95$ \\
-          football         & $29,62$ & $32,73$ \\
-          johnny           & $35,28$ & $39,70$ \\
-          park\_joy        & $26,07$ & $25,96$ \\
-          stockholm        & $23,63$ & $32,80$ \\
+          Cartoon & sintel\_trailer & $11.922,5$ & $41.83$ & $54.96$ \\
+          Esportes & football & $13.945,9$ & $24.96$ & $36.55$ \\
+          Indoor & johnny & $56.861,3$ & $30.25$ & $37.50$ \\
+          Monitoramento & stockholm & $64.208,8$ & $35.11$ & $42.96$ \\
+          Natureza & park\_joy & $62.531,8$ & $23.60$ & $32.37$ \\
           \hline
         \end{tabular}
     \legend{Fonte: O Autor.}
