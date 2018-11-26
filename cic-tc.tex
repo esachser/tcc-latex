@@ -151,11 +151,11 @@
 % palavras-chave
 % iniciar todas com letras minúsculas, exceto no caso de abreviaturas
 % 
-\keyword{Compressed Sensing}
-\keyword{Compressed Sensing}
-\keyword{Compressive Sampling}
-\keyword{Real Time}
-\keyword{Video}
+\keyword{compressed sensing}
+\keyword{compressive sampling}
+\keyword{dictionary learning}
+\keyword{real time}
+\keyword{video}
 \keyword{UFRGS}
 
 %\settowidth{\seclen}{1.10~}
@@ -189,13 +189,18 @@
 
 % resumo na língua do documento
 \begin{abstract}
-    Deve ser feito ainda.
+    O trabalho propõe uma metodologia para codificação e decodificação de 
+    vídeos em tempo real, utilizando técnicas de compressed sensing e aprendizado 
+    de dicionários, apresentando parametrizações possíveis e resultados alcançados 
+    a partir da variação dos parâmetros utilizados.
+    Por fim, compara o amplamente utilizado padrão de codificação de vídeos H.264
+    com a proposta, através das métricas de bitrate e PSNR médio.
 \end{abstract}
 
 % resumo na outra língua
 % como parametros devem ser passados o titulo e as palavras-chave
 % na outra língua, separadas por vírgulas
-\begin{englishabstract}{Translate title to english.}{Compressed Sensing. Compressive Sensing. UFRGS}
+\begin{englishabstract}{Translate title to english.}{compressed sensing. compressive sampling. UFRGS}
     Must be done yet.
 \end{englishabstract}
 
@@ -1848,7 +1853,7 @@ enquanto $K$ representa o número de átomos do dicionário.
 \begin{table}[h]
     \caption{Parâmetros tamanho do patch $p$ e tamanho do dicionário $K$ utilizados para treinamento e validação}
     \centering
-        \begin{tabular}{|c|c c c c c c|c c c c|}
+        \begin{tabular}{|c|c c c c c |c c c c|}
           \hline
           \emph{Tamanho do patch} & $4$ & $4$ & $4$ & $4$ & $4$ & $8$ & $8$ & $8$ & $8$ \\
           \hline
@@ -1867,11 +1872,17 @@ Sendo assim, para $p=4$, $s=4$, e para $p=8$, $s=8$.
 
 % INSERIR IMAGEM DE DICIONÁRIO, CITANDO K e p
 \begin{figure}[H]
-    \caption{Dicionários aprendidos. O primeiro, $K=192$ e $p=8$, classe cartoon. 
-    O segundo, $K=32$ e $p=4$, classe indoor.}
+    \caption{Dicionários aprendidos. 
+    (a) Classe cartoon, tamanho do dicionário $192$ e patches $8\times8$. 
+    (b) Classe indoor, tamanho do dicionário $32$ e patches $4\times4$. }
     \begin{center}
-        \includegraphics[width=\textwidth]{img/cartoon_p8_d192.png}
-        \includegraphics[width=0.4\textwidth]{img/indoor_p4_d32.png}
+        \begin{tabular}{r c}
+            \vspace*{1em}
+            (a) & \raisebox{-.5\height}{\includegraphics[width=0.8\textwidth]{img/cartoon_p8_d192.png}} \\
+        \end{tabular}
+        \begin{tabular}{r c}
+           (b) & \raisebox{-.5\height}{\includegraphics[width=0.4\textwidth]{img/indoor_p4_d32.png}} \\
+        \end{tabular}
     \end{center}
     \legend{Fonte: O Autor.}
 \end{figure}
@@ -2091,16 +2102,16 @@ Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
     \label{tbl:bitrateh264}
 \end{table}
 
-Os resultados obtidos foram, para todos os casos, com exceção do vídeo de natureza, piores 
-para o codec proposto em $3dB$ ou mais.
-A exceção que chama a atenção é a classe natureza, na qual houve um resultado 
-melhor utilizando o codec proposto.
-É interessante avaliar que praticamente não houveram patches sem recálculo, o que, como citado 
-acima, aumentou significativamente o bitrate.
-Mesmo assim, a proposta conseguir apresentar um PSNR médio maior que o codec H.264.
+Os resultados obtidos tiveram, para todos os casos, valores de PSNR médio inferiores
+ao codec H.264, o que já era esperado, devido a simplicidade do codec proposto.
+Porém, é possível perceber que as qualidades apresentadas são boas, o que indica que 
+o codec proposto funciona, porém precisa ser aprimorado em relação a buscar gerar 
+resultados mais comprimidos.
+Em especial, buscar utilizar as técnicas já conhecidas dos padrões de codec pode 
+ser uma via para melhorias no PSNR médio e no bitrate.
 
 Os valores amostrados indicam que a opção pelo uso das técnicas propostas,
-agregados a melhorias que possam ser executadas, pode gerar resultados ainda melhores.
+agregados a melhorias que possam ser executadas, podem gerar resultados ainda melhores.
 
 \section{Resultado visual}
 \label{sec:resultadovisual}
