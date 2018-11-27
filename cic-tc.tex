@@ -1792,12 +1792,6 @@ Os vídeos em negrito foram os escolhidos para a validação, enquanto os demais
           & big\_buck\_bunny & 720p & $ 14.315 $ \\
           & elephants\_dream & $1024\times436$ & $ 15.691 $ \\
           \hline
-          \multirow{4}{*}{Monitoramento} 
-          & \textbf{stockholm} & 720p & $604$ \\ 
-          & bridge\_close & CIF & $2.001$ \\
-          & bridge\_far & CIF & $2.101$ \\
-          & station & 1080p & $313$ \\
-          \hline 
           \multirow{3}{*}{Esportes} 
           & \textbf{football} & NTSC & $360$ \\
           & stefan & SIF & $300$ \\ 
@@ -1811,6 +1805,12 @@ Os vídeos em negrito foram os escolhidos para a validação, enquanto os demais
           & hall\_monitor & CIF & $300$ \\
           & mother\_daughter & QCIF & $961$ \\
           \hline
+          \multirow{4}{*}{Monitoramento} 
+          & \textbf{stockholm} & 720p & $604$ \\ 
+          & bridge\_close & CIF & $2.001$ \\
+          & bridge\_far & CIF & $2.101$ \\
+          & station & 1080p & $313$ \\
+          \hline 
           \multirow{6}{*}{Natureza} 
           & \textbf{park\_joy} & 720p & $500$ \\
           & ducks\_take\_off & 720p & $500$ \\
@@ -1828,10 +1828,36 @@ A máquina utilizada para o treinamento e os testes possui um processador Intel 
 e 8Gb de memória RAM.
 Além disso, a placa de vídeo é Nvidia Geforce GTX 1050Ti, com 4Gb de memória.
 
-Em seguida serão aprofundados os testes, bem como o treinamento utilizado para cada um dos testes.
+Para ilustrar como cada um dos vídeos é em geral, a figura abaixo apresenta uma imagem de 
+cada vídeo, para que se possa perceber as peculiaridades inerentes a cada um dos vídeos escolhidos.
+\begin{figure}[H]
+    \caption{Imagens dos vídeos escolhidos para os testes.
+    (a) sintel\_trailer.
+    (b) football.
+    (c) johnny.
+    (d) stockholm.
+    (e) park\_joy.}
+    \begin{center}
+        \begin{tabular}{r c r c}
+            \vspace{0.5em}
+            (a) & \raisebox{-.5\height}{\includegraphics[width=0.4\textwidth]{img/sintel.png}} & \hspace{0.5em} 
+            (b) & \raisebox{-.5\height}{\includegraphics[width=0.4\textwidth]{img/football.png}} \\
+            \vspace{0.5em} 
+            (c) & \raisebox{-.5\height}{\includegraphics[width=0.4\textwidth]{img/johnny.png}} & \hspace{0.5em} 
+            (d) & \raisebox{-.5\height}{\includegraphics[width=0.4\textwidth]{img/stockholm.png}} \\
+        \end{tabular}
+        \begin{tabular}{r c}
+            (e) & \raisebox{-.5\height}{\includegraphics[width=0.4\textwidth]{img/parkjoy.png}} \\
+        \end{tabular}
+    \end{center}
+    \legend{Fonte: O Autor.}
+\end{figure}
+
+Em seguida serão aprofundados os testes, bem como o treinamento utilizado para cada um deles.
 
 \section{Treinamento}
-Foi gerado um dicionário para cada classe de vídeos, e para cada variação em $K$ e $p$,
+Foi gerado um dicionário para cada classe de vídeos, e para cada variação em $K$ (tamanho do dicionário) e 
+$p$ (tamanho do patch),
 utilizando o algoritmo ODL, da forma que foi descrito na proposta do trabalho.
 
 Para o treinamento foram utilizados os vídeos de cada classe, com exceção daquele
@@ -2044,7 +2070,7 @@ em $128$.
           Cartoon & sintel\_trailer & $1.253$ & $24$ & $79.674.062$ & $11.922,5$ \\
           Esportes & football &  $360$ & $30$ & $21.420.945$ & $13.945,9$ \\
           Indoor & johnny  &   $600$ & $60$ & $72.782.464$ & $56.861,3$ \\
-          Monitoramento & stockholm & $604$ & $59,94$ & $82.818.027$ & $64.208,8$ \\
+          Monitor. & stockholm & $604$ & $59,94$ & $82.818.027$ & $64.208,8$ \\
           Natureza & park\_joy & $500$ & $50$ & $80.040.734$ & $62.531,8$ \\
           \hline
         \end{tabular}
@@ -2067,6 +2093,30 @@ de tamanho de patch, esparsidade e tamanho de dicionário mais baixos, enquanto 
 devem ser utilizados valores mais altos.
 O valor de esparsidade $s$ é capaz de controlar a qualidade, a compressão e até mesmo a velocidade 
 da codificação, sendo então necessário considerar várias possibilidades para seus valores.
+
+Para resumir, a tabela a seguir traz recomendações para os valores dos parâmetros do codec, 
+nos casos em que o foco está em tempo real ou compressão.
+
+\begin{table}
+    \caption{Valores recomendados de parâmetros em função da aplicação desejada}
+    \centering
+    \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \multicolumn{1}{|c|}{\emph{Aplicação}} & 
+        \emph{Foco} & 
+        \emph{Tam. patch} & 
+        \emph{Tam. dicionário} & 
+        \emph{Esparsidade} \\
+        \hline
+        Tempo real & qualidade & 4 & 16 & 4 \\
+        Tempo real & compressão & 8 & 64 & 5 \\
+        Gravação & qualidade & 8 & 128 & 10 \\
+        Gravação & qualidade+compressão & 8 & 128 & 8 \\
+        Gravação & compressão & 8 & 128 & 4 \\
+        \hline
+    \end{tabular}
+    \legend{Fonte: O Autor.}
+\end{table}
 
 \section{Comparação com codec H.264}
 Para a comparação com o codec H.264 foi utilizado o software FFmpeg \cite{FFmpeg}, tendo como entrada
@@ -2119,11 +2169,14 @@ Para encerrar o capítulo de resultados, serão observados alguns resultado visu
 ao codec.
 
 \begin{figure}[H]
-    \caption{Vídeo johnny, $p=4$, $K=32$, $s=5$, quantizado 8bit. O primeiro, frame de referência. 
-    O segundo, resultado com codec proposto}
+    \caption{Fundo de cena do vídeo johnny, $p=4$, $K=32$, $s=5$, quantizado 8bit. 
+    (a) Referência. 
+    (b) Resultado com codec proposto.}
     \begin{center}
-        \includegraphics[width=\textwidth]{img/johnnyref.png}
-        \includegraphics[width=\textwidth]{img/johnnyres.png}
+        \begin{tabular}{r c r c}
+            (a) & \raisebox{-0.5 \height}{\includegraphics[width=0.4\textwidth]{img/johnnyref.png}} & \hspace{1em}
+            (b) & \raisebox{-0.5 \height}{\includegraphics[width=0.4\textwidth]{img/johnnyres.png}} \\
+        \end{tabular}
     \end{center}
     \legend{Fonte: O Autor.}
     \label{fig:johnnyres}
@@ -2133,11 +2186,14 @@ Nesse primeira comparação pode-se verificar que altas frequências foram adici
 em geral, se deve a erros relacionados a quantização.
 
 \begin{figure}[H]
-    \caption{Vídeo big\_buck\_bunny, $p=4$, $K=16$, $s=5$, quantizado 8bit. O primeiro, frame de referência. 
-    O segundo, resultado com codec proposto}
+    \caption{Vídeo big\_buck\_bunny, $p=4$, $K=16$, $s=5$, quantizado 8bit. 
+    (a) Referência. 
+    (b) Resultado com codec proposto.}
     \begin{center}
-        \includegraphics[width=0.49\textwidth]{img/bbbref.png}
-        \includegraphics[width=0.49\textwidth]{img/bbbres.png}
+        \begin{tabular}{r c r c}
+            (a) & \raisebox{-0.5 \height}{\includegraphics[width=0.4\textwidth]{img/bbbref.png}} & \hspace{1em}
+            (b) & \raisebox{-0.5 \height}{\includegraphics[width=0.4\textwidth]{img/bbbres.png}} \\
+        \end{tabular}
     \end{center}
     \legend{Fonte: O Autor.}
     \label{fig:bbbres}
@@ -2154,7 +2210,8 @@ porém na versão final do codec não foi implementada essa funcionalidade.
 
 \chapter{Conclusão}
 O trabalho apresentou uma proposta de codec utlizando métodos de compressed sensing
-aliados a aprendizado de dicionários. 
+aliados a aprendizado de dicionários, além de realizar métricas relacionadas ao próprio codec 
+e também em relação ao padrão H.264, amplamente utilizado para codificação de vídeos.
 
 Na fase de execução de testes e geração de resultados foi possível constatar o funcionamento 
 do codec para 5 tipos diferentes de classes de vídeos.
