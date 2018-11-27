@@ -309,7 +309,7 @@ A indexação de vetores acontecerá no formato $x_i$, não utilizando negrito. 
 
 %Apresentar normas e (t)
 Alguns algoritmos calculam variáveis relacionadas a uma determinada iteração $t$.
-Nesses algorimos, seguindo as notações anteriormente apresentadas, $\mat{X_{(t)}}$ 
+Nesses algoritmos, seguindo as notações anteriormente apresentadas, $\mat{X_{(t)}}$ 
 representa a matriz $\mat{X}$ da iteração de número $t$.
 O mesmo acontece com vetores, por exemplo, $\vec{x_{(t)}}$.
 
@@ -603,7 +603,7 @@ Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 
 \begin{algorithm}[H]
 \label{algo:omp}
-\caption{\textit{Orthogonal Matching Pursuit (OMP)}}
+\caption{\textit{Orthogonal Matching Pursuit (OMP)}.}
 \Entrada{Matriz de medidas $m \times d$ $\mathbf{\Phi}$, Vetor de $m$ medidas $\vec{y}$, nível de esparsidade $s$}
 \Saida{Estimativa do sinal ideal $\vec{f'} \in \mathbb{R}^d$}
 $\vec{r_{(0)}} \leftarrow \vec{y}$\;
@@ -898,7 +898,7 @@ Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLear
 
 \begin{algorithm}[H]
     \label{algo:odl}
-    \caption{\textit{Online Dictionary Learning (ODL)}}
+    \caption{\textit{Online Dictionary Learning (ODL)}.}
     \Entrada{Distribuição de $\vec{x} \in \mathbb{R}^L = p(\vec{x})$, parâmetro $\lambda$, 
     dicionário inicial $\mat{D_{(0)}}$, número de iterações $T$.}
     \Saida{Dicionário final $\mat{D_{(t)}}$.}
@@ -1061,7 +1061,7 @@ Na figura abaixo, são mostrados os passos da codificação exemplificados por
 \citet{HuffmanCoding}.
 
 \begin{figure}[H]
-    \caption{Execução dos passos de codificação de Huffman}
+    \caption{Execução dos passos de codificação de Huffman.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/huffmanprocess.png}
     \end{center}
@@ -1070,7 +1070,7 @@ Na figura abaixo, são mostrados os passos da codificação exemplificados por
 
 Os códigos binários para cada símbolo gerados foram os seguintes:
 \begin{figure}[H]
-    \caption{Códigos binários gerados pela codificação de Huffman}
+    \caption{Códigos binários gerados pela codificação de Huffman.}
     \begin{center}
         \includegraphics[width=0.6\textwidth]{img/huffmantable.png}
     \end{center}
@@ -1138,7 +1138,7 @@ podem ser classificadas como segue \cite{SullivanH264}:
     fornece uma transformação mais compressível que a utilização da imagem bruta.
     \item \textbf{Quantização:} O processo de quantização se refere a representar os dados
     com menor quantidade de informação, ou seja, menos bits. Um exemplo é trocar uma representação 
-    em ponto flutuante por uma representação em inteiros com 8bits.
+    em ponto flutuante por uma representação em inteiros com 8 bits.
     \item \textbf{Codificação de entropia:} Processo que utiliza a redundância de informação para 
     criar uma tabela de representação na qual a informação mais redundante é codificada
     com menos bits e a mais, com mais bits. A codificação de Huffman é um exemplo desse processo.
@@ -1257,7 +1257,7 @@ com $B$ blocos, cada bloco com $T$ threads.
 Dentro de um bloco pode ser compartilhada memória de rápido acesso, enquanto para 
 acesso fora do bloco precisa-se de memória global.
 \begin{figure}[H]
-    \caption{Arquitetura de CUDA\reg}
+    \caption{Arquitetura de CUDA\reg.}
     \begin{center}
         \includegraphics[width=0.5\textwidth]{img/CUDAarch.png}
     \end{center}
@@ -1269,7 +1269,7 @@ paralelizáveis, como é possível verificar no gráfico abaixo, que apresenta o
 \emph{speedup} alcançado por funções da cuBLAS em comparação com as mesmas funções 
 executadas na CPU.
 \begin{figure}[H]
-    \caption{Speedup de cuBLAS (GPU) em relação a MKL BLAS (CPU)}
+    \caption{Speedup de cuBLAS (GPU) em relação a MKL BLAS (CPU).}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/cublas9_2.png}
     \end{center}
@@ -1452,7 +1452,7 @@ As escolhas e resultados obtidos com a alteração dos parâmetros serão discut
 capítulo \autoref{sec:results}.
 
 \begin{table}[h]
-    \caption{Parâmetros do sistema}
+    \caption{Parâmetros do sistema.}
     \centering
         \begin{tabular}{|c|p{10cm}|}
           \hline
@@ -1631,7 +1631,7 @@ na representação do sinal.
 Além disso, ao final dessa seção, é necessário que haja uma representação em formato de 
 \textit{stream} de bytes, para ser enviada ou armazenada pelo \textit{encoder}.
 
-Primeiramente, o sinal é quantizado uniformemente em 8bits. 
+Primeiramente, o sinal é quantizado uniformemente em 8 bits. 
 Para isso, é necessário identificar-se os coeficientes máximo $u$ e mínimo $l$ em $\mat{\Gamma}$.
 Em seguida, cada coeficiente $c$ de $\mat{\Gamma}$ é quantizado de acordo com a seguinte equação:
 \begin{equation*}
@@ -1777,7 +1777,7 @@ A tabela a seguir ilustra as escolhas.
 Os vídeos em negrito foram os escolhidos para a validação, enquanto os demais para treinamento.
 
 \begin{table}[h]
-    \caption{Vídeos utilizados para treinamento e validação}
+    \caption{Vídeos utilizados para treinamento e validação.}
     \centering
         \begin{tabular}{|c|l|c|c|}
           \hline
@@ -1877,7 +1877,7 @@ Cada parametrização foi aplicada a todas as classes de vídeos.
 É importante recordar que o parâmetro $p$ trata do tamanho do patch $p \times p \times 3$, 
 enquanto $K$ representa o número de átomos do dicionário.
 \begin{table}[h]
-    \caption{Parâmetros tamanho do patch $p$ e tamanho do dicionário $K$ utilizados para treinamento e validação}
+    \caption{Parâmetros tamanho do patch $p$ e tamanho do dicionário $K$ utilizados para treinamento e validação.}
     \centering
         \begin{tabular}{|c|c c c c c |c c c c|}
           \hline
@@ -1935,7 +1935,7 @@ Porém, por mais que patches possam ser executados em paralelo, seu tempo indivi
 no processamento do OMP, aumenta conforme o aumento do dicionário.
 
 \begin{figure}[H]
-    \caption{Tempo médio por frame para tamanho do patch $4$.}
+    \caption{Tempo médio por frame para patches $4\times4$.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/p4_ds_edtime.png}
     \end{center}
@@ -1950,7 +1950,7 @@ somente cada um dos $s$ valores não nulos do vetor.
 O mesmo pode ser constatado na figura abaixo, que apresenta os resultados alcançados com $p=8$.
 
 \begin{figure}[H]
-    \caption{Tempo médio por frame para tamanho do patch $8$.}
+    \caption{Tempo médio por frame para patches $8\times8$.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/p8_ds_edtime.png}
     \end{center}
@@ -1992,7 +1992,7 @@ A figura abaixo mostra que o PSNR médio é bem mais estável utilizando uma rep
 de 16 bits, com exceção da classe cartoon, que manteve uma considerável variação.
 
 \begin{figure}[H]
-    \caption{PSNR médio em função do tamanho do dicionário, com quantização de 16bit.}
+    \caption{PSNR médio em função do tamanho do dicionário, com quantização de 16 bits.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/ds_psnr_16bit.png}
     \end{center}
@@ -2098,7 +2098,7 @@ Para resumir, a tabela a seguir traz recomendações para os valores dos parâme
 nos casos em que o foco está em tempo real ou compressão.
 
 \begin{table}
-    \caption{Valores recomendados de parâmetros em função da aplicação desejada}
+    \caption{Valores recomendados de parâmetros em função da aplicação desejada.}
     \centering
     \begin{tabular}{|l|c|c|c|c|}
         \hline
@@ -2141,11 +2141,11 @@ Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
           \multicolumn{1}{|c|}{\textit{PSNR H.264 (dB)}} \\
           \hline
           \hline
-          Cartoon & sintel\_trailer & $11.922,5$ & $41.83$ & $54.96$ \\
-          Esportes & football & $13.945,9$ & $24.96$ & $36.55$ \\
-          Indoor & johnny & $56.861,3$ & $30.25$ & $37.50$ \\
-          Monitoramento & stockholm & $64.208,8$ & $35.11$ & $42.96$ \\
-          Natureza & park\_joy & $62.531,8$ & $23.60$ & $32.37$ \\
+          Cartoon & sintel\_trailer & $11.922,5$ & $41,83$ & $54,96$ \\
+          Esportes & football & $13.945,9$ & $24,96$ & $36,55$ \\
+          Indoor & johnny & $56.861,3$ & $30,25$ & $37,50$ \\
+          Monitoramento & stockholm & $64.208,8$ & $35,11$ & $42,96$ \\
+          Natureza & park\_joy & $62.531,8$ & $23,60$ & $32,37$ \\
           \hline
         \end{tabular}
     \legend{Fonte: O Autor.}
@@ -2160,16 +2160,47 @@ resultados mais comprimidos.
 Em especial, buscar utilizar as técnicas já conhecidas dos padrões de codec pode 
 ser uma via para melhorias no PSNR médio e no bitrate.
 
+Para possibilitar uma melhor visualização da situação, também foi executado o 
+software FFmpeg codificando os vídeos para H.264 sem utilizar nenhuma parametrização, 
+ou seja, utilizando o padrão do programa.
+Os resultados se deram como segue.
+
+\begin{table}[h]
+    \caption{PSNR médio e bitrate usando codificação padrão.}
+    \centering
+        \begin{tabular}{|l|l|c|c|}
+          \hline
+          \multicolumn{1}{|c}{\textit{Classe}} & 
+          \multicolumn{1}{|c}{\textit{Vídeo}} & 
+          \multicolumn{1}{|c|}{\textit{Bitrate (kbit/s)}} &
+          \multicolumn{1}{|c|}{\textit{PSNR H.264 (dB)}} \\
+          \hline
+          \hline
+          Cartoon & sintel\_trailer & $901,15$ & $45,58$ \\
+          Esportes & football & $2.624,67$ & $32,85$ \\
+          Indoor & johnny & $874,84$ & $37,93$ \\
+          Monitoramento & stockholm & $3.703,45$ & $31,96$ \\
+          Natureza & park\_joy & $14.828,28$ & $27,26$ \\
+          \hline
+        \end{tabular}
+    \legend{Fonte: O Autor.}
+    \label{tbl:bitrateonlyh264}
+\end{table}
+
 Os valores amostrados indicam que a opção pelo uso das técnicas propostas,
 agregados a melhorias que possam ser executadas, podem gerar resultados ainda melhores.
 
 \section{Resultado visual}
 \label{sec:resultadovisual}
-Para encerrar o capítulo de resultados, serão observados alguns resultado visuais relativos 
+Para encerrar o capítulo de resultados, serão observados alguns resultados visuais relativos 
 ao codec.
+Os resultados discutidos apresentam visualmente erros gerados nos frames gerados 
+pelo codec proposto,
+comparando a imagem de referência com a gerada pela codificação.
 
 \begin{figure}[H]
-    \caption{Fundo de cena do vídeo johnny, $p=4$, $K=32$, $s=5$, quantizado 8bit. 
+    \caption{Fundo de cena do vídeo johnny, tamanho do dicionário $K=32$, esparsidade $s=5$ e patches $4\times4$,
+    quantizado 8 bits.
     (a) Referência. 
     (b) Resultado com codec proposto.}
     \begin{center}
@@ -2182,11 +2213,13 @@ ao codec.
     \label{fig:johnnyres}
 \end{figure}
 
-Nesse primeira comparação pode-se verificar que altas frequências foram adicionadas a imagem, o que, 
-em geral, se deve a erros relacionados a quantização.
+Nesse primeira comparação pode-se verificar que altas frequências foram adicionadas a imagem,
+na comparação entre a imagem de referência e a imagem gerada pelo codec, 
+o que se deve a erros relacionados a quantização.
 
 \begin{figure}[H]
-    \caption{Vídeo big\_buck\_bunny, $p=4$, $K=16$, $s=5$, quantizado 8bit. 
+    \caption{Vídeo big\_buck\_bunny, tamanho do dicionário $K=16$, esparsidade $s=5$ e patches $4\times4$, 
+    quantizado 8 bits. 
     (a) Referência. 
     (b) Resultado com codec proposto.}
     \begin{center}
@@ -2219,7 +2252,7 @@ Ficou clara também a relação entre execução em tempo real, compressibilidad
 qualidade com os parâmetros $K$ (número de átomos do dicionário), $p$ (tamanho do bloco), 
 e $s$ (esparsidade da representação).
 
-Mudanças no valor de $K$ acarretam em pouca diferença na qualidade do vídeo, desde que 
+Mudanças no valor de $K$ (tamanho do dicionário) acarretam em pouca diferença na qualidade do vídeo, desde que 
 o valor não seja muito pequeno. 
 Por outro lado, o valor de $K$ altera linearmente o tempo de codificação dos frames, como 
 pode ser verificado nas figuras \ref{fig:timep4} e \ref{fig:timep8}.
@@ -2232,8 +2265,8 @@ Vale lembrar que os dicionários precisam ser previamente treinados.
 O que pode valer a pena, nesse caso, é escolher, para determinada classe, um dicionário para 
 tempo real e outro para compressão, através de testes.
 
-Quanto ao parâmetro $p$, ele produz dois distúrbios no codec.
-Em primeiro lugar, ao observar $p=4$ e $p=8$, fica claro que, para tempo real, $p=4$ é a 
+Quanto ao tamanho do patch $p$, esse produz dois distúrbios no codec.
+Em primeiro lugar, ao observar $p=4$ e $p=8$, fica claro que, para tempo real, $p=4$ é uma melhor 
 solução. Para compressão, $p=8$. 
 Seria interessante serem executados testes com valores de $p$ maiores que $8$, 
 no sentido de verificar a capacidade de compressão.
@@ -2249,7 +2282,7 @@ artefatos visuais.
 Para aprimorar nesse sentido foram criados algoritmos para \emph{deblocking}, que poderiam 
 ser aplicados a solução apresentada.
 
-Já no que diz respeito ao parâmetro $s$, ficou claro que ele altera a qualidade da representação 
+Já no que diz respeito ao parâmetro de esparsidade $s$, ficou claro que ele altera a qualidade da representação 
 e também a compressibilidade.
 Quanto a compressibilidade, o resultado pode ser verificado pela própria representação dos dados.
 Considere um frame 720p usando $p=4$, utilizando $1$ byte para o valor e $1$ para o índice em cada 
