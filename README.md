@@ -19,8 +19,8 @@ trabalho, bem como dúvidas e conclusões.
 [ x ] CUDA \
 [ x ] Trabalhos relacionados \
 [ x ] Proposta \
-[ p ] Resultados \
-[ _ ] Conclusão
+[ x ] Resultados \
+[ x ] Conclusão
 
 ### Controle de dúvidas
 - Que referências utilizar para escrever sobre sinais? Buscar referências em artigos de CS.
