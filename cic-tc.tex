@@ -192,9 +192,13 @@
     O trabalho propõe uma metodologia para codificação e decodificação de 
     vídeos em tempo real, utilizando técnicas de compressed sensing e aprendizado 
     de dicionários, apresentando parametrizações possíveis e resultados alcançados 
-    a partir da variação dos parâmetros utilizados.
-    Por fim, compara o amplamente utilizado padrão de codificação de vídeos H.264
+    a partir da variação dos parâmetros utilizados, gerando recomendações de parâmetros 
+    padrão que podem ser utilizados.
+    Ainda, compara o amplamente utilizado padrão de codificação de vídeos H.264
     com a proposta, através das métricas de bitrate e PSNR médio.
+    A proposta apresenta resultados inferiores ao H.264, porém agrega conhecimentos
+    de compressed sensing e aprendizado de dicionários, assuntos bastante atuais, 
+    ao problema de codificação de vídeos.
 \end{abstract}
 
 % resumo na outra língua
@@ -292,6 +296,8 @@ Este trabalho tem os seguintes objetivos:
     de parametrização do objeto do trabalho proposto.
     \item Realizar medidas comparativas com outros padrões conhecidos de 
     codecs de vídeo.
+    \item Aprofundar o conhecimento da área de compressed sensing e dictionary 
+    learning através aplicação de técnicas relacionadas a tais assuntos.
 \end{itemize}
 
 \section{Notações Utilizadas}
@@ -394,6 +400,7 @@ Por fim, um resultado clássico sobre amostragem de sinais no domínio tempo, o 
     \begin{equation*}
         f_{max} \le \frac{f_s}{2}.
     \end{equation*}
+    \label{teo:nyquist}
 \end{teorema}
 
 A partir desse pequeno resumo focado em amostragem de sinais digitais,
@@ -409,7 +416,7 @@ fez com que os métodos conhecidos de processamento de sinais não tivessem boa 
 "Muitos sinais de interesse possuem menos informação do que a dimensão do ambiente sugere"
 \footnote{"Many signals of interest contain far less information than their ambient dimension suggests"}
 (\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, p. 2, tradução própria).
-As formas tradicionais de aquisição de sinais baseadas nos teoremas de Shannon e Nyquist acabam por causar o descarte
+As formas tradicionais de aquisição de sinais baseadas no teorema de Shannon-Nyquist (\ref{teo:nyquist}) acabam por causar o descarte
 de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: é possível haver 
 uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? \cite{chen2015compressed}.
 
@@ -428,7 +435,9 @@ se $ m \ll d$, reconstruir $\vec{f}$ a partir de $\vec{y}$, sem assumir nada a m
 com infinitas soluções \cite{chen2015compressed}.
 
 Uma importante consideração que CS faz é a de que os sinais de interesse possuem menos informação do que sugere a 
-dimensão $d$. Uma forma de quantificar essa noção é a esparsidade, que pode ser definida como a quantidade de valores não
+dimensão $d$. 
+Uma forma de quantificar essa noção é a esparsidade.
+Considere-se a quantidade de valores não
 nulos $s$ de um sinal $\vec{f} \in \mathbb{C}^d$, também conhecida como norma $\ell_0$:
 \begin{equation}
     \lVert \vec{f} \rVert_0 = s
@@ -604,7 +613,7 @@ Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 \begin{algorithm}[H]
 \label{algo:omp}
 \caption{\textit{Orthogonal Matching Pursuit (OMP)}.}
-\Entrada{Matriz de medidas $m \times d$ $\mathbf{\Phi}$, Vetor de $m$ medidas $\vec{y}$, nível de esparsidade $s$}
+\Entrada{Matriz de medidas $m \times d$ $\mathbf{\Phi}$, Vetor de $m$ medidas $\vec{y}$, parâmetro de esparsidade $s$}
 \Saida{Estimativa do sinal ideal $\vec{f'} \in \mathbb{R}^d$}
 $\vec{r_{(0)}} \leftarrow \vec{y}$\;
 $t \leftarrow 1$\;
@@ -639,7 +648,7 @@ Gilbert e Tropp ainda apresentam um teorema sobre o algoritmo.
 Sem nenhuma modificação, o OMP não é reconhecidamente robusto a ruído, nem oferece garantias de uniformidade.
 Porém, esse algoritmo possui um baixo custo computacional e boa eficiência, tendo complexidade de
 $O(s m d)$ \cite{chen2015compressed}. 
-Algo que fica claro, observando-se o pseudo-código e a complexidade, é que o OMP tem desempenho diretamente
+Algo que fica claro, observando-se o pseudo-código e a complexidade, é que o OMP tem desempenho inversamente
 proporcional com a esparsidade da solução, ou seja, a cada nova iteração no \textit{loop} principal, um 
 novo coeficiente da solução é calculado.
 
@@ -1461,9 +1470,9 @@ capítulo \autoref{sec:results}.
           \hline
           \hline
           $p$    & Tamanho do patch. \\ 
-          $s$    & Valor máximo de esparsidade de cada patch. Quantidade de valores não nulos da representação do patch. \\     
+          $s$    & Valor máximo da norma $\ell_0$ de cada patch. Quantidade de valores não nulos da representação do patch. \\     
           $K$    & Número de átomos do dicionário. \\
-          $q$    & Esparsidade de envio da informação, $q \le s$. \\
+          $q$    & Parâmetro de esparsidade de envio da informação, $q \le s$. \\
           \hline
         \end{tabular}
     \legend{Fonte: O Autor.}
@@ -1543,8 +1552,8 @@ discutidos resultados alcançados com ambas escolhas de tamanho de patch.
 
 A escolha por processar patches se dá pela necessidade do processamento em tempo real, pois 
 os algoritmos relacionados a CS dependem diretamente do tamanho
-dos sinais envolvidos, do tamanho dos dicionários e da esparsidade.
-Porém, o tamanho dos dicionários e a esparsidade precisam ser maiores conforme maior for 
+dos sinais envolvidos, do tamanho dos dicionários e do número de valores não nulos.
+Porém, o tamanho dos dicionários e a o número de valores não nulos precisam ser maiores conforme maior for 
 o sinal, o que leva a um aumento de complexidade maior que linear com o aumento do tamanho dos
 patches, além de uma utilização maior de memória para o dicionário.
 Utilizar patches pequenos possibilita a paralelização dos cálculos.
@@ -1612,8 +1621,8 @@ em tempo suficiente para transmissão em tempo real, conforme será verificado n
 de resultados.
 
 Um importante fato a ser considerado sobre o algoritmo \autoref{algo:omp} é que, a cada iteração $i$,
-ele descobre a melhor solução para a esparsidade $i$. Ou seja, se escolhida esparsidade $s=5$,
-por exemplo, é possível armazenar-se os resultados com esparsidade $s=1,...,5$. 
+ele descobre a melhor solução para o parâmetro de esparsidade $i$. Ou seja, se escolhid $s=5$,
+por exemplo, é possível armazenar-se os resultados com parâmetro de esparsidade $s=1,...,5$. 
 A utilidade desse fato se dá no controle da taxa de transmissão, pois quanto mais esparsa a 
 representação, menor o bitrate. 
 Portanto, com a aplicação do OMP, já se é possível gerar as melhores e piores representações.
@@ -1638,7 +1647,7 @@ Em seguida, cada coeficiente $c$ de $\mat{\Gamma}$ é quantizado de acordo com a
     c' = \floor*{0,5 + 255\frac{c - l}{u - l}}
 \end{equation*}
 
-Um dos parâmetros que entra em ação é o de esparsidade de envido da informação, $q$. 
+Um dos parâmetros que entra em ação é o parâmetro de esparsidade de envio da informação, $q$. 
 Ele é o responsável pela escolha de qual será o nível de esparsidade escolhido,
 dado que $1 \le q \le s$.
 A partir desse parâmetro escolhem-se as colunas $q-1$ de cada $\mat{\Gamma_i}$ (já quantizado), 
@@ -1893,7 +1902,7 @@ enquanto $K$ representa o número de átomos do dicionário.
 Os parâmetros para teste foram escolhidos com base na implementação, também considerando 
 o padrão H.264, que utiliza, na etapa de transformação, patches de $4\times4$, 
 e o padrão JPEG, cujos patches são $8\times8$.
-O valor de $s$, que se trata da esparsidade (\autoref{tbl:params}) foi fixo para os valores de $p$. 
+O valor de $s$, parâmetro de esparsidade (\autoref{tbl:params}), foi fixo para os valores de $p$. 
 Sendo assim, para $p=4$, $s=4$, e para $p=8$, $s=8$.
 
 % INSERIR IMAGEM DE DICIONÁRIO, CITANDO K e p
@@ -1916,7 +1925,7 @@ Sendo assim, para $p=4$, $s=4$, e para $p=8$, $s=8$.
 Em seguida serão apresentados os resultados alcançados com as diferentes parametrizações 
 e diferentes classes de vídeos.
 
-\section{Alterações no tamanho do dicionário, no tamanho do patch e na esparsidade}
+\section{Alterações no tamanho do dicionário, no tamanho do patch e no parâmetro de esparsidade}
 \label{sec:parametrizacao}
 Nessa seção serão apresentados e discutidos resultados alcançados na compressão e 
 decompressão dos vídeos escolhidos de cada classe para os parâmetros definidos na 
@@ -1935,7 +1944,7 @@ Porém, por mais que patches possam ser executados em paralelo, seu tempo indivi
 no processamento do OMP, aumenta conforme o aumento do dicionário.
 
 \begin{figure}[H]
-    \caption{Tempo médio por frame para patches $4\times4$.}
+    \caption{Tempo médio por frame para patches $4\times4$ em função do tamanho do dicionário $K$.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/p4_ds_edtime.png}
     \end{center}
@@ -1950,7 +1959,7 @@ somente cada um dos $s$ valores não nulos do vetor.
 O mesmo pode ser constatado na figura abaixo, que apresenta os resultados alcançados com $p=8$.
 
 \begin{figure}[H]
-    \caption{Tempo médio por frame para patches $8\times8$.}
+    \caption{Tempo médio por frame para patches $8\times8$ em função do tamanho do dicionário $K$.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/p8_ds_edtime.png}
     \end{center}
@@ -1975,7 +1984,7 @@ de dicionário, o que indica que é possível utilizar valores baixos de $K$ sem
 na qualidade da representação.
 
 \begin{figure}[H]
-    \caption{PSNR médio em função do tamanho do dicionário.}
+    \caption{PSNR médio em função do tamanho do dicionário $K$, com quantização de 8 bits.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/ds_psnr.png}
     \end{center}
@@ -1992,7 +2001,7 @@ A figura abaixo mostra que o PSNR médio é bem mais estável utilizando uma rep
 de 16 bits, com exceção da classe cartoon, que manteve uma considerável variação.
 
 \begin{figure}[H]
-    \caption{PSNR médio em função do tamanho do dicionário, com quantização de 16 bits.}
+    \caption{PSNR médio em função do tamanho do dicionário $K$, com quantização de 16 bits.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/ds_psnr_16bit.png}
     \end{center}
@@ -2013,14 +2022,14 @@ tão grande, o que mostra que o uso de dicionários menores pode ser bastante ú
 especialmente quando se leva em conta a velocidade de codificação.
 
 Em seguida, foi escolhida a melhor representação do vídeo indoor, que apresenta 
-pouca variação nas cenas, para avaliar as mudanças no PSNR médio em função do valor 
-de esparsidade.
+pouca variação nas cenas, para avaliar as mudanças no PSNR médio em função da esparsidade.
 Também foi escolhido o vídeo de esportes, usando a mesma configuração, este pelo fato 
 de que possui patches com grama, que é uma imagem com alta frequência.
 Sumarizando, foram escolhidos $p=4$, $K=32$, e $s=1,2,3,4,5,6$.
 
 \begin{figure}[H]
-    \caption{PSNR médio em função da esparsidade $s$.}
+    \caption{PSNR médio em função do parâmetro de esparsidade $s$, para patches $4\times4$ ($p=4$) e 
+    tamanho do dicionário $K=32$.}
     \begin{center}
         \includegraphics[width=0.6\textwidth]{img/graficos/p4d32_sv_psnr.png}
     \end{center}
@@ -2055,7 +2064,7 @@ em $128$.
 % Tabela do bitrate
 \begin{table}[h]
     \caption{Bitrate calculado para vídeos de teste com tamanho do patch $8$, tamanho do 
-    dicionário $128$ e esparsidade $8$.}
+    dicionário $128$ e parâmetro de esparsidade $8$.}
     \centering
         \begin{tabular}{|l|l|c|c|c|c|}
           \hline
@@ -2089,9 +2098,9 @@ Além de ser o maior vídeo, o mesmo também possui diversas partes com a câmer
 o que facilita a compressão devido ao método proposto.
 
 Fica claro que, quando se deseja tempo real na codificação, deve-se utilizar valores 
-de tamanho de patch, esparsidade e tamanho de dicionário mais baixos, enquanto para que haja melhor compressão, 
+de tamanho de patch, parâmetro de esparsidade e tamanho de dicionário mais baixos, enquanto para que haja melhor compressão, 
 devem ser utilizados valores mais altos.
-O valor de esparsidade $s$ é capaz de controlar a qualidade, a compressão e até mesmo a velocidade 
+O parâmetro de esparsidade $s$ é capaz de controlar a qualidade, a compressão e até mesmo a velocidade 
 da codificação, sendo então necessário considerar várias possibilidades para seus valores.
 
 Para resumir, a tabela a seguir traz recomendações para os valores dos parâmetros do codec, 
@@ -2106,12 +2115,12 @@ nos casos em que o foco está em tempo real ou compressão.
         \emph{Foco} & 
         \emph{Tam. patch} & 
         \emph{Tam. dicionário} & 
-        \emph{Esparsidade} \\
+        \emph{Par. de esparsidade} \\
         \hline
         Tempo real & qualidade & 4 & 16 & 4 \\
         Tempo real & compressão & 8 & 64 & 5 \\
         Gravação & qualidade & 8 & 128 & 10 \\
-        Gravação & qualidade+compressão & 8 & 128 & 8 \\
+        Gravação & qual. + compr. & 8 & 128 & 8 \\
         Gravação & compressão & 8 & 128 & 4 \\
         \hline
     \end{tabular}
@@ -2153,7 +2162,9 @@ Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
 \end{table}
 
 Os resultados obtidos tiveram, para todos os casos, valores de PSNR médio inferiores
-ao codec H.264, o que já era esperado, devido a simplicidade do codec proposto.
+ao codec H.264, o que já era esperado, devido a simplicidade do codec proposto, 
+aliado a que o padrão H.264 é amplamente desenvolvido e foi aprimorado tanto pela 
+academia quanto pela indústria.
 Porém, é possível perceber que as qualidades apresentadas são boas, o que indica que 
 o codec proposto funciona, porém precisa ser aprimorado em relação a buscar gerar 
 resultados mais comprimidos.
@@ -2199,7 +2210,7 @@ pelo codec proposto,
 comparando a imagem de referência com a gerada pela codificação.
 
 \begin{figure}[H]
-    \caption{Fundo de cena do vídeo johnny, tamanho do dicionário $K=32$, esparsidade $s=5$ e patches $4\times4$,
+    \caption{Fundo de cena do vídeo johnny, tamanho do dicionário $K=32$, parâmetro de esparsidade $s=5$ e patches $4\times4$,
     quantizado 8 bits.
     (a) Referência. 
     (b) Resultado com codec proposto.}
@@ -2218,7 +2229,7 @@ na comparação entre a imagem de referência e a imagem gerada pelo codec,
 o que se deve a erros relacionados a quantização.
 
 \begin{figure}[H]
-    \caption{Vídeo big\_buck\_bunny, tamanho do dicionário $K=16$, esparsidade $s=5$ e patches $4\times4$, 
+    \caption{Vídeo big\_buck\_bunny, tamanho do dicionário $K=16$, parâmetro de esparsidade $s=5$ e patches $4\times4$, 
     quantizado 8 bits. 
     (a) Referência. 
     (b) Resultado com codec proposto.}
@@ -2250,7 +2261,7 @@ Na fase de execução de testes e geração de resultados foi possível constata
 do codec para 5 tipos diferentes de classes de vídeos.
 Ficou clara também a relação entre execução em tempo real, compressibilidade do vídeo e 
 qualidade com os parâmetros $K$ (número de átomos do dicionário), $p$ (tamanho do bloco), 
-e $s$ (esparsidade da representação).
+e $s$ (parâmetro de esparsidade da representação).
 
 Mudanças no valor de $K$ (tamanho do dicionário) acarretam em pouca diferença na qualidade do vídeo, desde que 
 o valor não seja muito pequeno. 
@@ -2300,6 +2311,11 @@ nos padrões já existentes.
 
 De forma resumida, o trabalho proposto apresentou um caminho para a codificação de vídeos 
 utilizando aprendizado de dicionários e técnicas de compressed sensing.
+Além disso, foi possível somar conhecimento de áreas até antes desconhecidas, 
+compressed sensing e aprendizado de dicionários.
+Especialmente do ponto de vista do conhecimento, o trabalho proposto foi um sucesso, 
+pois fez com que, através da pesquisa e do estudo, fosse possível compreender e dominar 
+melhor os assuntos base da proposta, que não são estudados dentro do escopo da graduação.
 
 
 % referências
