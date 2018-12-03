@@ -93,7 +93,7 @@
 % 
 % Informações gerais
 % 
-\title{Aplicação de técnicas de compressed sensing e dictionary learning para codificação de vídeos em tempo real.}
+\title{Aplicação de técnicas de compressed sensing e aprendizado de dicionários para codificação de vídeos em tempo real}
 
 \author{Sachser}{Eduardo}
 % alguns documentos podem ter varios autores:
@@ -241,63 +241,49 @@
 
 % introducao
 \chapter{Introdução}
-O processo de globalização vem acontecendo em todo mundo, 
-e uma grande aliada desse processo é a internet.
-Essa jovem e promissora tecnologia tem transformado a vida das pessoas.
-Em especial, a internet trouxe novas formas de comunicação.
+% O processo de globalização vem acontecendo em todo mundo, 
+% e uma grande aliada desse processo é a internet.
+% Essa jovem e promissora tecnologia tem transformado a vida das pessoas.
+% Em especial, a internet trouxe novas formas de comunicação.
 
-Hoje em dia é possível comunicar-se mesmo em longas distâncias, 
-através da internet.
-Reuniões podem ser feitas através de videoconferências, transmissões 
-em tempo real de eventos, streaming de vídeo e áudio passam por 
-inúmeros dispositivos conectados a grande rede.
-Tais dispositivos vão desde grandes datacenters, passando por computadores 
-pessoais, laptops, smartphones, e até câmeras de monitoramento instaladas
-em cidades, todos com a capacidade de receber e enviar informações 
-pela internet.
+% Hoje em dia é possível comunicar-se mesmo em longas distâncias, 
+% através da internet.
+% Reuniões podem ser feitas através de videoconferências, transmissões 
+% em tempo real de eventos, streaming de vídeo e áudio passam por 
+% inúmeros dispositivos conectados a grande rede.
+% Tais dispositivos vão desde grandes datacenters, passando por computadores 
+% pessoais, laptops, smartphones, e até câmeras de monitoramento instaladas
+% em cidades, todos com a capacidade de receber e enviar informações 
+% pela internet.
 
-Segundo a revista Forbes \cite{VideoMarketing}, mais de 500 milhões de horas são assistidos 
+Segundo a revista Forbes \cite{VideoMarketing}, mais de 500 milhões de horas de vídeos são assistidos 
 diariamente no Youtube. 
-Também segundo a revista, até 2021, 17.000 horas de conteúdo de vídeo passarão 
-pela internet, por segundo.
-
-Essa grandiosa utilização de vídeos somente é possível graças a eficiência 
-dos padrões de transmissão de vídeo e áudio criados ao longo dos anos, 
+Ainda segundo a revista, até 2021, 17.000 horas de conteúdo de vídeo passarão 
+pela \emph{internet}, por segundo.
+Isso somente é possível graças a eficiência 
+dos padrões de compressão e transmissão de vídeo e áudio criados ao longo dos anos, 
 e ainda sendo estudados e melhorados.
 Diversos padrões foram criados, e com o avanço tecnológico, mais tecnologias
 são possíveis de serem aplicadas a novos padrões, permitindo que mais informação
 trafegue na rede com menor quantidade de dados sendo necessários.
 
-Dentro desse contexto, o trabalho que segue buscará discutir como novos 
-campos do conhecimento tais quais compressed sensing e aprendizado de 
-dicionários (\emph{dictionary learning}), apresentando uma proposta de 
-codificação de vídeos em tempo real baseada nesses assuntos, bem como 
-métricas e avaliações do funcionamento da proposta.
-
-O capítulo \autoref{cap:ref} trará o referencial teórico que serviu de base
-para a elaboração da proposta do trabalho,
-abordando assuntos relativos a processamento de sinais, compressed sensing, 
-aprendizado de dicionários, codificação de vídeos e uma breve introdução 
-a plataforma CUDA\reg.
-No capítulo seguinte discutir-se-ão alguns trabalhos que inspiraram a 
-proposta ou que apresentam diferentes óticas para o mesmo problema.
-A seguir, será detalhada a proposta. 
-Baseando-se na mesma, serão apresentados alguns resultados de medidas 
-aplicadas ao objeto do trabalho, encerrando com conclusões tiradas com 
-base na proposta, nos trabalhos relacionados, e nas medidas executadas. 
+Dentro desse contexto, este trabalho explora o uso de \emph{compressed sensing} e aprendizado de 
+dicionários (\emph{dictionary learning}), para 
+codificação de vídeos em tempo real.
+O trabalho também avalia o desempenho da técnica implementada, comparando-o com o do codificador H.264. 
 
 \section{Objetivos}
 Este trabalho tem os seguintes objetivos:
 \begin{itemize}
     \item Apresentar uma proposta de codificação de decodificação de vídeos
-    em tempo real baseada em técnicas de compressed sensing e aprendizado de 
-    dicionários.
+    em tempo real baseada em técnicas de \emph{compressed sensing} e aprendizado de 
+    dicionários;
     \item Realizar medidas comparativas entre as diversas possibilidades 
-    de parametrização do objeto do trabalho proposto.
+    de parametrização do objeto do trabalho proposto;
     \item Realizar medidas comparativas com outros padrões conhecidos de 
-    codecs de vídeo.
-    \item Aprofundar o conhecimento da área de compressed sensing e dictionary 
-    learning através aplicação de técnicas relacionadas a tais assuntos.
+    codecs de vídeo;
+    \item Aprofundar o conhecimento da área de \emph{compressed sensing} e aprendizado 
+    de dicionários através aplicação de técnicas relacionadas a tais assuntos.
 \end{itemize}
 
 \section{Notações Utilizadas}
@@ -306,9 +292,10 @@ Para representar matrizes, serão utilizadas letras gregas ou romanas,
 maiúsculas e em negrito, por exemplo $\mat{X}$.
 As colunas de $\mat{X}$ serão representadas pela letra correspondente 
 minúscula em negrito, com o indexador da coluna, $\vec{x_i}$, também em negrito.
-Outra forma possível de representar partes de uma matriz podem ser $\mat{X_{:,i}}$,
+Outra forma possível de representar partes de uma matriz é $\mat{X_{:,i}}$,
 que representa todas as linhas da coluna $i$, e $\mat{X_{i,:}}$, que representa 
 todas as colunas da linha $i$.
+% Melhorar o exemplo
 Um valor qualquer da matriz é descrito como $\mat{X_{i,j}}$.
 Letras minúsculas em negrito representarão vetores.
 A indexação de vetores acontecerá no formato $x_i$, não utilizando negrito. % Revisar todo o texto
@@ -316,35 +303,50 @@ A indexação de vetores acontecerá no formato $x_i$, não utilizando negrito. 
 %Apresentar normas e (t)
 Alguns algoritmos calculam variáveis relacionadas a uma determinada iteração $t$.
 Nesses algoritmos, seguindo as notações anteriormente apresentadas, $\mat{X_{(t)}}$ 
-representa a matriz $\mat{X}$ da iteração de número $t$.
+representa a matriz $\mat{X}$ na t-ésima iteração.
 O mesmo acontece com vetores, por exemplo, $\vec{x_{(t)}}$.
+
+% A cada iteração t o valor de X é alterado, na iteração.
 
 Por fim, vale lembrar a definição da norma $\ell_p$ para um vetor $\vec{x} \in \mathbb{R}^m$:
 \begin{equation*}
     \lVert \vec{x} \rVert_p = 
-    \left( \sum_{i=1}^m {|x_i|^p} \right)^{\frac{1}{p}}
+    \left( \sum_{i=1}^m {|x_i|^p} \right)^{\frac{1}{p}}, 
 \end{equation*}
 podendo escrever, portanto, a norma $\ell_2$, por exemplo, como:
 \begin{equation*}
     \lVert \vec{x} \rVert_2 = 
-    \sqrt{\sum_{i=1}^m {x_i^2}}
+    \sqrt{\sum_{i=1}^m {x_i^2}},
 \end{equation*}
 e a norma $\ell_1$:
 \begin{equation*}
     \lVert \vec{x} \rVert_1 = 
-    \sum_{i=1}^m {|x_i|}
+    \sum_{i=1}^m {|x_i|}.
 \end{equation*}
 
 As normas acima apresentadas, bem como as notações, serão amplamente utilizadas
 em todo o texto. 
-Outras definições serão agregadas ao continuar a leitura, somando-se as atuais, 
+Outras definições serão agregadas ao longo do texto, somando-se as atuais, 
 que foram apresentadas por serem aplicadas em toda a extensão do trabalho.
+
+\section{Estrutura do Trabalho}
+O capítulo \ref{cap:ref} apresenta o referencial teórico que serviu de base
+para a elaboração da proposta do trabalho,
+abordando assuntos relativos a processamento de sinais, \emph{compressed sensing}, 
+aprendizado de dicionários, codificação de vídeos e uma breve introdução 
+a plataforma CUDA\reg.
+No capítulo \ref{cap:relacionados} discutem-se alguns trabalhos que inspiraram a 
+proposta ou que apresentam diferentes óticas para o mesmo problema.
+A seguir, será detalhada a proposta. 
+Baseando-se na mesma, serão apresentados alguns resultados de medidas 
+aplicadas ao objeto do trabalho, encerrando com conclusões tiradas com 
+base na proposta, nos trabalhos relacionados, e nas medidas executadas.
 
 \chapter{Referencial Teórico}
 \label{cap:ref}
 
 \section{Introdução a Sinais e Sistemas}
-O trabalho apresentará uma metodologia para compressão de vídeos.
+O trabalho apresenta uma metodologia para compressão de vídeos.
 Porém, vídeos são, particularmente, uma sequência de imagens.
 Já imagens, por sua vez, são um exemplo de sinais bidimensionais.
 Vídeos, portanto, sinais tridimensionais.
@@ -353,13 +355,13 @@ o que é um sinal e alguns resultados importantes, primeiramente, para
 em seguida aprimorarem-se os estudos acerca de outros conceitos.
 
 "Um sinal é formalmente definido como uma função de uma ou mais variáveis, 
-a qual veicula informações sobre a natureza de um fenômeno físico" \cite{haykin2001sinais}.
+a qual veicula informações sobre a natureza de um fenômeno físico"~ \cite{haykin2001sinais}.
 Também segundo \citet{haykin2001sinais}, os sinais são chamados unidimensionais quando
 dependem de apenas uma variável, e multidimensionais quando dependem de mais que uma.
-Exemplo de multidimensionais foram citadas anteriormente, imagens e vídeos. 
-Já unidimensionais, podemos tomar como exemplo os sinais de som, dependentes apenas da variável tempo.
+Como exemplo de sinais unidimensionais existem os sinais de som, dependentes apenas da variável tempo.
+Já exemplos de sinais multidimensionais foram citadas anteriormente, imagens e vídeos. 
 
-Além disso, temos de definir o que é um sistema. 
+Além disso, deve-se definir o conceito de sistema. 
 Segundo \citet{haykin2001sinais}, "Um sistema é definido como uma entidade que manipula
 um ou mais sinais para realizar uma função, produzindo novos sinais".
 Um exemplo simples poderia ser o controle de volume de um aparelho de som,
@@ -370,13 +372,13 @@ deseja reconhecer, e fornece como saída o nome ou as informações da face reco
 
 Sinais podem ser contínuos - ou analógicos - e digitais.
 Na verdade, em geral, sinais da natureza são contínuos, mas são digitalizados 
-para que seja possível armazenamento, envio e processamento por meios digitais.
-Dessa forma, \citet{haykin2001sinais} apresenta os passos geralmente executados 
+para que seja possível armazená-los, enviá-los e transmiti-los por meios digitais.
+Dessa forma, \citet{haykin2001sinais} apresentam os passos geralmente executados 
 para digitalizar sinais analógicos:
 \begin{enumerate}
-    \item \emph{Amostragem:} O sinal analógico é amostrado com determinada taxa de amostragem.
-    \item \emph{Quantização:} Cada uma das amostras é transformada para um valor digital em um intervalo definido.
-    \item \emph{Codificação:} Os valores quantizados são salvos de alguma forma.
+    \item \emph{Amostragem:} O sinal analógico é amostrado com determinada taxa de amostragem;
+    \item \emph{Quantização:} Cada uma das amostras é transformada para um valor digital em um intervalo definido;
+    \item \emph{Codificação:} Os valores quantizados são salvos de alguma forma;
     \item \emph{Redundância:} Podem ser geradas informações de redundância para armazenamento do sinal.
 \end{enumerate} 
 
@@ -386,28 +388,28 @@ $\vec{f} = \vec{y} + \vec{e}$, no qual $\vec{f}$ é a amostragem, $\vec{y}$ é o
 e $\vec{e}$ é o erro.
 
 
-Uma definição importante para o prosseguimento do trabalho é a de energia de um sinal $\vec{f} \in \mathbb{R}^m$,
-$E$, como segue:
+Uma definição importante para o prosseguimento do trabalho é a de energia $E$ de um sinal $\vec{f} \in \mathbb{R}^m$, como segue:
 \begin{equation}
-    E = \sum_{i=1}^m f_i^2 = \lVert \vec{f} \rVert_2^2
+    E = \sum_{i=1}^m f_i^2 = \lVert \vec{f} \rVert_2^2,
 \end{equation}
+onde $f_i$ representa a i-ésima componente do vetor $\vec{f}$.
 
-Por fim, um resultado clássico sobre amostragem de sinais no domínio tempo, o teorema Shannon-Nyquist.
+Por fim, um resultado clássico sobre amostragem de sinais no domínio tempo, o teorema de Nyquist.
 \begin{teorema}
     \cite{NyquistSampling}.
-    Um sinal contínuo pode ser apropriadamente amostrado somente se ele não contiver 
-    componentes em frequência $f_{max}$ acima de metade da frequência de amostragem $f_s$.
+    Um sinal contínuo pode ser apropriadamente amostrado somente se a máxima frequência $f_max$ contida 
+    no sinal for menor que metade da taxa de amostragem $f_s$:
     \begin{equation*}
-        f_{max} \le \frac{f_s}{2}.
+        f_{max} < \frac{f_s}{2}.
     \end{equation*}
     \label{teo:nyquist}
 \end{teorema}
 
-A partir desse pequeno resumo focado em amostragem de sinais digitais,
-as próximas seções utilizarão os conceitos apresentados para formularem outros novos.
+% A partir desse pequeno resumo focado em amostragem de sinais digitais,
+% as próximas seções utilizarão os conceitos apresentados para formularem outros novos.
 
 \section{Compressed Sensing}
-\subsection{O modelo de Compressed Sensing}
+% \subsection{O modelo de Compressed Sensing}
 \textit{Compressed Sensing (CS)} ou \textit{Compressive Sampling} é um campo de estudo de sinais cujos
 primeiros trabalhos surgiram a partir de 2006, a partir da análise de amostragens executadas em imagens de 
 ressonância magnética. Essas amostragens eram de muito menor dimensionalidade do que a da imagem, o que 
@@ -415,15 +417,15 @@ fez com que os métodos conhecidos de processamento de sinais não tivessem boa 
 
 "Muitos sinais de interesse possuem menos informação do que a dimensão do ambiente sugere"
 \footnote{"Many signals of interest contain far less information than their ambient dimension suggests"}
-(\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, p. 2, tradução própria).
-As formas tradicionais de aquisição de sinais baseadas no teorema de Shannon-Nyquist (\ref{teo:nyquist}) acabam por causar o descarte
+(\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, p. 2, tradução livre).
+As formas tradicionais de aquisição de sinais baseadas no teorema de Nyquist (\ref{teo:nyquist}) acabam por causar o descarte
 de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: é possível haver 
 uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? \cite{chen2015compressed}.
 
-O modelo de Compressed Sensing surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
+O modelo de \emph{compressed sensing} surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
 de sinais, poucas amostras são necessárias para representar o sinal com acurácia \cite{chen2015compressed}.
-Ou seja, Compressed Sensing busca encontrar quais tipos
-de sinais podem ser amostrados de forma já comprimida e respostas de como fazê-lo.
+% Ou seja, \emph{compressed sensing} busca encontrar quais tipos
+% de sinais podem ser amostrados de forma já comprimida e respostas de como fazê-lo.
 
 De acordo com o modelo, um sinal $ \vec{f} $ em geral é um elemento de $ \mathbb{C}^d $. Amostragens são executadas na forma:
 \begin{equation}
@@ -1334,6 +1336,7 @@ OMP (\autoref{algo:omp}), conforme será discutido nos próximos capítulos.
 
 
 \chapter{Trabalhos Relacionados}
+\label{cap:relacionados}
 Neste capítulo serão abordados alguns trabalhos que se relacionam com a proposta apresentada.
 O foco principal da proposta está na codificação esparsa de frames de vídeos utilizando dicionários
 previamente treinados, buscando executar o processo em tempo real.
@@ -1411,6 +1414,7 @@ da implementação.
 Em seguida, testes e resultados serão apresentados com base na proposta.
 
 \chapter{Proposta}
+\label{cap:proposta}
 Após considerar o desenvolvimento da área de CS e de aprendizado de dicionários e 
 resumidos alguns trabalhos que focaram em alguma dessas áreas, será descrita a proposta 
 do trabalho de forma detalhada.
