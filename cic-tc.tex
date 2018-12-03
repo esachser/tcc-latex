@@ -153,8 +153,8 @@
 % 
 \keyword{compressed sensing}
 \keyword{compressive sampling}
-\keyword{dictionary learning}
-\keyword{real time}
+\keyword{aprendizado de dicionários}
+\keyword{tempo real}
 \keyword{video}
 \keyword{UFRGS}
 
@@ -190,21 +190,33 @@
 % resumo na língua do documento
 \begin{abstract}
     O trabalho propõe uma metodologia para codificação e decodificação de 
-    vídeos em tempo real, utilizando técnicas de compressed sensing e aprendizado 
-    de dicionários, apresentando parametrizações possíveis e resultados alcançados 
-    a partir da variação dos parâmetros utilizados, gerando recomendações de parâmetros 
+    vídeos em tempo real, utilizando técnicas de \emph{compressed sensing} e aprendizado 
+    de dicionários, além de quantização e compressão utilizando codificação de Huffman, 
+    apresentando parametrizações possíveis e resultados alcançados 
+    a partir da variação dos parâmetros, gerando recomendações de parâmetros 
     padrão que podem ser utilizados.
-    Ainda, compara o amplamente utilizado padrão de codificação de vídeos H.264
+    Do ponto de vista teórico, o trabalho apresenta os conceitos fundamentais de representação
+    de sinais, do padrão de codificação de vídeos H.264 e de CUDA\reg, além 
+    de aprofundar os assuntos de \emph{compressed sensing} e aprendizado de dicionários,
+    trazendo alguns resultados alcançados e técnicas aplicadas a cada um deles. 
+    Também na parte teórica é apresentado o algoritmo para codificação de Huffman.
+    Outro ponto abrangido pelo trabalho são outros trabalhos que têm relação com a proposta,
+    sobre os quais são discutidas as ideias principais, bem como resultados alcançados e sua 
+    relação com a proposta.
+    O trabalho ainda compara o amplamente utilizado padrão de codificação de vídeos H.264
     com a proposta, através das métricas de bitrate e PSNR médio.
-    A proposta apresenta resultados inferiores ao H.264, porém agrega conhecimentos
-    de compressed sensing e aprendizado de dicionários, assuntos bastante atuais, 
+    A proposta apresenta resultados bastante inferiores ao padrão H.264, 
+    porém agrega conhecimentos
+    de \emph{compressed sensing} e aprendizado de dicionários, assuntos bastante atuais, 
     ao problema de codificação de vídeos.
 \end{abstract}
 
 % resumo na outra língua
 % como parametros devem ser passados o titulo e as palavras-chave
 % na outra língua, separadas por vírgulas
-\begin{englishabstract}{Translate title to english.}{compressed sensing. compressive sampling. UFRGS}
+% \title{Aplicação de técnicas de compressed sensing e aprendizado de dicionários para codificação de vídeos em tempo real}
+\begin{englishabstract}{An application of compressed sensing and dictionary learning for real-time coding and decoding of videos}
+    {compressed sensing. compressive sampling. dictionary learning. real-time. UFRGS}
     Must be done yet.
 \end{englishabstract}
 
@@ -331,7 +343,7 @@ Outras definições serão agregadas ao longo do texto, somando-se as atuais,
 que foram apresentadas por serem aplicadas em toda a extensão do trabalho.
 
 \section{Estrutura do Trabalho}
-O capítulo \ref{cap:ref} apresenta o referencial teórico que serviu de base
+O capítulo \ref{cap:ref} apresenta os conceitos fundamentais que serviram de base
 para a elaboração da proposta do trabalho,
 abordando assuntos relativos a processamento de sinais, \emph{compressed sensing}, 
 aprendizado de dicionários, codificação de vídeos e uma breve introdução 
@@ -362,7 +374,7 @@ dependem de apenas uma variável, e multidimensionais quando dependem de mais qu
 Como exemplo de sinais unidimensionais existem os sinais de som, dependentes apenas da variável tempo.
 Já exemplos de sinais multidimensionais foram citadas anteriormente, imagens e vídeos. 
 
-Além disso, deve-se definir o conceito de sistema. 
+Além disso, deve-se definir o conceito de "sistema". 
 Segundo \citet{haykin2001sinais}, "Um sistema é definido como uma entidade que manipula
 um ou mais sinais para realizar uma função, produzindo novos sinais".
 Um exemplo simples poderia ser o controle de volume de um aparelho de som,
@@ -419,8 +431,10 @@ fez com que os métodos conhecidos de processamento de sinais não tivessem boa 
 "Muitos sinais de interesse possuem menos informação do que a dimensão do ambiente sugere"
 \footnote{"Many signals of interest contain far less information than their ambient dimension suggests"}
 (\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, p. 2, tradução livre).
-As formas tradicionais de aquisição de sinais baseadas no teorema de Nyquist (\ref{teo:nyquist}) acabam por causar o descarte
-de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: existe 
+As formas tradicionais de aquisição de sinais baseadas no teorema de Nyquist (\ref{teo:nyquist}) 
+geram informação redundante.
+% acabam por causar o descarte de boa parte da informação coletada durante a etapa de compressão. 
+Tal fato traz a tona a pergunta: existe 
 uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? \cite{chen2015compressed}.
 
 O modelo de \emph{compressed sensing} surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
@@ -454,7 +468,7 @@ satisfaz a seguinte inequação:
 \end{equation} 
 
 Na prática, sinais não são usualmente encontrados esparsos, o que leva a definição de \textit{sinais compressíveis},
-que são aqueles que obedecem a seguinte lei de decaimento exponencial \cite{chen2015compressed}:
+que são aqueles que obedecem à seguinte lei de decaimento exponencial \cite{chen2015compressed}:
 \begin{equation}
     \label{eq:compressiblesignal}
     | f\SPSB{*}{k} | < R k^{-\frac{1}{q}},  
@@ -472,7 +486,7 @@ e no eixo x a variação de $k$.
 \end{figure}
 
 Percebe-se que para valores bem pequenos de $q$ a compressibilidade se torna praticamente o mesmo que esparsidade.
-% Fazer gráfico para ilustrar, aí fica mais fácil de dizer isso.
+% Fazer gráfico para ilustrar, aí fica mais fácil de dizer isso. OK
 Segundo \citet{chen2015compressed}, se considerar-se 
 $\vec{f_s}$ o vetor com os $s$ maiores valores de $\vec{f}$ em magnitude, temos que, para sinais compressíveis $\vec{f}$ e 
 $\vec{f_s}$:
