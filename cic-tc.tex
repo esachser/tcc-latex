@@ -435,7 +435,7 @@ As formas tradicionais de aquisição de sinais baseadas no teorema de Nyquist (
 geram informação redundante.
 % acabam por causar o descarte de boa parte da informação coletada durante a etapa de compressão. 
 Tal fato traz a tona a pergunta: existe 
-uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? \cite{chen2015compressed}.
+uma forma de aquisição de sinais na qual as amostras comprimidas são obtidas diretamente? \cite{chen2015compressed}.
 
 O modelo de \emph{compressed sensing} surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
 de sinais, poucas amostras são necessárias para representar o sinal com acurácia \cite{chen2015compressed}.
@@ -474,9 +474,11 @@ que são aqueles que obedecem à seguinte lei de decaimento exponencial \cite{ch
     | f\SPSB{*}{k} | < R k^{-\frac{1}{q}},  
 \end{equation}
 tal que $\vec{f}^* $ é o rearranjo decrescente de $\vec{f}$, ou seja, o vetor $\vec{f}$ reorganizado de forma que o maior 
-coeficiente seja $f_1^*$, o segundo maior, $f_2^*$, e assim por diante. $R$ é uma constante positiva e $0< q < 1$. 
+coeficiente em magnitude seja $f_1^*$, o segundo maior, $f_2^*$, e assim por diante. $R$ é uma constante positiva e $0< q < 1$. 
 Para ilustrar essa ideia, o gráfico abaixo apresenta curvas geradas variando $q$, usando $R=1,0$
 e no eixo x a variação de $k$.
+Um sinal compressível é aquele que cada coeficiente $f_k^*$ fica abaixo da curva apresentada,
+para algum $q$. 
 \begin{figure}[H]
     \caption{Curvas de sinais compressíveis com $R=1,0$ e variando $q$ e $k$.}
     \begin{center}
