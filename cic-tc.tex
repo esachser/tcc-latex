@@ -217,6 +217,7 @@
 % lista de abreviaturas e siglas
 % o parametro deve ser a abreviatura mais longa
 \begin{listofabbrv}{CoSaMP}
+    \item[CS] Compressed Sensing
     \item[RIP] Restricted Isometric Property
     \item[OMP] Orthogonal Matching Pursuit
     \item[CoSaMP] Compressive Sampling Matching Pursuit 
@@ -460,6 +461,16 @@ que são aqueles que obedecem a seguinte lei de decaimento exponencial \cite{che
 \end{equation}
 tal que $\vec{f}^* $ é o rearranjo decrescente de $\vec{f}$, ou seja, o vetor $\vec{f}$ reorganizado de forma que o maior 
 coeficiente seja $f_1^*$, o segundo maior, $f_2^*$, e assim por diante. $R$ é uma constante positiva e $0< q < 1$. 
+Para ilustrar essa ideia, o gráfico abaixo apresenta curvas geradas variando $q$, usando $R=1,0$
+e no eixo x a variação de $k$.
+\begin{figure}[H]
+    \caption{Curvas de sinais compressíveis com $R=1,0$ e variando $q$ e $k$.}
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/rkq.png}
+    \end{center}
+    \legend{Fonte: O Autor.}
+\end{figure}
+
 Percebe-se que para valores bem pequenos de $q$ a compressibilidade se torna praticamente o mesmo que esparsidade.
 % Fazer gráfico para ilustrar, aí fica mais fácil de dizer isso.
 Segundo \citet{chen2015compressed}, se considerar-se 
