@@ -342,7 +342,7 @@ Baseando-se na mesma, serão apresentados alguns resultados de medidas
 aplicadas ao objeto do trabalho, encerrando com conclusões tiradas com 
 base na proposta, nos trabalhos relacionados, e nas medidas executadas.
 
-\chapter{Referencial Teórico}
+\chapter{Conceitos Fundamentais}
 \label{cap:ref}
 
 \section{Introdução a Sinais e Sistemas}
@@ -383,7 +383,7 @@ para digitalizar sinais analógicos:
 \end{enumerate} 
 
 De uma forma geral, a aquisição ou até mesmo a transmissão de um sinal podem conter ruído.
-Dessa forma, pode se imaginar que um sinal amostrado é composto pelo próprio sinal somado ao ruído,
+Dessa forma, pode-se imaginar que um sinal amostrado é composto pelo próprio sinal somado ao ruído,
 $\vec{f} = \vec{y} + \vec{e}$, no qual $\vec{f}$ é a amostragem, $\vec{y}$ é o sinal real, 
 e $\vec{e}$ é o erro.
 
@@ -397,7 +397,7 @@ onde $f_i$ representa a i-ésima componente do vetor $\vec{f}$.
 Por fim, um resultado clássico sobre amostragem de sinais no domínio tempo, o teorema de Nyquist.
 \begin{teorema}
     \cite{NyquistSampling}.
-    Um sinal contínuo pode ser apropriadamente amostrado somente se a máxima frequência $f_max$ contida 
+    Um sinal contínuo pode ser apropriadamente amostrado somente se a máxima frequência $f_{max}$ contida 
     no sinal for menor que metade da taxa de amostragem $f_s$:
     \begin{equation*}
         f_{max} < \frac{f_s}{2}.
@@ -419,7 +419,7 @@ fez com que os métodos conhecidos de processamento de sinais não tivessem boa 
 \footnote{"Many signals of interest contain far less information than their ambient dimension suggests"}
 (\citeauthor{chen2015compressed}, \citeyear{chen2015compressed}, p. 2, tradução livre).
 As formas tradicionais de aquisição de sinais baseadas no teorema de Nyquist (\ref{teo:nyquist}) acabam por causar o descarte
-de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: é possível haver 
+de boa parte da informação coletada durante a etapa de compressão. Tal fato traz a tona a pergunta: existe 
 uma forma de aquisição dos sinais na qual as amostras comprimidas são obtidas diretamente? \cite{chen2015compressed}.
 
 O modelo de \emph{compressed sensing} surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
@@ -427,11 +427,12 @@ de sinais, poucas amostras são necessárias para representar o sinal com acurá
 % Ou seja, \emph{compressed sensing} busca encontrar quais tipos
 % de sinais podem ser amostrados de forma já comprimida e respostas de como fazê-lo.
 
-De acordo com o modelo, um sinal $ \vec{f} $ em geral é um elemento de $ \mathbb{C}^d $. Amostragens são executadas na forma:
+De acordo com o modelo, para um dado sinal $ \vec{f} \in \mathbb{C}^d $, 
+amostragens são executadas na seguinte forma, utilizando produto interno:
 \begin{equation}
     y_i = \langle \vec{\phi_i}, \vec{f} \rangle \text{ para } i=1,2,...,m, 
 \end{equation}
-na qual $m \ll d$. Os vetores $\vec{\phi_i}$ são linhas de uma matriz $m \times d$ $\mathbf{\Phi}$, chamada matriz 
+na qual $m \ll d$. Os vetores $\vec{\phi_i} \in \mathbb{R}^d$ são linhas de uma matriz $\mathbf{\Phi} \in \mathbb{R}^{m \times d}$, chamada matriz 
 de amostragem. Assim, pode-se reescrever o vetor de amostragem como $\vec{y} = \mathbf{\Phi} \vec{f}$. Fica claro que, 
 se $ m \ll d$, reconstruir $\vec{f}$ a partir de $\vec{y}$, sem assumir nada a mais, é um problema 
 com infinitas soluções \cite{chen2015compressed}.
@@ -442,34 +443,36 @@ Uma forma de quantificar essa noção é a esparsidade.
 Considere-se a quantidade de valores não
 nulos $s$ de um sinal $\vec{f} \in \mathbb{C}^d$, também conhecida como norma $\ell_0$:
 \begin{equation}
-    \lVert \vec{f} \rVert_0 = s
+    \lVert \vec{f} \rVert_0 = s.
 \end{equation}
-
 Considerando o mesmo sinal $\vec{f}$, diz-se que este é \textit{s-esparso}, quando, para dado um um valor $s$, $\vec{f}$
 satisfaz a seguinte inequação:
 \begin{equation}
     \label{eq:f0less}
-    \lVert \vec{f} \rVert_0 \le s \ll d
+    \lVert \vec{f} \rVert_0 \le s \ll d.
 \end{equation} 
 
-Na prática, sinais não são usualmente encontrados esparsos, o que leva a definição de que \textit{sinais compressíveis}
-são aqueles que obedecem a seguinte lei de decaimento exponencial:
+Na prática, sinais não são usualmente encontrados esparsos, o que leva a definição de \textit{sinais compressíveis},
+que são aqueles que obedecem a seguinte lei de decaimento exponencial \cite{chen2015compressed}:
 \begin{equation}
     \label{eq:compressiblesignal}
     | f\SPSB{*}{k} | < R k^{-\frac{1}{q}},  
 \end{equation}
-tal que $\vec{f}^* $ é o rearranjo decrescente de $\vec{f}$, $R$ é uma constante positiva e $0< q < 1$. Percebe-se
-que para valores bem pequenos de $q$ a compressibilidade se torna praticamente o mesmo que esparsidade. Se considerarmos
+tal que $\vec{f}^* $ é o rearranjo decrescente de $\vec{f}$, ou seja, o vetor $\vec{f}$ reorganizado de forma que o maior 
+coeficiente seja $f_1^*$, o segundo maior, $f_2^*$, e assim por diante. $R$ é uma constante positiva e $0< q < 1$. 
+Percebe-se que para valores bem pequenos de $q$ a compressibilidade se torna praticamente o mesmo que esparsidade.
+% Fazer gráfico para ilustrar, aí fica mais fácil de dizer isso.
+Segundo \citet{chen2015compressed}, se considerar-se 
 $\vec{f_s}$ o vetor com os $s$ maiores valores de $\vec{f}$ em magnitude, temos que, para sinais compressíveis $\vec{f}$ e 
 $\vec{f_s}$:
 \begin{equation}
     \lVert \vec{f} - \vec{f_s} \rVert_2 \le Rs^{\frac{1}{2} - \frac{1}{q}} \hspace{1em} \text{ e } \hspace{1em}
-    \lVert \vec{f} - \vec{f_s} \rVert_1 \le Rs^{1 - \frac{1}{q}} 
+    \lVert \vec{f} - \vec{f_s} \rVert_1 \le Rs^{1 - \frac{1}{q}}.
 \end{equation} 
 
 Por fim, a definição \eqref{eq:f0less} exige que $\vec{f}$ seja esparso, ou seja, tenha $s$ coeficientes não nulos
-no máximo. Por outro lado, $\vec{f}$ pode ser esparso em alguma outra base ortonormal $\mathbf{D}$, uma \textit{sparsifying basis} 
-\cite{CandesDecoLinear}. Nesse caso, considera-se $\vec{f}$ s-esparso se:
+no máximo. Por outro lado, $\vec{f}$ pode ser esparso em alguma outra base ortonormal $\mathbf{D}$, aqui referida como 
+\textit{sparsifying basis} \cite{CandesDecoLinear}. Nesse caso, considera-se $\vec{f}$ s-esparso se:
 \begin{equation}
     \vec{f} = \mathbf{D}\vec{x} \hspace{1em} \text{dado que} \hspace{1em} \lVert \vec{x} \rVert_0 \le s \ll d.
 \end{equation}
