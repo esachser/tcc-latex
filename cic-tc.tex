@@ -788,7 +788,7 @@ por exemplo, dicionários supercompletos, com mais colunas que linhas.
 "Coerência é, de certa forma, uma propriedade natural para \emph{compressed sensing}, 
 porque se duas colunas são muito correlatas, será impossível em geral distinguir se a energia do sinal
 vem de uma ou da outra" 
-\footnote{"Coherence is in some sense a natural property in the \emph{compressed sensing} framework, for if two
+\footnote{"Coherence is in some sense a natural property in the \emph{compressed sensing} quadrowork, for if two
 columns are closely correlated, it will be impossible in general to distinguish whether the energy in 
 the signal comes from one or the other"}
 (\citeauthor{CANDESDICTS}, \citeyear{CANDESDICTS}, tradução livre).
@@ -1074,11 +1074,11 @@ autores da área.
 \chapter{Trabalhos Relacionados}
 \label{cap:relacionados}
 Neste capítulo serão abordados alguns trabalhos que se relacionam com a proposta apresentada.
-O foco principal da proposta está na codificação esparsa de frames de vídeos utilizando dicionários
+O foco principal da proposta está na codificação esparsa de quadros de vídeos utilizando dicionários
 previamente treinados, buscando executar o processo em tempo real.
 
 Todos os trabalhos encontrados, bem como os padrões de vídeo existentes,
-utilizam a técnida de separar os frames em blocos, ou \textit{patches},
+utilizam a técnida de separar os quadros em blocos, ou \textit{patches},
 para que a aplicação das técnicas de transformação e compressão sejam 
 mais eficientes.
 
@@ -1157,13 +1157,13 @@ do trabalho de forma detalhada.
 
 O trabalho proposto visa desenvolver uma metodologia para codificação de vídeos em
 tempo real, utilizando dicionários pré-aprendidos relacionados ao próprio vídeo.
-Por ser um \textit{framework} com foco em tempo real, transmissão e recepção, 
+Por ser um \textit{quadrowork} com foco em tempo real, transmissão e recepção, 
 naturalmente se põe em questão 
 a necessidade de definir as funções que serão desenvolvidas por parte do \textit{encoder}
 e por parte do \textit{decoder}.
 
-% A proposta foca na codificação de frames a partir de dicionários previamente treinados,
-% apresentando um novo olha sobre a transformação aplicada aos frames.
+% A proposta foca na codificação de quadros a partir de dicionários previamente treinados,
+% apresentando um novo olha sobre a transformação aplicada aos quadros.
 % As técnicas apresentadas de forma resumida na seção \autoref{sec:codvideo} podem ser 
 % aplicadas juntamente a metodologia apresentada.
 
@@ -1179,14 +1179,14 @@ forma geral.
     \label{fig:geral}
 \end{figure}
 
-Entende-se que os frames processados estarão no formato de imagem colorida,
+Entende-se que os quadros processados estarão no formato de imagem colorida,
 pixel a pixel, RGB (Red, Green, Blue). 
-Ou seja, os frames terão dimensão 
+Ou seja, os quadros terão dimensão 
 $m \times n \times 3$,
 sendo a resolução do vídeo $m \times n$. 
 No caso do sistema criado, a ordem dos pixels é 
 linha a linha, ou seja, primeiro a linha $0$ e todas suas colunas, depois a $1$, e assim por diante.
-Em contraste com essa definição o frame em memória poderia ser coluna por coluna, o que alteraria
+Em contraste com essa definição o quadro em memória poderia ser coluna por coluna, o que alteraria
 alguns cálculos internos, sendo possível adaptar o sistema desenvolvido de forma bastante simples.
 Essa é uma diferença para com os codecs conhecidos, que utilizam comumente o espaço de cor YCbCr
 para processamento.
@@ -1226,7 +1226,7 @@ do projeto.
 \label{sec:learn}
 A etapa de aprendizado do dicionário, a qual é realizada off-line, é essencial para que a qualidade da representação
 esparsa utilizada seja boa.
-Além disso, para o caso de treinamento a partir de frames de vídeos, caso em que se está
+Além disso, para o caso de treinamento a partir de quadros de vídeos, caso em que se está
 trabalhando, é também necessário fazer a escolha de um algoritmo que permita a utilização
 de uma grande quantidade de dados de treinamento.
 
@@ -1239,18 +1239,18 @@ O treinamento foi executado da seguinte forma:
 \begin{enumerate}
     \item Os vídeos foram separados em diversas classes. Por exemplo, vídeos naturais, vídeos
     de esportes, \textit{cartoon}, etc.;
-    \item Os frames foram sorteados, de forma a garantir que um comportamento dos últimos frames
+    \item Os quadros foram sorteados, de forma a garantir que um comportamento dos últimos quadros
     não prepondere sobre todo o dicionário;
-    \item Cada frame foi separado em patches com tamanho $p \times p$;
+    \item Cada quadro foi separado em patches com tamanho $p \times p$;
     Para o treinamento, foram utilizados patches com sobreposição. Por fim, todos os patches
-    foram vetorizados como descritos na \autoref{sec:frameaquisition};
+    foram vetorizados como descritos na \autoref{sec:quadroaquisition};
     \item O dicionário foi obtido executando o algoritmo ODL (Algoritmo \ref{algo:odl}).
 \end{enumerate}
 
 Vale ressaltar que, para vídeos muito especializados, pode-se utilizar um treinamento
 mais especializado. 
 Por exemplo, uma transmissão esportiva, de um esporte específico pode se beneficiar 
-de um dicionário obtido a partir de apenas frames desse determinado esporte.
+de um dicionário obtido a partir de apenas quadros desse determinado esporte.
 
 A fase de aprendizado do dicionário, por envolver um tempo maior de processamento,
 deve ser executada antes da transmissão em tempo real, por parte do \textit{encoder}.
@@ -1265,7 +1265,7 @@ de escolhas diferentes no número de átomos do dicionário.
 Como parametrização do ODL, utiliza-se o valor $s$ como esparsidade desejada e
 $K$ como número de átomos do dicionário.
 O algoritmo ainda precisa saber o número de amostras que devem ser selecionadas aleatoriamente
-de cada frame.
+de cada quadro.
 Para determinar isso, foram executados testes de qualidade com diversos valores
 (\autoref{sec:parametrizacao}).
 Foi utilizada a implementação da biblioteca SPAMS \cite{SPAMS} do algoritmo ODL.
@@ -1278,9 +1278,9 @@ para a transmissão.
 
 
 % \section{\textit{Encoder}}
-\section{Aquisição do frame}
-\label{sec:frameaquisition}
-Essa etapa tem como entrada o frame a ser codificado, sendo que o histórico de frames já
+\section{Aquisição do quadro}
+\label{sec:quadroaquisition}
+Essa etapa tem como entrada o quadro a ser codificado, sendo que o histórico de quadros já
 processados, para a posterior verificação de igualdade, está armazenado também neste
 subsistema.
 
@@ -1461,7 +1461,7 @@ O Apêndice A descreve o processo de codificação de Huffman.
 
 % \section{\textit{Decoder}}
 
-\section{Decompressão e dequantização}
+\section{Descompressão e dequantização}
 \label{sec:decdeq}
 
 A primeira etapa do processo de decodificação consiste na descompressão dos dados recebidos. 
@@ -1497,10 +1497,10 @@ a maior parte dos coeficientes dessa matriz é nulo, por se tratar de uma repres
 % Porém, aplicando uma multiplicação da forma natural, esse fato é desconsiderado e acabam
 % acontecendo mais operações de multiplicação do que o necessário.
 
-\section{Reconstrução do frame}
-A reconstrução do frame se dá exatamente da forma contrária a separação por patches.
+\section{Reconstrução do quadro}
+A reconstrução do quadro se dá exatamente da forma contrária a separação por patches.
 Vale notar que alguns dos patches não precisarão ser atualizados
-(i. e., não se modificaram de um frame para outro).
+(i. e., não se modificaram de um quadro para outro).
 Essa informação foi recebida pelo \textit{decoder} na \autoref{sec:decdeq} e repassada
 até essa etapa.
 
@@ -1527,32 +1527,32 @@ desenvolvimento do codec.
 
 \chapter{Resultados}
 \label{sec:results}
-Durante a implementação da proposta, surgiram alguns parâmetros gerais da implementação
-que poderiam ser modificados, vide tabela \ref{tbl:params}. 
-Nas próximas seções serão discutidos os parâmetros e resultados alcançados com as 
-alterações dos mesmos.
-
-Os testes foram executados com vídeos utilizados na literatura para testes,
+% Durante a implementação da proposta, surgiram alguns parâmetros gerais da implementação
+% que poderiam ser modificados, vide tabela \ref{tbl:params}. 
+% Nas próximas seções serão discutidos os parâmetros e resultados alcançados com as 
+% alterações dos mesmos.
+De modo a avaliar o desempenho da abordagem proposta, foram realizados experimentos 
+com vídeos utilizados na literatura para testes,
 disponíveis em \url{https://media.xiph.org/video/derf/}.
 % Criar citação
-Os vídeos estão em formato de sequência de frames, sem compressão, ou somente com 
+Os vídeos estão em formato de sequência de quadros, sem compressão, ou somente com 
 compressão sem perdas.
 Alguns dos vídeos disponíveis foram escolhidos.
-Estes, por sua vez, foram, de forma empírica, separados em grupos: \textit{cartoon}, 
+Estes foram classificados nos seguintes grupos: \textit{cartoon}, 
 monitoramento, esportes, \textit{indoor} e natureza, de forma que fosse possível 
 verificar se existe alguma diferença no uso da técnica para diferentes classes de vídeos.
 A tabela a seguir ilustra as escolhas.
 Os vídeos em negrito foram os escolhidos para a validação, enquanto os demais para treinamento.
 
 \begin{table}[h]
-    \caption{Vídeos utilizados para treinamento e validação.}
+    \caption{Vídeos utilizados para treinamento e validação (mostrados em negrito).}
     \centering
         \begin{tabular}{|c|l|c|c|}
           \hline
           \multicolumn{1}{|c}{\textit{Categoria}} & 
           \multicolumn{1}{|c}{\textit{Vídeo}} & 
           \multicolumn{1}{|c}{\textit{Resolução}} & 
-          \multicolumn{1}{|c|}{\textit{Nº de frames}}  \\
+          \multicolumn{1}{|c|}{\textit{Nº de quadros}}  \\
           \hline
           \hline
           \multirow{3}{*}{Cartoon} 
@@ -1592,11 +1592,11 @@ Os vídeos em negrito foram os escolhidos para a validação, enquanto os demais
     \label{tbl:vidtrain}
 \end{table}
 
-A máquina utilizada para o treinamento e os testes possui um processador Intel i5 2.5 GHz e 4 cores físicos,
+A máquina utilizada para treinamento e testes possui um processador Intel i5 2.5 GHz e 4 cores físicos,
 e 8Gb de memória RAM.
 Além disso, a placa de vídeo é Nvidia Geforce GTX 1050Ti, com 4Gb de memória.
 
-Para ilustrar como cada um dos vídeos é em geral, a figura abaixo apresenta uma imagem de 
+Para ilustrar os vídeos utilizados na avaliação de resultados, a figura abaixo apresenta uma imagem de 
 cada vídeo, para que se possa perceber as peculiaridades inerentes a cada um dos vídeos escolhidos.
 \begin{figure}[H]
     \caption{Imagens dos vídeos escolhidos para os testes.
@@ -1621,7 +1621,7 @@ cada vídeo, para que se possa perceber as peculiaridades inerentes a cada um do
     \legend{Fonte: O Autor.}
 \end{figure}
 
-Em seguida serão aprofundados os testes, bem como o treinamento utilizado para cada um deles.
+Em seguida serão discutidos o treinamento e os testes realizados com os vídeos.
 
 \section{Treinamento}
 Foi gerado um dicionário para cada classe de vídeos, e para cada variação em $K$ (tamanho do dicionário) e 
@@ -1630,15 +1630,15 @@ utilizando o algoritmo ODL, da forma que foi descrito na proposta do trabalho.
 
 Para o treinamento foram utilizados os vídeos de cada classe, com exceção daquele
 que foi escolhido para teste.
-De cada um dos conjuntos de vídeos foram amostrados frames a cada $t$ segundos, variando
-o valor de $t$ para providenciar pelo menos $10$ e no máximo $100$ frames para o processo 
-de treinamento, aproximadamente.
-A ordem de processamento dos frames foi aleatória, para evitar viés para os últimos frames. 
-Cada frame foi então transformado em sequência de patches, com sobreposição.
+De cada um dos conjuntos de vídeos foram amostrados quadros a cada $t$ segundos, variando
+o valor de $t$ para providenciar pelo menos $10$ e no máximo $100$ quadros para o processo 
+de treinamento, por classe de vídeos.
+A ordem de processamento dos quadros foi aleatória, para evitar viés para os últimos quadros. 
+Cada quadro foi então transformado em sequência de patches, com sobreposição.
 Essa sequência foi introduzida no algoritmo ODL, que tomou no máximo $2.500$ amostras por sequência
 para fazer o treinamento do dicionário.
-Como dicionários iniciais foram utilizados valores randômicos com distribuição normal de 
-média aproximadamente $0$.
+% Como dicionários iniciais foram utilizados valores randômicos com distribuição normal de 
+% média aproximadamente $0$.
 
 A tabela a seguir apresenta os parâmetros de cada dicionário criado para os testes subsequentes.
 Cada parametrização foi aplicada a todas as classes de vídeos.
@@ -1647,7 +1647,7 @@ enquanto $K$ representa o número de átomos do dicionário.
 \begin{table}[h]
     \caption{Parâmetros tamanho do patch $p$ e tamanho do dicionário $K$ utilizados para treinamento e validação.}
     \centering
-        \begin{tabular}{|c|c c c c c |c c c c|}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
           \hline
           \emph{Tamanho do patch} & $4$ & $4$ & $4$ & $4$ & $4$ & $8$ & $8$ & $8$ & $8$ \\
           \hline
@@ -1664,22 +1664,62 @@ e o padrão JPEG, cujos patches são $8\times8$ \cite{mitchell1992digital}.
 O valor de $s$, parâmetro de esparsidade (\autoref{tbl:params}), foi fixo para os valores de $p$. 
 Sendo assim, para $p=4$, $s=4$, e para $p=8$, $s=8$.
 
+A \autoref{fig:diccp8d192} mostra um dicionário aprendido para a classe cartoon com patches $8\times8$. 
+Isto resulta em um dicionário contendo $192$ linhas ($8\times8\times3$). 
+Neste exemplo, o dicionário também contém $192$ colunas. 
+Cada quadrado mostrado contém $8\times8$ pixels, sendo cada pixel exibindo um valore RGB.
+O conteúdo de cada um dos quadrados corresponde a uma coluna, com os valores associados às $192$ linhas. 
+
+A \autoref{fig:dicip4d32} mostra um outro exemplo de dicionário aprendido para a classe indoors com patches de $4\times4$. 
+Neste exemplo, o dicionário contém 48 linhas ($4\times4\times3$) e 
+$32$ colunas (número de quadrados mostrados na figura).
+
 % INSERIR IMAGEM DE DICIONÁRIO, CITANDO K e p
 \begin{figure}[H]
-    \caption{Dicionários aprendidos. 
-    (a) Classe cartoon, tamanho do dicionário $192$ e patches $8\times8$. 
-    (b) Classe indoor, tamanho do dicionário $32$ e patches $4\times4$. }
+    \caption{Exemplo de dicionário aprendido para a classe cartoon com patches $8\times8$. 
+    Isto resulta em um dicionário contendo $192$ linhas ($8\times8\times3$). 
+    Este dicionário contém $192$ colunas. 
+    Cada quadrado mostrado contém $8\times8$ pixels, 
+    cada um exibindo um valore RGB.
+    O conteúdo de cada um dos quadrados corresponde a uma coluna, com os valores 
+    associados às $192$ linhas.}
     \begin{center}
-        \begin{tabular}{r c}
-            \vspace*{1em}
-            (a) & \raisebox{-.5\height}{\includegraphics[width=0.8\textwidth]{img/cartoon_p8_d192.png}} \\
-        \end{tabular}
-        \begin{tabular}{r c}
-           (b) & \raisebox{-.5\height}{\includegraphics[width=0.4\textwidth]{img/indoor_p4_d32.png}} \\
-        \end{tabular}
+           \includegraphics[width=0.8\textwidth]{img/cartoon_p8_d192.png}
     \end{center}
     \legend{Fonte: O Autor.}
+    \label{fig:diccp8d192}
 \end{figure}
+
+\begin{figure}[H]
+    \caption{Exemplo de dicionário aprendido para a classe cartoon com patches $4\times4$. 
+    Isto resulta em um dicionário contendo $48$ linhas ($4\times4\times3$). 
+    Este dicionário contém $32$ colunas. 
+    Cada quadrado mostrado contém $4\times4$ pixels, 
+    cada um exibindo um valore RGB.
+    O conteúdo de cada um dos quadrados corresponde a uma coluna, com os valores 
+    associados às $48$ linhas.}
+    \begin{center}
+           \includegraphics[width=0.4\textwidth]{img/indoor_p4_d32.png}
+    \end{center}
+    \legend{Fonte: O Autor.}
+    \label{fig:dicip4d32}
+\end{figure}
+
+% \begin{figure}[H]
+%     \caption{Dicionários aprendidos. 
+%     (a) Classe cartoon, tamanho do dicionário $192$ e patches $8\times8$. 
+%     (b) Classe indoor, tamanho do dicionário $32$ e patches $4\times4$. }
+%     \begin{center}
+%         \begin{tabular}{r c}
+%             \vspace*{1em}
+%             (a) & \raisebox{-.5\height}{\includegraphics[width=0.8\textwidth]{img/cartoon_p8_d192.png}} \\
+%         \end{tabular}
+%         \begin{tabular}{r c}
+%            (b) & \raisebox{-.5\height}{\includegraphics[width=0.4\textwidth]{img/indoor_p4_d32.png}} \\
+%         \end{tabular}
+%     \end{center}
+%     \legend{Fonte: O Autor.}
+% \end{figure}
 
 Em seguida serão apresentados os resultados alcançados com as diferentes parametrizações 
 e diferentes classes de vídeos.
@@ -1688,8 +1728,7 @@ e diferentes classes de vídeos.
 \label{sec:parametrizacao}
 Nessa seção serão apresentados e discutidos resultados alcançados na compressão e 
 decompressão dos vídeos escolhidos de cada classe para os parâmetros definidos na 
-tabela \ref{tbl:testparams}.
-
+\autoref{tbl:testparams}.
 No total foram 9 parametrizações diferentes para cada uma das 5 classes de vídeos, 
 totalizando 45 combinações diferentes para serem testadas.
 
@@ -1700,10 +1739,10 @@ pois no caso considerado, foram mantidos $s$ e $d$ fixos, enquanto a variação 
 Vale ressaltar que o processamento de cada patch foi individual e utilizando a plataforma 
 CUDA\reg, que paraleliza as operações.
 Porém, por mais que patches possam ser executados em paralelo, seu tempo individualmente, 
-no processamento do OMP, aumenta conforme o aumento do dicionário.
+no processamento do OMP, aumenta conforme o tamanho do dicionário.
 
 \begin{figure}[H]
-    \caption{Tempo médio por frame para patches $4\times4$ em função do tamanho do dicionário $K$.}
+    \caption{Tempo médio para codificação e decodificação por quadro para patches $4\times4$ em função do tamanho do dicionário $K$.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/p4_ds_edtime.png}
     \end{center}
@@ -1718,7 +1757,7 @@ somente cada um dos $s$ valores não nulos do vetor.
 O mesmo pode ser constatado na figura abaixo, que apresenta os resultados alcançados com $p=8$.
 
 \begin{figure}[H]
-    \caption{Tempo médio por frame para patches $8\times8$ em função do tamanho do dicionário $K$.}
+    \caption{Tempo médio para codificação e decodificação por quadro para patches $8\times8$ em função do tamanho do dicionário $K$.}
     \begin{center}
         \includegraphics[width=0.9\textwidth]{img/graficos/p8_ds_edtime.png}
     \end{center}
@@ -1726,14 +1765,14 @@ O mesmo pode ser constatado na figura abaixo, que apresenta os resultados alcan�
     \label{fig:timep8}
 \end{figure}
 
-Um fato importante a ser detalhado é de que a classe esportes teve menor tempo médio por frame.
+Um fato importante a ser detalhado é de que a classe esportes teve menor tempo médio por quadro.
 Esse fato está simplesmente ligado a resolução do vídeo utilizado por essa classe, NTSC, que é 
 aproximadamente $2,63$ vezes menor que 720p.
 O mesmo acontece com a classe cartoon, no qual o vídeo escolhido possui resolução menor e, portanto,
 menor tempo de codificação.
-Percebe-se, portanto, uma relação linear entre o tamanho do frame e o tempo de codificação.
+Percebe-se, portanto, uma relação linear entre o tamanho do quadro e o tempo de codificação.
 
-Além disso, o vídeo de cartoon possui vários frames com partes que se repetem.
+Além disso, o vídeo de cartoon possui vários quadros com partes que se repetem.
 O sistema simples que não recalcula os patches que são iguais entrou em ação, fazendo com que 
 o tempo médio para decodificação fosse ainda um pouco menor.
 
@@ -1751,13 +1790,13 @@ na qualidade da representação.
     \label{fig:psnr8bit}
 \end{figure}
 
-Na verdade o que se pode verificar é que existe uma variabilidade no PSNR médio devido 
+Nos gráficos da \autoref{fig:psnr8bit} verifica-se uma variabilidade no PSNR médio devido 
 a quantização.
 Para melhorar esse fato, poderiam ser utilizados inteiros de 16 bits ao invés de 8 bits na 
-representação comprimida, considerando que a representação perde significativamente em 
+representação comprimida, considerando que, neste caso, a representação perde significativamente em 
 compressibilidade.
-A figura abaixo mostra que o PSNR médio é bem mais estável utilizando uma representação 
-de 16 bits, com exceção da classe cartoon, que manteve uma considerável variação.
+A \autoref{fig:psnr16bit} mostra que o PSNR médio é bem mais estável utilizando uma representação 
+de 16 bits para todas as classes.
 
 \begin{figure}[H]
     \caption{PSNR médio em função do tamanho do dicionário $K$, com quantização de 16 bits.}
@@ -1829,7 +1868,7 @@ em $128$.
           \hline
           \multicolumn{1}{|c}{\textit{Classe}} & 
           \multicolumn{1}{|c}{\textit{Vídeo}} & 
-          \multicolumn{1}{|c}{\textit{Nº frames}} & 
+          \multicolumn{1}{|c}{\textit{Nº quadros}} & 
           \multicolumn{1}{|c}{\textit{FPS}} & 
           \multicolumn{1}{|c}{\textit{Tam. arquivo (bytes)}} & 
           \multicolumn{1}{|c|}{\textit{Bitrate (kbit/s)}} \\
@@ -1964,7 +2003,7 @@ agregados a melhorias que possam ser executadas, podem gerar resultados ainda me
 \label{sec:resultadovisual}
 Para encerrar o capítulo de resultados, serão observados alguns resultados visuais relativos 
 ao codec.
-Os resultados discutidos apresentam visualmente erros gerados nos frames gerados 
+Os resultados discutidos apresentam visualmente erros gerados nos quadros gerados 
 pelo codec proposto,
 comparando a imagem de referência com a gerada pela codificação.
 
@@ -2002,7 +2041,7 @@ o que se deve a erros relacionados a quantização.
     \label{fig:bbbres}
 \end{figure}
 
-Já nesse caso, o frame resultado é bem próximo ao original. 
+Já nesse caso, o quadro resultado é bem próximo ao original. 
 O que se nota, apesar disso, é que em alguns pontos da imagem foram criados artefatos devido ao 
 uso de patches sem sobreposição.
 A imagem foi recortada para melhor visualização do efeito.
@@ -2024,7 +2063,7 @@ e $s$ (parâmetro de esparsidade da representação).
 
 Mudanças no valor de $K$ (tamanho do dicionário) acarretam em pouca diferença na qualidade do vídeo, desde que 
 o valor não seja muito pequeno. 
-Por outro lado, o valor de $K$ altera linearmente o tempo de codificação dos frames, como 
+Por outro lado, o valor de $K$ altera linearmente o tempo de codificação dos quadros, como 
 pode ser verificado nas figuras \ref{fig:timep4} e \ref{fig:timep8}.
 Também nas figuras anteriores se percebe que o tempo de decodificação não se altera.
 A compressibilidade é alterada pelo valor de $K$, sendo que valores maiores correspondem 
@@ -2055,7 +2094,7 @@ ser aplicados a solução apresentada.
 Já no que diz respeito ao parâmetro de esparsidade $s$, ficou claro que ele altera a qualidade da representação 
 e também a compressibilidade.
 Quanto a compressibilidade, o resultado pode ser verificado pela própria representação dos dados.
-Considere um frame 720p usando $p=4$, utilizando $1$ byte para o valor e $1$ para o índice em cada 
+Considere um quadro 720p usando $p=4$, utilizando $1$ byte para o valor e $1$ para o índice em cada 
 patch, e que são $57600$ patches, $112,5$ kbytes serão utilizados aproximadamente a cada incremento
 em $s$.
 
@@ -2063,8 +2102,8 @@ Por fim, as comparações com o codec H.264 mostraram que existem muitos pontos 
 aprimorados, mas também mostra que a proposta apresentada pode ser construtiva.
 Em relação aos padrões já existentes, fica clara a necessidade de maior desenvolvimento em 
 todas as dimensões do codec, pois o que foi apresentado ilustra a ideia principal.
-Um caminho a ser seguido é combinar as metodologias já existentes para predição intra-frame 
-e inter-frame com o aprendizado de dicionários, além de estruturar essa relação.
+Um caminho a ser seguido é combinar as metodologias já existentes para predição intra-quadro 
+e inter-quadro com o aprendizado de dicionários, além de estruturar essa relação.
 Além disso, é necessário verificar formas de implementar a camada de rede do codec baseando-se 
 nos padrões já existentes.
 
@@ -2089,8 +2128,9 @@ melhor os assuntos base da proposta, que não são estudados dentro do escopo da
 \bibliographystyle{abntex2-alf}
 \bibliography{biblio}
 
-\section*{APÊNDICES}
-\chapter*{APÊNDICE A}
+% \newpage
+\chapter*{APÊNDICES}
+\section*{APÊNDICE A}
 \section*{Codificação de Huffman}
 Dentre os diversos tipos de codificação de dados que existem, alguns deles 
 permitem a representação compacta dos dados sem perdas de compressão.
@@ -2196,7 +2236,7 @@ estando presente em padrões de codificação de imagens, tal qual o JPEG,
 ou de codificação de vídeo, por exemplo, o H.264.
 % Escrever exemplo disso aí
 \newpage
-\chapter*{APÊNDICE B}
+\section*{APÊNDICE B}
 \section*{Codificação de Vídeo}
 \label{sec:codvideo}
 A comunicação através de vídeo, nas últimas décadas, tem sido uma das principais formas
@@ -2214,7 +2254,7 @@ sem nenhuma compressão, utilizando $1$ byte por canal de cor, a quantidade de b
 para tal tarefa seria $1.280\cdot720\cdot3 = 2.764.800$ bytes, ou, aproximadamente, $2,7MB$
 por imagem.
 Expandindo a ideia, um vídeo de $10$ minutos, ou $600$ segundos, 
-utilizando uma taxa de $30$ frames por segundo,
+utilizando uma taxa de $30$ quadros por segundo,
 precisaria de quase $50GB$ para ser armazenado!
 
 Esse exemplo ilustra a necessidade de codificar os vídeos de forma a
@@ -2233,9 +2273,9 @@ ou o brilho, em geral é codificado com dimensão 4 vezes maior que Cb e Cr, com
 
 Em alguns \emph{codecs} de vídeo existe a possibilidade de utilizar os formatos
 \emph{progressive} e \emph{interlaced} \cite{SullivanH264}.
-No caso de \emph{progressive}, todo frame é salvo em sequência.
+No caso de \emph{progressive}, todo quadro é salvo em sequência.
 Já no formato \emph{interlaced}, podem ser utilizados campos entrelaçados.
-Por exemplo, um primeiro campo pode ser as linhas pares do frame, enquanto o segundo
+Por exemplo, um primeiro campo pode ser as linhas pares do quadro, enquanto o segundo
 as linhas ímpares \cite{SullivanH264}.
 Na sequência do texto será utilizado o termo imagem sem diferenciação entre os 
 formatos apresentados.
@@ -2259,12 +2299,12 @@ podem ser classificadas como segue \cite{SullivanH264}:
 
 Uma forma simples de fazer compressão de vídeos se dá por tomar cada imagem do vídeos
 separadamente e comprimi-la utilizando técnicas relativas a imagens, por exemplo JPEG \cite{SullivanH264}.
-Ainda podem ser utilizadas técnicas de predição intra-frame, visando melhorar a codificação.
+Ainda podem ser utilizadas técnicas de predição intra-quadro, visando melhorar a codificação.
 Essas técnicas atingem certo grau de compressão, porém vídeos possuem grande correlação temporal
-entre seus frames, ou seja, o frame do instante $t$ está fortemente correlacionado ao frame $t-1$ e
-ao frame $t+1$, em geral.
+entre seus quadros, ou seja, o quadro do instante $t$ está fortemente correlacionado ao quadro $t-1$ e
+ao quadro $t+1$, em geral.
 Utilizar a forma anterior não aproveita esse fato, o que leva a se imaginar buscar metodologias
-que façam codificação inter-frame.
+que façam codificação inter-quadro.
 
 A \autoref{fig:hybenc} apresenta a ideia do funcionamento geral de um \textit{encoder} de vídeo,
 mostrando, em alto nível, o funcionamento do mesmo.
@@ -2299,7 +2339,7 @@ funcionamento geral do codec.
 Em primeiro lugar, podemos dividir o codec em \emph{Network Abstraction Layer} (NAL), a parte
 relativa à configuração da rede pela qual o video será transmitido,
 e a \emph{Video Coding Layer} (VCL), que diz respeito a forma como será representado o vídeo 
-e seus frames.
+e seus quadros.
 Neste resumo o foco será nas funcionalidades relativas a codificação de vídeo, 
 por tratarem de um assunto mais próximo a proposta do trabalho.
 
@@ -2311,9 +2351,9 @@ $8\times8$, $8\times4$, $4\times8$ e $4\times4$.
 A partir dos sub-blocos, dos macroblocos e das porções é que a codificação de vídeo 
 é executada, levando em consideração o MCP.
 
-Cada um dos frames pode somente fazer predição intra-frame (I-frames), utilizar 
-predição inter-frames (P-frames) com uma imagem de referência, ou utilizar 
-duas imagens de referência, com pesos diferenciados (B-frames).
+Cada um dos quadros pode somente fazer predição intra-quadro (I-quadros), utilizar 
+predição inter-quadros (P-quadros) com uma imagem de referência, ou utilizar 
+duas imagens de referência, com pesos diferenciados (B-quadros).
 Segundo \citet{WiegangH264}, as principais funcionalidades relativas a eficiência
 da codificação são as seguintes:
 \begin{itemize}
@@ -2345,7 +2385,7 @@ Esse apêndice buscou apresentar os conceitos básicos utilizados na codificaç�
 dando enfoque principal ao padrão H.264, fortemente utilizado no meio.
 % Buscar terminar melhor essa parte....
 \newpage
-\chapter*{APÊNDICE C}
+\section*{APÊNDICE C}
 \section*{Introdução a CUDA\reg}
 CUDA\reg~é uma plataforma de programação paralela, bem como um modelo de programação, 
 desenvolvido pela Nvidia para aplicações de propósito geral poderem ser executadas
