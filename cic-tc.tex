@@ -564,14 +564,14 @@ classes de matrizes que possuem a propriedade. Dois importantes exemplos de matr
 as seguintes \cite{chen2015compressed}: 
 \begin{itemize}
     \item \textbf{Matrizes subgaussianas}: uma variável randômica $\mat{X}$ é subgaussiana se 
-    $\mathbb{P}(|\mat{X}| > t) \le Ce^{-vt^2}$ para todo $t>0$ e constantes positivas $C$ e $v$. Ou seja,
+    $\mathbb{P}(|\mat{X}| > t) \le C_1e^{-vt^2}$ para todo $t>0$ e constantes positivas $C_1$ e $v$. Ou seja,
     variáveis subgaussianas possuem distribuição de média aproximadamente $0$, e a maior parte dos valores
     próximos a média. Exemplos dessa distribuição são a própria distribuição Gaussiana e a matrizes de 
     Bernoulli, que possuem coeficientes $-1$ e $+1$ distribuídos com média $0$. \citet{Mendelson2008} provaram que
     se $\mat{\Phi} \in \mathbb{R}^{m\times d}$ é subgaussiana, então, com alta probabilidade, $\frac{1}{\sqrt{m}}\mat{\Phi}$
     satisfaz a RIP de ordem $s$ quando $m$ está na ordem de $s\log{d}$.
     \item \textbf{Matrizes parcialmente ortogonais limitadas}: dada uma matriz ortogonal $\mat{\Psi}$ com dimensões $d\times d$
-    cujos coeficientes são limitados por $\frac{C}{\sqrt{d}}$ para uma constante $C$. Uma matriz parcialmente
+    cujos coeficientes são limitados por $\frac{C_2}{\sqrt{d}}$ para uma constante $C_2$. Uma matriz parcialmente
     ortogonal limitada $\mat{\Phi}$ pode ser obtida escolhendo $m$ colunas de $\mat{\Psi}$ randomicamente.
     Por exemplo, a matriz da transformada discreta de Fourier tem coeficientes limitados em $\frac{1}{\sqrt{d}}$.
     Logo, escolhendo-se $m$ linhas randomicamente tem-se uma matriz parcialmente ortogonal limitada.
@@ -643,10 +643,10 @@ intensidade do ruído, como segue.
     Então, para qualquer sinal $\vec{f}$ e sua amostragem ruidosa $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$, 
     tal que $\lVert \vec{e} \rVert_2 \le \epsilon$, a solução $\vec{f}'$ de \eqref{eq:probleml1} satisfaz:
     \begin{equation*}
-        \lVert \vec{f}' - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \vec{f} - \vec{f_s} \rVert_1}{\sqrt{s}} \right],
+        \lVert \vec{f}' - \vec{f} \rVert_2 \le C_3 \left[ \epsilon + \frac{\lVert \vec{f} - \vec{f_s} \rVert_1}{\sqrt{s}} \right],
     \end{equation*}
-    tal que $\vec{f_s}$ denota o vetor com os $s$ maiores coeficientes em magnitude de $\vec{f}$ e $C$ é uma
-    constante tal que $C \ge 0$.
+    tal que $\vec{f_s}$ denota o vetor com os $s$ maiores coeficientes em magnitude de $\vec{f}$ e $C_3$ é uma
+    constante tal que $C_3 \ge 0$.
 \end{teorema}
 
 \subsubsection{Métodos utilizando algoritmos gulosos}
@@ -660,7 +660,9 @@ Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 \begin{algorithm}[H]
 \label{algo:omp}
 \caption{\textit{Orthogonal Matching Pursuit (OMP)}.}
-\Entrada{Matriz de medidas $m \times d$ $\mathbf{\Phi}$, Vetor de $m$ medidas $\vec{y}$, parâmetro de esparsidade $s$}
+\Entrada{Matriz de amostragem $m \times d$ $\mathbf{\Phi}$, 
+Vetor de $m$ medidas $\vec{y} = \mat{\Phi}\vec{f} $, 
+parâmetro de esparsidade $s$}
 \Saida{Estimativa do sinal ideal $\vec{f'} \in \mathbb{R}^d$}
 $\vec{r_{(0)}} \leftarrow \vec{y}$\;
 $t \leftarrow 1$\;
@@ -803,9 +805,9 @@ baseado na solução utilizando a norma $\ell_1$, considerando $\vec{f} = \mathb
 e $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$ as medidas, $\vec{e}$ o erro.
 \begin{equation}
     \label{eq:problemDl1}
-    \vec{f'} = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \mathbf{D}^*\vec{g} \rVert_1 
+    \vec{f'} = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \mathbf{D}^*\vec{g} \rVert_1, 
     \hspace{1em} \text{sujeito a} \hspace{1em}
-    \lVert \mathbf{\Phi} \vec{g} - \vec{y} \rVert_2 \le \epsilon
+    \lVert \mathbf{\Phi} \vec{g} - \vec{y} \rVert_2 \le \epsilon, 
 \end{equation}
 tal que $\lVert \vec{e} \rVert_2 \le \epsilon $.
 
@@ -814,52 +816,51 @@ Dado um operador de amostragem $\mathbf{\Phi}$, ele satisfaz a D-RIP para um det
 dicionário $\mathbf{D}$ de ordem $s$ se:
 \begin{equation}
     (1 - \delta_s)\lVert \mathbf{D}\vec{x} \rVert\SPSB{2}{2} \le \lVert \mathbf{\Phi} \mathbf{D}\vec{x} \rVert \SPSB{2}{2} \le 
-    (1 + \delta_s)\lVert \mathbf{D}\vec{x} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso } \vec{x}.
+    (1 + \delta_s)\lVert \mathbf{D}\vec{x} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso,  } \vec{x}.
 \end{equation}
-para algum $\delta_s$, por exemplo $\delta_s \le 0,08$.
-
+e para algum $\delta_s$ de valor próximo a 0. %por exemplo $\delta_s \le 0,08$.
 Tomando a nova definição, \citet{CANDESDICTS} provou o seguinte teorema sobre a recuperação do sinal.
 \begin{teorema}
     \cite{CANDESDICTS}
     Dado $\mathbf{D}$ um dicionário e supondo um operador de amostragem $\mathbf{\Phi}$ que satisfaz
-    a D-RIP de ordem $s$.
-    Então, a solução $\vec{f'}$ para a análise $\ell_1$ satisfaz:
+    a D-RIP de ordem $s$,
+    a solução $\vec{f'}$ para a análise $\ell_1$ satisfaz
     \begin{equation*}
-        \lVert \vec{f'} - \vec{f} \rVert_2 \le C \left[ \epsilon + \frac{\lVert \mathbf{D}^* \vec{f} - \left( \mathbf{D}^* \vec{f} \right)_s \rVert_1}{\sqrt{s}} \right],
+        \lVert \vec{f'} - \vec{f} \rVert_2 \le C_4 \left[ \epsilon + \frac{\lVert \mathbf{D}^* \vec{f} - \left( \mathbf{D}^* \vec{f} \right)_s \rVert_1}{\sqrt{s}} \right],
     \end{equation*}
     tal que $\left( \mathbf{D}^* \vec{f} \right)_s$ denota o vetor com os $s$ maiores coeficientes em 
-    magnitude de $\mathbf{D}^* \vec{f}$ e $C$ é uma constante tal que $C \ge 0$.
+    magnitude de $\mathbf{D}^* \vec{f}$ e $C_4$ é uma constante tal que $C_4 \ge 0$.
 \end{teorema}
 
-Esse novo campo de estudo abriu caminhos para novas análises e usos de CS para outros
-problemas, antes não possível, além tornar possível utilizar os modelos e técnicas de CS
+A abordagem baseada em dicionários coerentes abriu caminhos para novas análises e usos de CS para outros
+problemas, além de tornar possível utilizar os modelos e técnicas de CS
 para outros campos do conhecimento.
 
 \section{Aprendizado de Dicionários}
 \label{sec:diclearn}
 A área de aprendizado de dicionários, do inglês \textit{dictionary learning}, busca, através
 dos dados já conhecidos de uma classe de sinais, prover novos dicionários nos quais os sinais 
-serão capazes de se conformar de forma mais esparsa. 
+serão capazes de se conformar de maneira mais esparsa. 
 Sob o ponto de vista de CS, um dicionário $\mat{D}$ normalmente é escolhido de forma aleatória,
 desde que satisfaça a RIP.
 Aprendizado de dicionários, por outro lado, busca gerar modelos considerando os sinais envolvidos,
 ou seja, dicionários que dependem dos dados, ou \textit{data-dependent dictionaries} \cite{chen2015compressed}.
 
 Nas seções seguintes será explicitado o problema geral de aprendizado de dicionários, bem como 
-um algoritmo que é capaz de de gerar um dicionário a partir de dados observados, e, por fim, 
-uma aplicação focada em processamento de imagens.
+um algoritmo que é capaz de de gerar um dicionário a partir de dados observados.
+%  e, por fim, uma aplicação focada em processamento de imagens.
 
 \subsection{Problema Geral de Aprendizado de Dicionários}
 Nessa seção será apresentado um modelo geral do problema que aprendizado de dicionários busca resolver.
 De forma intuitiva, pode-se imaginar aprendizado de dicionários como se fosse desejado gerar 
-um sub-dicionário da língua portuguesa a partir de uma grande quantidade textos, livros, todos 
-eles separados por palavras.
+um sub-dicionário da língua portuguesa a partir de uma grande quantidade textos.
+% , livros, todos eles separados por palavras.
 
-Mais formalmente, suponha-se $\vec{x_1}, \vec{x_2}, ..., \vec{x_n} \in \mathbb{R}^L$
-um conjunto finito de sinais de trainamento, e inteiros positivos $m, s$.
-Deseja-se encontrar a matriz $\mat{D}$ e os s-esparsos vetores 
-$\vec{\gamma_1}, \vec{\gamma_2}, ..., \vec{\gamma_n} \in \mathbb{R}^m$ os quais
-$\mat{D}\vec{\gamma_i} \approx x_i$ para todo $i$. Dessa forma, pode-se escrever o problema
+Mais formalmente, seja $\vec{x_1}, \vec{x_2}, ..., \vec{x_n} \in \mathbb{R}^L$
+um conjunto finito de sinais de treinamento, e sejam $m$ e $s$ inteiros positivos.
+Deseja-se encontrar a matriz $\mat{D}$ e os vetores s-esparsos
+$\vec{\gamma_1}, \vec{\gamma_2}, ..., \vec{\gamma_n} \in \mathbb{R}^m$, tais que
+$\mat{D}\vec{\gamma_i} \approx x_i$ para todo $i$. Dessa forma, pode-se definir o problema
 de aprendizado de dicionários utilizando a norma $\ell_2$ como segue  \cite{chen2015compressed}:
 \begin{equation}
     \label{eq:dlgeneral}
@@ -869,14 +870,22 @@ de aprendizado de dicionários utilizando a norma $\ell_2$ como segue  \cite{che
     \lVert \vec{\gamma_i} \rVert_0 \le s, \text{ para todo } i.
 \end{equation}
 
-Nesse caso, $\mat{D} \in \mathbb{R}^{L\times m}$ é o dicionário aprendido, enquanto os 
-vetores $\vec{\gamma_i} \in \mathbb{R}^m$, com no máximo $s$ coeficientes não nulos, é a representação
-linear de $\vec{x_i}$ em $\mat{D}$. O valor de $m$ pode ser maior que o de $L$, talvez para 
-explorar alguma redundância, mas $s\ll L$. Ainda, sobre o problema \eqref{eq:dlgeneral}, para que as escolhas
-de $\vec{\gamma_i}$ e $\mat{D}$ sejam únicas, pode-se forçar que as colunas de $\mat{D}$ tenham norma $\ell_2$
+Nesse caso, $\mat{D} \in \mathbb{R}^{L\times m}$ é o dicionário aprendido, enquanto 
+cada vetor $\vec{\gamma_i} \in \mathbb{R}^m$, com no máximo $s$ coeficientes não nulos, 
+% , corresponde 
+% à representação
+% linear de $\vec{x_i}$ em $\mat{D}$,
+% O valor de $m$ pode ser maior que o de $L$, talvez para explorar alguma redundância, mas 
+e $s\ll L$. 
+Neste caso, um sinal $\vec{x_i}$ contendo $L$ amostras é representado pela combinação linear de $s$ 
+colunas do dicionário $\mat{D}$. 
+Os coeficientes desta combinação linear são armazenados nos $s$ elementos não zero 
+do vetor $\vec{\gamma_i}$.
+Ainda, sobre o problema \eqref{eq:dlgeneral}, para que as escolhas
+de $\vec{\gamma_i}$ e $\mat{D}$ sejam únicas, pode-se forçar que as colunas de $\mat{D}$ 
+tenham norma $\ell_2$
 unitária \cite{chen2015compressed}. O valor $m$ é conhecido como o número de átomos do 
 dicionário.
-
 É importante notar que a função de erro de \eqref{eq:dlgeneral} usa norma $\ell_2$, mas pode ser trocada
 por outra função de erro, como, por exemplo, a norma $\ell_1$ \cite{chen2015compressed}.
 
@@ -891,16 +900,15 @@ Nesse caso, pode-se reformular o problema de aprendizado de dicionários como se
 \end{equation}
 
 Unificando as duas formulações \eqref{eq:dlgeneral} e \eqref{eq:dleps}, chega-se ao seguinte
-\cite{chen2015compressed}.
+\cite{chen2015compressed}:
 \begin{equation}
     \label{eq:dlunica}
     \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
-    \sum_{i=1}^{n} {\lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2} + \lambda \lVert \vec{\gamma_i} \rVert_0}
+    \sum_{i=1}^{n} {\lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2} + \lambda \lVert \vec{\gamma_i} \rVert_0},
 \end{equation}
 no qual $\lambda$ é um parâmetro de balanceamento.
-
 Porém, utilizando-se a norma $\ell_0$, o problema é usualmente NP-difícil. Dessa forma, pode-se gerar
-uma reformulação somente trocando a norma $\ell_0$ pela norma $\ell_1$ \cite{chen2015compressed}.
+uma reformulação somente trocando a norma $\ell_0$ pela norma $\ell_1$ \cite{chen2015compressed}:
 \begin{equation}
     \label{eq:dlunical1}
     \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
@@ -908,59 +916,66 @@ uma reformulação somente trocando a norma $\ell_0$ pela norma $\ell_1$ \cite{c
 \end{equation}
 
 Aprendizado de dicionários tem ligação com diversas outras áreas do conhecimento. 
-Em especial, e que será utilizado no decorrer do desenvolvimento do trabalho, está sua ligação
+Em especial
+% e que será utilizado no decorrer do desenvolvimento do trabalho, está sua ligação
 com CS, da forma que foi explicitada no início da seção, e com processamento de imagens,
 o que será melhor abordados na seção \autoref{sec:codesparsa}.
 
 \subsection{\textit{Online Dictionary Learning}}
 \label{sec:odl}
-Um dos principais algoritmos de aprendizado de dicionários, com aplicação em processamento de imagens
+Um dos principais algoritmos de aprendizado de dicionários, com aplicação em processamento de imagens, 
 é o algoritmo \textit{Online Dictionary Learning (ODL)}. Um de seus principais diferenciais
 se dá pela possibilidade de utilizar um conjunto de treinamento bastante volumoso, mantendo bom 
 desempenho \cite{MairalOnlineDictLearn}.
 Por isso, pode-se dizer que o ODL possui boa escalabilidade.
 
-O ODL, como o próprio nome retrata, é um algoritmo \textit{online}, ou seja, a cada nova iteração $t$
+O ODL é um algoritmo \textit{online}, ou seja, a cada nova iteração $t$
 é gerada uma nova versão do dicionário $\mat{D_{(t)}}$ a partir de uma nova amostra $\vec{x_{(t)}}$.
 
 Entrando mais a fundo na definição geral do algoritmo, tomado um chute inicial $\mat{D_{(0)}}$, as próximas
 iterações $t \ge 1$ serão baseadas em $\mat{D_{(t-1)}}$ e $\vec{x_{(t)}}$. O novo dicionário $\mat{D_{(t)}}$ será
 gerado a partir de dois passos. Primeiramente, deve-se encontrar o vetor de coeficientes $\vec{\gamma_{(t)}}$
-relativos a $\vec{x_{(t)}}$ e $\mat{D_{(t-1)}}$, resovendo o problema de codificação esparsa a seguir \cite{chen2015compressed}.
+relativos a $\vec{x_{(t)}}$ e $\mat{D_{(t-1)}}$, resolvendo o problema de codificação esparsa a seguir \cite{chen2015compressed}:
 \begin{equation}
     \vec{\gamma_{(t)}} = \underset{\vec{\gamma}}{argmin}
     \frac{1}{2} \lVert \vec{x_{(t)}} - \mat{D_{(t-1)}}\vec{\gamma} \rVert\SPSB{2}{2} +
-    \lambda \lVert \vec{\gamma} \rVert_1
+    \lambda \lVert \vec{\gamma} \rVert_1,
 \end{equation}
 sendo que $\lambda$ é um parâmetro de configuração do algoritmo. Esse problema pode ser resolvido por algum dos 
-algoritmos discutidos na seção \autoref{sec:csalgo}. Também é possível alterar-se a norma $\ell_1$ pela $\ell_0$,
+algoritmos discutidos na \autoref{sec:csalgo}. 
+Também é possível substituir a norma $\ell_1$ pela $\ell_0$,
 de forma que algum algoritmo guloso de CS possa ser utilizado. O mesmo se dará para o passo seguinte.
 
 No segundo passo do algoritmo, definimos o novo dicionário $\mat{D_{(t)}}$ através dos vetores de coeficientes
 anteriores, $\vec{\gamma_{(1)}}, ..., \vec{\gamma_{(t-1)}}$, além de considerar o novo $\vec{\gamma_{(t)}}$.
 Para facilitar, consideremos a matriz $\mat{X}$ com colunas $\vec{x_1},...,\vec{x_t}$ e a matriz $\mat{\Gamma}$
 com colunas $\vec{\gamma_1},...,\vec{\gamma_t}$.
-Dessa forma, e considerando que os valores de $\vec{\gamma_i}$ são fixos, pode-se formular o problema \cite{chen2015compressed}.
+Dessa forma, e considerando que os valores de $\vec{\gamma_i}$ são fixos, pode-se 
+formular o problema da seguinte forma \cite{chen2015compressed}:
 \begin{equation}
+    \label{eq:newdt}
     \mat{D_{(t)}} = \underset{\mat{D}}{argmin}
     \frac{1}{t} \sum_{i=1}^t \lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2}.
 \end{equation}
 
-Processando o problema anterior, chega-se ao resultado de que ele pode ser resolvido utilizando-se o método do 
-gradiente descendente. Para isso, primeiramente precisamos definir as matrizes a seguir \cite{chen2015compressed}.
+A \autoref{eq:newdt} pode ser resolvida utilizando-se o método do 
+gradiente descendente. Para isso, primeiramente precisamos definir 
+as seguintes matrizes \cite{chen2015compressed}.
 \begin{equation}
     \mat{A_{(t)}} = \sum_{i=1}^t \vec{\gamma_i}\vec{\gamma_i^T} \in \mathbb{R}^{m \times m},
     \hspace{0.5em}
     \mat{B_{(t)}} = \sum_{i=1}^t \vec{x_i}\vec{\gamma_i^T} \in \mathbb{R}^{L \times m}.
 \end{equation}
 
-Tomando como valor inicial $\mat{D} = \mat{D_{(t-1)}}$, e utilizando o seguinte cálculo em cada coluna $\vec{d_k}$, 
-de forma iterativa,
-que sempre minimiza a função objetivo, chega-se no novo dicionário $\mat{D_{(t)}}$.
+Tomando como valor inicial $\mat{D} = \mat{D_{(t-1)}}$, 
+e utilizando o seguinte cálculo recursivo em cada coluna $\vec{d_k}$, 
+que sempre minimiza a função objetivo \cite{MairalOnlineDictLearn}, 
+chega-se no novo dicionário $\mat{D_{(t)}}$,
+iterando até que não se tenha mudança em $\mat{D}$.
 \begin{equation}
     \vec{d_k} \leftarrow \frac{1}{\mat{A_{(t)_{k,k}}}}
     \left( \vec{B_{(t)_{:,k}}} - \mat{D}\vec{A_{(t)_{:,k}}} \right) +
-    \vec{d_k}
+    \vec{d_k}.
 \end{equation}
 
 Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLearn}.
@@ -969,7 +984,8 @@ Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLear
 \begin{algorithm}[H]
     \label{algo:odl}
     \caption{\textit{Online Dictionary Learning (ODL)}.}
-    \Entrada{Distribuição de $\vec{x} \in \mathbb{R}^L = p(\vec{x})$, parâmetro $\lambda$, 
+    \Entrada{Distribuição de probabilidade $p(\vec{x})$, para $\vec{x} \in \mathbb{R}^L$, 
+    parâmetro $\lambda$, 
     dicionário inicial $\mat{D_{(0)}}$, número de iterações $T$.}
     \Saida{Dicionário final $\mat{D_{(t)}}$.}
     $\mat{A_{(0)}} \leftarrow \mat{0}$\;
@@ -981,12 +997,14 @@ Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLear
         \lambda \lVert \vec{\gamma} \rVert_1$\;
         $\mat{A_{(t)}} \leftarrow \mat{A_{(t-1)}} + \vec{\gamma_{(t)}} \vec{\gamma_{(t)}^T}$\;
         $\mat{B_{(t)}} \leftarrow \mat{B_{(t-1)}} + \vec{x_{(t)}} \vec{\gamma_{(t)}^T}$\;
-        Realizar a atualização do dicionário para todas as colunas $k$ até convergência:
+        $\mat{D} \leftarrow \mat{D_{(t-1)}}$\;
+        Realizar a atualização do dicionário $\mat{D}$ para todas as colunas $k$ até convergência:
         $\vec{d_k} \leftarrow \frac{1}{\mat{A_{(t)_{k,k}}}}
         \left( \vec{B_{(t)_{:,k}}} - \mat{D}\vec{A_{(t)_{:,k}}} \right) + \vec{d_k}$ \;
         \If{$\lVert \vec{d_k} \rVert_2 > 1$}{
             Normalizar $\vec{d_k}$\;
         }
+        $\mat{D_{(t)}} \leftarrow \mat{D} $\;
     }
     \Return{$\mat{D_{(t)}}$}
 \end{algorithm}
@@ -994,7 +1012,7 @@ Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLear
 
 \subsection{Codificação Esparsa}
 \label{sec:codesparsa}
-A partir das bases de Compressed Sensing e de aprendizado de dicionários, pode-se 
+A partir das bases de \emph{compressed sensing} e de aprendizado de dicionários, pode-se 
 buscar um outro objetivo, compressão de sinais.
 No caso que será estudado, o foco será em codificação esparsa de imagens, buscando 
 embasar os estudos para a proposta do trabalho em questão.
@@ -1012,12 +1030,15 @@ pode gerar bons resultados. Para remoção de ruído em imagens, \citet{EladDeno
 mostram que o uso de dicionários aprendidos têm resultados melhores que o uso de 
 dicionários gerais, teóricos.
 
-Considerando uma imagem $I$, separada em patches $P_i$ de tamanho $\sqrt{L}\times\sqrt{L}$, 
-com ou sem sobreposição - normalmente para problemas de remoção de ruído, com sobreposição,
-enquanto para representação esparsa, sem - e vetorizando cada patch $P_i$ em vetores
-$\vec{x_i} \in \mathbb{R}^L$. Tomando um dicionário $\mat{D} \in \mathbb{R}^{L\times m}$, 
-aprendido via patches de imagens correlatas a $I$, se desejar-se representar os patches 
-$\vec{x_i}$ em relação a $\mat{D}$, temos a seguinte formulação.
+Considerando uma imagem $I$, separada em patches $p_i$ de tamanho $\sqrt{L}\times\sqrt{L}$, 
+com ou sem sobreposição
+\footnote{Normalmente, para problemas de remoção de ruído, é utilizada sobreposição,
+enquanto para representação esparsa não é utilizada.}
+e vetorizando cada patch $p_i$ em vetores
+$\vec{x_i} \in \mathbb{R}^L$. 
+Tomando um dicionário $\mat{D} \in \mathbb{R}^{L\times m}$, 
+aprendido via patches de imagens correlatas a $I$, se desejarmos representar os patches 
+$\vec{x_i}$ em relação a $\mat{D}$, podemos utilizar a seguinte formulação:
 \begin{equation}
     \label{eq:patchcoding}
     \vec{\gamma_i} = \underset{\vec{\gamma}}{argmin} \lVert \vec{x_i} - \mat{D}\vec{\gamma} \rVert_2^2
@@ -1026,8 +1047,8 @@ $\vec{x_i}$ em relação a $\mat{D}$, temos a seguinte formulação.
     \text{ para todo } i,
 \end{equation}
 tal que $s$ é o número máximo de valores não nulos da representação $\vec{\gamma_i} \in \mathbb{R}^m$.
-Para resolver essa formulação, pode-se utilizar algum dos algoritmos apresentados na
-seção \autoref{sec:greedy}, por exemplo o OMP. 
+Nesse caso, pode-se utilizar algum dos algoritmos apresentados na
+Seção \ref{sec:greedy}, por exemplo o OMP. 
 Para que a representação seja esparsa, precisa-se garantir que $s \ll L$.
 Por exemplo, tomando uma imagem $I$ e separando em patches de $8\times 8$, ou seja,
 $L = 64$, poderia ser escolhido um valor de $s = 4$ ou $s=6$, independente do valor 
@@ -1042,356 +1063,12 @@ imagens, principalmente \cite{MairalSparse}:
     \item \textit{Up-scaling}: aumento da resolução de imagens.
 \end{itemize}
 
-Estas aplicações fogem ao escopo do trabalho apresentado, portanto não serão
+Estas aplicações fogem ao escopo do trabalho apresentado e, portanto, não serão
 aprofundadas nesse referencial, porém são amplamente desenvolvidas por diversos
 autores da área.
 
 % \section{Codificação de Imagens}
 % Decidir se terá ou não
-
-\section{Codificação de Huffman}
-Dentre os diversos tipos de codificação de dados que existem, alguns deles 
-permitem a representação compacta dos dados sem perdas de compressão.
-Esse é o caso da codificação de Huffman, um algoritmo de compressão por entropia,
-ou seja, que se aproveita da repetibilidade dos dados e de sua distribuição, 
-pois, em geral, sinais que carregam informação possuem bastante redundância.
-
-O método foi apresentado em 1952, e continua sendo amplamente utilizado. 
-Em primeiro lugar, considere-se que deseja-se comprimir uma sequência de 
-símbolos, ou mensagem, utilizando códigos de tamanho variável, um para cada símbolo.
-Segundo \citet{HuffmanCoding}, duas restrições básicas são impostas para 
-a codificação de mensagens proposta pelo autor:
-\begin{enumerate}
-    \item Dois símbolos diferentes não podem ter o mesmo código;
-    \item Os códigos das mensagem precisam ser construídos de forma que não seja necessário 
-    identificar onde começa ou termina um código.
-\end{enumerate}
-
-Um princípio básico utilizado é que o tamanho de um código nunca pode ser menor 
-do que o de outro menos provável \cite{HuffmanCoding}.
-
-Para facilitar as explicações, dados $N$ símbolos, eles serão representados 
-pelos numerais $1, 2, ..., N$.
-Algo que pode ser assumido, sem perda de generalidade, considerando $P(s)$ a probabilidade de um símbolo
-$s$ qualquer aparecer na mensagem, é que \cite{HuffmanCoding}:
-\begin{equation}
-    \label{eq:hufprob}
-    P(1) \ge P(2) \ge \cdots \ge P(N).
-\end{equation}
-
-Por consequência, se quisermos uma codificação ótima, o tamanho do código $L(s)$ 
-deve ser \cite{HuffmanCoding}:
-\begin{equation}
-    \label{eq:huflen}
-    L(1) \le L(2) \le \cdots \le L(N).
-\end{equation}
-
-Pode-se definir, a partir de \eqref{eq:hufprob} e \eqref{eq:huflen} o tamanho $L$ da mensagem 
-codificada:
-\begin{equation*}
-    L = \sum_{i=1}^N {P(i)L(i)}.
-\end{equation*}
-
-É importante ressaltar que:
-\begin{equation*}
-    \sum_{i=1}^N {P(i)} = 1.
-\end{equation*}
-
-Por fim, \citet{HuffmanCoding} apresentou três novas restrições, além das iniciais.
-Considere-se $D$ o número de valores que um dígito do código pode assumir.
-\begin{enumerate}
-    \item $L(1) \le L(2) \le \cdots \le L(N-1) = L(N)$.
-    \item Pelo menos $2$ e não mais que $D$ símbolos com código de tamanho $L(N)$ tem códigos 
-    com início idêntico, diferenciando-se por seus dígitos finais.
-    \item Cada possível sequência de $L(N)-1$ dígitos deve ser usada ou como código ou ser 
-    prefixo de outros códigos.
-\end{enumerate}
-
-Em seguida, serão explicados os passos do algoritmo apresentado em \citet{HuffmanCoding}.
-Por fim, será mostrado um exemplo.
-Para facilitar, vamos utilizar o problema de codificação binária, $D=2$, com valores 
-possíveis do dígito $0$ e $1$.
-
-A explanação partirá de que a tabela das probabilidades de cada símbolo já está pronta.
-Para gerar essa tabela, podem ser simplesmente contadas quantas vezes cada símbolo aparece
-em relação ao total dos símbolos da mensagem.
-
-Tomando a tabela de probabilidades ordenada, os dois símbolos de menor probabilidade 
-têm seus sufixos definidos por $0$ e $1$.
-Em seguida, esses símbolos podem ser considerados como apenas um, com probabilidade igual 
-a soma das duas probabilidades. 
-A tabela então é atualizada removendo-se os dois símbolos e adicionando o símbolo unido. 
-O processo volta a ser executado, iterativamente, até que haja somente um símbolo que seja 
-a união de todos, com probabilidade $1$.
-Cada vez que é definido o sufixo, considere-se que é inserido a frente do sufixo anterior 
-de cada símbolo o valor $0$ ou $1$.
-
-O exemplo a seguir mostra o funcionamento do algoritmo de forma mais clara.
-Na figura abaixo, são mostrados os passos da codificação exemplificados por 
-\citet{HuffmanCoding}.
-
-\begin{figure}[H]
-    \caption{Execução dos passos de codificação de Huffman.}
-    \begin{center}
-        \includegraphics[width=0.9\textwidth]{img/huffmanprocess.png}
-    \end{center}
-    \legend{Fonte: \citet{HuffmanCoding}}
-\end{figure}
-
-Os códigos binários para cada símbolo gerados foram os seguintes:
-\begin{figure}[H]
-    \caption{Códigos binários gerados pela codificação de Huffman.}
-    \begin{center}
-        \includegraphics[width=0.6\textwidth]{img/huffmantable.png}
-    \end{center}
-    \legend{Fonte: \citet{HuffmanCoding}}
-\end{figure}
-
-O método apresentado é muito utilizado e possui variadas implementações na 
-literatura.
-Além disso, serve de base para diversos compressores de arquivos, também 
-estando presente em padrões de codificação de imagens, tal qual o JPEG, 
-ou de codificação de vídeo, por exemplo, o H.264.
-% Escrever exemplo disso aí
-
-\section{Codificação de Vídeo}
-\label{sec:codvideo}
-A comunicação através de vídeo, nas últimas décadas, tem sido uma das principais formas
-de comunicação, sob as mais diversas formas.
-\citet{SullivanH264} apresentam alguns cenários onde a vídeos digitais são aplicados:
-\begin{itemize}
-    \item Transmissão televisiva via satélite, ou cabo;
-    \item Serviços de conversação via internet;
-    \item Streaming de vídeos;
-    \item Gravação e armazenamento de vídeos, por exemplo DVD.
-\end{itemize}
-
-Se imaginar-se armazenar, por exemplo, apenas uma imagem 720p, RGB, $1280\times720$, 
-sem nenhuma compressão, utilizando $1$ byte por cor, a quantidade de bytes necessários 
-para tal tarefa seria $1280\cdot720\cdot3 = 2764800$ bytes, ou, aproximadamente, $2,7Mb$
-por imagem.
-Expandindo a ideia, um vídeo de $10min$, ou $600s$, utilizando uma taxa de $30$ frames por segundo,
-precisaria de quase $50Gb$ para ser armazenado!
-
-Com esse pequeno exemplo, fica clara a necessidade de codificar os vídeos de forma a
-reduzir substancialmente a quantidade de informação necessária para armazená-los.
-A partir disso, serão descritas algumas características de \textit{codecs} 
-(\emph{\textbf{co}der} e \emph{\textbf{dec}oder} de vídeo) precisam observar.
-
-Um dos princípios básicos utilizados na codificação de vídeos é a de que o olho humano
-é mais sensível ao brilho do que a cor diretamente \cite{SullivanH264}.
-Ou seja, pode ser utilizada mais informação para representar o brilho, enquanto a cor
-pode ser representada com menor precisão.
-De fato é isso que acontece na maioria dos \emph{codecs}. 
-Em geral, é utilizada o espaço de cor Y, Cb, Cr, no qual Y, chamado componente \emph{lumma},
-ou o brilho, em geral é codificado com dimensão 4 vezes maior que Cb e Cr, componentes 
-\emph{chroma} do cinza para o azul (Cb) e do cinza para o vermelho (Cr).
-
-Em alguns \emph{codecs} de vídeo existe a possibilidade de utilizar os formatos
-\emph{progressive} e \emph{interlaced} \cite{SullivanH264}.
-No caso de \emph{progressive}, todo frame é salvo em sequência.
-Já no formato \emph{interlaced}, podem ser utilizados campos entrelaçados.
-Por exemplo, um primeiro campo pode ser as linhas pares do frame, enquanto o segundo
-as linhas ímpares \cite{SullivanH264}.
-Na sequência do texto será utilizado o termo imagem sem diferenciação entre os 
-formatos apresentados.
-
-Técnicas para compressão digital, não somente para vídeos, mas para aplicações em geral,
-podem ser classificadas como segue \cite{SullivanH264}:
-\begin{itemize}
-    \item \textbf{Predição:} Processo no qual são criadas predições sobre a informação 
-    que virá. Caso a predição for de boa qualidade, a diferença entre a predição e a 
-    imagem em si, ou resíduo, será pequena, e, em geral, fácil de codificar, além de mais
-    comprimida.
-    \item \textbf{Transformações:} Este processo é o de buscar outras formas de representar
-    os dados, em geral mais esparsas (ou comprimidas). Por exemplo, para imagens a DCT 
-    fornece uma transformação mais compressível que a utilização da imagem bruta.
-    \item \textbf{Quantização:} O processo de quantização se refere a representar os dados
-    com menor quantidade de informação, ou seja, menos bits. Um exemplo é trocar uma representação 
-    em ponto flutuante por uma representação em inteiros com 8 bits.
-    \item \textbf{Codificação de entropia:} Processo que utiliza a redundância de informação para 
-    criar uma tabela de representação na qual a informação mais redundante é codificada
-    com menos bits e a mais, com mais bits. A codificação de Huffman é um exemplo desse processo.
-\end{itemize}
-
-Uma forma simples de fazer compressão de vídeos se dá por tomar cada imagem do vídeos
-separadamente e comprimi-la utilizando técnicas relativas a imagens, por exemplo JPEG \cite{SullivanH264}.
-Ainda podem ser utilizadas técnicas de predição intra-frame, visando melhorar a codificação.
-Essas técnicas atingem certo grau de compressão, porém vídeos possuem grande correlação temporal
-entre seus frames, ou seja, o frame do instante $t$ está fortemente correlato ao frame $t-1$ e
-ao frame $t+1$, em geral.
-Utilizar a forma anterior não aproveita esse fato, o que leva a se imaginar buscar metodologias
-que façam codificação inter-frame.
-
-A imagem a seguir apresenta a ideia do funcionamento geral de um \textit{encoder} de vídeo,
-mostrando, em conceito macro, o funcionamento do mesmo.
-\begin{figure}[H]
-    \caption{\textit{Encoder} de vídeo híbrido (em especial H.264).}
-    \begin{center}
-        \includegraphics[width=0.7\textwidth]{img/HybridCodec.png}
-    \end{center}
-    \legend{Fonte: \citet{SullivanH264}.}
-\end{figure}
-
-Um conceito que aproveita a dependência temporal é o MCP (\textit{Motion-compensated prediction}).
-O MCP considera que, muitas vezes, as mudanças durante os vídeos acontecem devido ao movimento.
-Dessa forma, se for possível estimar um vetor de movimento, seria possível fazer uma predição
-de compensação de movimento, uma estimativa de movimento \cite{SullivanH264}. 
-
-Diversas formas de executar-se o MCP foram desenvolvidas pela literatura, unindo ganhos
-na complexidade a ganhos em compressividade e qualidade, utilizando uma ou mais imagens 
-do passado como base para criar predições de movimento.
-
-A seguir será explicado, de forma superficial, o funcionamento do codec H.264, com o qual 
-serão feitas comparações nesse trabalho.
-
-\subsection{Codec H.264}
-O codec H.264 foi lançado como padrão em 2003.
-Ele incorporou funcionalidades de codecs anteriores, como H.262 e H.263, mas também
-trouxe novas funcionalidades.
-
-Antes de entrar mais especificamente nas funcionalidades, é necessário entender-se o 
-funcionamento geral do codec.
-Em primeiro lugar, podemos dividir o codec em Network Abstraction Layer (NAL), a parte
-relativa a configuração da rede pela qual o video será transmitido,
-e a Video Coding Layer (VCL), que diz respeito a forma como será representado o vídeo 
-e seus frames.
-Neste resumo o foco será nas funcionalidades relativas a codificação de vídeo, 
-por tratarem de um assunto mais próximo a proposta do trabalho.
-
-Sendo assim, a seguir serão listadas funcionalidades presentes no codec.
-Basicamente, a VCL separa cada imagem porções com uma quantidade variável de macroblocos 
-de dimensão $16\times16$.
-Estes, por sua vez, podem ser divididos em sub-blocos de $16\times8$, $8\times16$,
-$8\times8$, $8\times4$, $4\times8$ e $4\times4$.
-A partir dos sub-blocos, dos macroblocos e das porções é que a codificação de vídeo 
-é executada, levando em consideração o MCP.
-
-Cada um dos frames pode somente fazer predição intra-frame (I-frames), utilizar 
-predição inter-frames (P-frames) com uma imagem de referência, ou utilizar 
-duas imagens de referência, com pesos diferenciados (B-frames).
-
-Segundo \citet{WiegangH264}, as principais funcionalidades relativas a eficiência
-da codificação são as seguintes:
-\begin{itemize}
-    \item \textbf{Motion Compensation (MC) com blocos de tamanho variável:}
-    Dentro do macrobloco, cada um dos sub-blocos pode fazer MC.
-    \item \textbf{MC com acurácia de um quarto de amostra:} A maioria dos codecs anteriores 
-    provia MC com acurácia de um meio de amostra. O codec H.264 aumenta o poder 
-    de acurácia para um quarto.
-    \item \textbf{Vetores de movimento nas bordas da imagem:} Já presente como opcional
-    no padrão H.263, permite que bordas também tenham vetores de movimento, utilizando
-    técnicas de extrapolação das bordas.
-    \item \textbf{Imagens de referência para MC múltiplas:} Permite que o \textit{encoder}
-    escolha entre múltiplas imagens as referências para fazer MC.
-    \item \textbf{Possibilidade de utilizar imagens preditas como referência:} Em alguns 
-    codecs anteriores não era permitido utilizar imagens preditas como referência para o 
-    processo de MC. O H.264 remove essa restrição.
-    \item \textbf{Predição com pesos:} Permite que o MCP atribua pesos e offsets aos 
-    sinais de referência utilizados.
-    \item \textbf{Melhorias na predição intra-imagem:} Foram aprimoradas técnicas de
-    extrapolação de arestas para a predição intra-imagem.
-    \item \textbf{DCT aplicada a blocos menores:} No H.264 a DCT é aplicada a blocos de 
-    dimensão $4\times4$, utilizando uma transformada inteira. Porém é possível aplicar 
-    a DCT de mesma dimensão novamente a blocos maiores, de forma hierárquica.
-    \item \textbf{Melhorias na codificação de entropia:} Foi melhorada a codificação de 
-    entropia utilizando um método chamado \emph{arithmetic coding}.
-\end{itemize}
-
-Essa subseção buscou apresentar os conceitos básicos utlizados na codificação de vídeos, 
-dando enfoque principal ao padrão H.264, fortemente utilizado no meio.
-% Buscar terminar melhor essa parte....
-
-\section{Introdução a CUDA\reg}
-CUDA\reg~é uma plataforma de programação paralela, bem como um modelo de programação, 
-desenvolvido pela Nvidia para aplicações computacionais em geral poderem ser executadas
-em GPU's.
-Sua primeira versão foi lançada em 2006.
-Desde então, diversas empresas e trabalhos acadêmicos utilizaram a plataforma.
-Além da forte utilização, também bibliotecas baseadas na plataforma surgiram, 
-com o intuito de prover funções para aplicações já conhecidas como paralelizáveis.
-Exemplos de tais plataformas são cuFFT, para aplicações com transformada de Fourier,
-cuBLAS, para álgebra linear básica, NPP, para processamento de vídeo, imagens e 
-sinais em geral.
-
-A plataforma tem ótimos resultados para algoritmos, procedimentos, que possam utilizar
-fortemente o paralelismo \cite{CUDAMAIN}.
-Atualmente, GPU's podem possuir mais de 4000 cores, por exemplo, a Nvidia Geforce RTX 2080 Ti,
-além de serem capazes de rodarem 32 threads simultaneamente.
-Todos os cores, ou pelo menos aqueles que forem designados para determinada aplicação,
-devem estar rodando o mesmo código, porém com valores de variáveis que podem ser diferentes.
-
-A arquitetura de CUDA\reg~se dá como na figura abaixo.
-Ao ser executado um determinado \textit{kernel}, este é distribuído em um \textit{grid}
-com $B$ blocos, cada bloco com $T$ threads.
-Dentro de um bloco pode ser compartilhada memória de rápido acesso, enquanto para 
-acesso fora do bloco precisa-se de memória global.
-\begin{figure}[H]
-    \caption{Arquitetura de CUDA\reg.}
-    \begin{center}
-        \includegraphics[width=0.5\textwidth]{img/CUDAarch.png}
-    \end{center}
-    \legend{Fonte: \cite{CUDACGUIDE}}
-\end{figure}
-
-Os resultados que CUDA\reg~apresenta são muito consistentes para algoritmos claramente
-paralelizáveis, como é possível verificar no gráfico abaixo, que apresenta o 
-\emph{speedup} alcançado por funções da cuBLAS em comparação com as mesmas funções 
-executadas na CPU.
-\begin{figure}[H]
-    \caption{Speedup de cuBLAS (GPU) em relação a MKL BLAS (CPU).}
-    \begin{center}
-        \includegraphics[width=0.9\textwidth]{img/cublas9_2.png}
-    \end{center}
-    \legend{Fonte: \cite{CUBLAS}}
-\end{figure}
-
-
-Em geral o uso da interface com CUDA, através de alguma das linguagens de programação 
-que permitem o uso, tais quais Python, C++, Fortran, se dá nas seguintes etapas:
-\begin{enumerate}
-    \item Alocação inicial de memória da GPU;
-    \item Envio dos dados para a GPU;
-    \item Processamento das informações;
-    \item Aquisição dos dados;
-    \item Liberação de memória da GPU.
-\end{enumerate}
-
-Os passos de alocação e liberação de memória demandam bastante tempo de CPU.
-Em geral, para ganhos de performance, tenta-se alocar memória somente no início da
-execução da aplicação, enviando, processando e recuperando as computações executadas 
-sem gerar novas alocações.
-
-Para exemplificar o quão simples é executar programas claramente paralelos em 
-CUDA\reg, a seguir está descrito um \textit{kernel} que soma duas matrizes,
-$\mat{A}$ e $\mat{B}$, e põe o resultado em $\mat{C}$.
-\begin{center}
-    \begin{lstlisting}
-        __global__ void MatAdd(float A[N][N], float B[N][N],
-                               float C[N][N])
-        {
-            int i = threadIdx.x;
-            int j = threadIdx.y;
-            C[i][j] = A[i][j] + B[i][j];
-        }
-        \end{lstlisting}
-\end{center}
-
-É possível perceber que, além da simplicidade do código, a sintaxe é muito próxima a
-da linguagem C. 
-Esse fato pode ser considerado uma ajuda para a popularização da plataforma.
-Também é possível verificar como se dá o paralelismo. 
-Através dos parâmetros $x$ e $y$ de $threadIdx$, seleciona-se qual parte da matriz que 
-será somada. 
-Nesse caso, por simplicidade, é considerado que o \textit{kernel} será criado com apenas
-$1$ bloco, de forma que somente é necessário utilizar o número da thread para definir 
-os índices operados.
-Caso fossem utilizados mais blocos, deveriam ser considerados os valores de $blockIdx$, 
-que corresponde ao identificador de que bloco está sendo processado, e $blockDim$, que 
-representa o tamanho do bloco.
-
-A plataforma CUDA\reg~foi utlizada no trabalho proposto para a paralelização do algoritmo
-OMP (\autoref{algo:omp}), conforme será discutido nos próximos capítulos.
 
 
 \chapter{Trabalhos Relacionados}
@@ -2392,5 +2069,351 @@ melhor os assuntos base da proposta, que não são estudados dentro do escopo da
 
 \bibliographystyle{abntex2-alf}
 \bibliography{biblio}
+
+\chapter*{Apêndices}
+\section*{APÊNDICE A - Codificação de Huffman}
+Dentre os diversos tipos de codificação de dados que existem, alguns deles 
+permitem a representação compacta dos dados sem perdas de compressão.
+Esse é o caso da codificação de Huffman, um algoritmo de compressão por entropia,
+ou seja, que se aproveita da repetibilidade dos dados e de sua distribuição, 
+pois, em geral, sinais que carregam informação possuem bastante redundância.
+
+% O método foi apresentado em 1952, e continua sendo amplamente utilizado. 
+% Em primeiro lugar, 
+Considere que deseja-se comprimir uma sequência de 
+símbolos, ou mensagem, utilizando códigos de tamanho variável, um para cada símbolo.
+Segundo \citet{HuffmanCoding}, duas restrições básicas são impostas para 
+a codificação de mensagens proposta pelo autor:
+\begin{enumerate}
+    \item Dois símbolos diferentes não podem ter o mesmo código;
+    \item Os códigos das mensagem precisam ser construídos de forma que não seja necessário 
+    identificar onde começa ou termina um código.
+\end{enumerate}
+
+Um princípio básico utilizado é que o tamanho de um código nunca pode ser menor 
+do que o de outro menos provável \cite{HuffmanCoding}.
+
+Para facilitar as explicações, dados $N$ símbolos, eles serão representados 
+pelos numerais $1, 2, ..., N$.
+Algo que pode ser assumido, sem perda de generalidade, considerando $P(s)$ a probabilidade de um símbolo
+$a$ qualquer aparecer na mensagem, é que \cite{HuffmanCoding}:
+\begin{equation}
+    \label{eq:hufprob}
+    P(1) \ge P(2) \ge \cdots \ge P(N).
+\end{equation}
+
+Por consequência, se quisermos uma codificação ótima, o tamanho do código $L(s)$ 
+deve ser \cite{HuffmanCoding}:
+\begin{equation}
+    \label{eq:huflen}
+    L(1) \le L(2) \le \cdots \le L(N).
+\end{equation}
+
+Pode-se definir, a partir de \eqref{eq:hufprob} e \eqref{eq:huflen} o tamanho $L$ da mensagem 
+codificada:
+\begin{equation*}
+    L = \sum_{i=1}^N {P(i)L(i)}.
+\end{equation*}
+É importante ressaltar que:
+\begin{equation*}
+    \sum_{i=1}^N {P(i)} = 1.
+\end{equation*}
+
+Por fim, \citet{HuffmanCoding} apresentou três novas restrições, além das iniciais.
+Considere-se $D$ o número de valores que um dígito do código pode assumir.
+\begin{enumerate}
+    \item $L(1) \le L(2) \le \cdots \le L(N-1) = L(N)$.
+    \item Pelo menos $2$ e não mais que $D$ símbolos com código de tamanho $L(N)$ tem códigos 
+    com início idêntico, diferenciando-se por seus dígitos finais.
+    \item Cada possível sequência de $L(N)-1$ dígitos deve ser usada ou como código ou ser 
+    prefixo de outros códigos.
+\end{enumerate}
+
+Em seguida, serão explicados os passos do algoritmo apresentado em \citet{HuffmanCoding}.
+Por fim, será mostrado um exemplo.
+Para facilitar, vamos utilizar o problema de codificação binária, $D=2$, com valores 
+possíveis do dígito $0$ e $1$.
+
+A explanação partirá de que a tabela das probabilidades de cada símbolo já está pronta.
+Para gerar essa tabela, podem ser simplesmente contadas quantas vezes cada símbolo aparece
+em relação ao total dos símbolos da mensagem.
+
+Tomando a tabela de probabilidades ordenada, os dois símbolos de menor probabilidade 
+têm seus sufixos definidos por $0$ e $1$.
+Em seguida, esses símbolos podem ser considerados como apenas um, com probabilidade igual 
+a soma das duas probabilidades. 
+A tabela então é atualizada removendo-se os dois símbolos e adicionando o símbolo unido. 
+O processo volta a ser executado, iterativamente, até que haja somente um símbolo que seja 
+a união de todos, com probabilidade $1$.
+Cada vez que é definido o sufixo, considere-se que é inserido a frente do sufixo anterior 
+de cada símbolo o valor $0$ ou $1$.
+
+O exemplo a seguir mostra o funcionamento do algoritmo de forma mais clara.
+Na figura abaixo, são mostrados os passos da codificação exemplificados por 
+\citet{HuffmanCoding}.
+
+\begin{figure}[H]
+    \caption{Execução dos passos de codificação de Huffman.}
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{img/huffmanprocess.png}
+    \end{center}
+    \legend{Fonte: \citet{HuffmanCoding}}
+\end{figure}
+
+Os códigos binários para cada símbolo gerados foram os seguintes:
+\begin{figure}[H]
+    \caption{Códigos binários gerados pela codificação de Huffman.}
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{img/huffmantable.png}
+    \end{center}
+    \legend{Fonte: \citet{HuffmanCoding}}
+\end{figure}
+
+O método apresentado é muito utilizado e possui variadas implementações na 
+literatura.
+Além disso, serve de base para diversos compressores de arquivos, também 
+estando presente em padrões de codificação de imagens, tal qual o JPEG, 
+ou de codificação de vídeo, por exemplo, o H.264.
+% Escrever exemplo disso aí
+\newpage
+\section*{Codificação de Vídeo}
+\label{sec:codvideo}
+A comunicação através de vídeo, nas últimas décadas, tem sido uma das principais formas
+de comunicação, sob as mais diversas formas.
+\citet{SullivanH264} apresentam alguns cenários onde a vídeos digitais são aplicados:
+\begin{itemize}
+    \item Transmissão televisiva via satélite, ou cabo;
+    \item Serviços de conversação via internet;
+    \item Streaming de vídeos;
+    \item Gravação e armazenamento de vídeos, por exemplo DVD.
+\end{itemize}
+
+Se imaginar-se armazenar, por exemplo, apenas uma imagem RGB, $1.280\times720$, 
+sem nenhuma compressão, utilizando $1$ byte por canal de cor, a quantidade de bytes necessários 
+para tal tarefa seria $1.280\cdot720\cdot3 = 2.764.800$ bytes, ou, aproximadamente, $2,7MB$
+por imagem.
+Expandindo a ideia, um vídeo de $10$ minutos, ou $600$ segundos, 
+utilizando uma taxa de $30$ frames por segundo,
+precisaria de quase $50GB$ para ser armazenado!
+
+Esse exemplo ilustra a necessidade de codificar os vídeos de forma a
+reduzir substancialmente a quantidade de informação necessária para armazená-los.
+A partir disso, serão descritas algumas características de \textit{codecs} 
+(\emph{\textbf{co}der} e \emph{\textbf{dec}oder} de vídeo) precisam observar.
+
+Um dos princípios básicos utilizados na codificação de vídeos é a de que o olho humano
+é mais sensível ao brilho do que a cor diretamente \cite{SullivanH264}.
+Ou seja, a informação de crominância pode ser representada com menor precisão que 
+a informação de luminância.
+De fato é isso que acontece na maioria dos \emph{codecs}. 
+Em geral, é utilizada o espaço de cor Y, Cb, Cr, no qual Y, chamado componente \emph{lumma},
+ou o brilho, em geral é codificado com dimensão 4 vezes maior que Cb e Cr, componentes 
+\emph{chroma} do cinza para o azul (Cb) e do cinza para o vermelho (Cr).
+
+Em alguns \emph{codecs} de vídeo existe a possibilidade de utilizar os formatos
+\emph{progressive} e \emph{interlaced} \cite{SullivanH264}.
+No caso de \emph{progressive}, todo frame é salvo em sequência.
+Já no formato \emph{interlaced}, podem ser utilizados campos entrelaçados.
+Por exemplo, um primeiro campo pode ser as linhas pares do frame, enquanto o segundo
+as linhas ímpares \cite{SullivanH264}.
+Na sequência do texto será utilizado o termo imagem sem diferenciação entre os 
+formatos apresentados.
+
+Técnicas para compressão digital, não somente para vídeos, mas para aplicações em geral,
+podem ser classificadas como segue \cite{SullivanH264}:
+\begin{itemize}
+    \item \textbf{Predição:} Processo no qual são criadas predições sobre a informação 
+    que virá. Caso a predição seja de boa qualidade, a diferença entre a predição e a 
+    imagem em si, ou resíduo, será pequena e representável com menos bits.
+    \item \textbf{Transformações:} Este processo é o de buscar outras formas de representar
+    os dados, em geral mais esparsas (ou comprimidas). Por exemplo, para imagens a DCT 
+    fornece uma transformação mais compressível que a utilização da imagem original.
+    \item \textbf{Quantização:} O processo de quantização se refere a representar os dados
+    com menor quantidade de informação, ou seja, menos bits. Um exemplo é trocar uma representação 
+    em ponto flutuante por uma representação de inteiros com 8 bits.
+    \item \textbf{Codificação de entropia:} Processo que utiliza a redundância de informação para 
+    criar uma tabela de representação na qual a informação mais redundante é codificada
+    com menos bits e a mais, com mais bits. A codificação de Huffman é um exemplo desse processo.
+\end{itemize}
+
+Uma forma simples de fazer compressão de vídeos se dá por tomar cada imagem do vídeos
+separadamente e comprimi-la utilizando técnicas relativas a imagens, por exemplo JPEG \cite{SullivanH264}.
+Ainda podem ser utilizadas técnicas de predição intra-frame, visando melhorar a codificação.
+Essas técnicas atingem certo grau de compressão, porém vídeos possuem grande correlação temporal
+entre seus frames, ou seja, o frame do instante $t$ está fortemente correlacionado ao frame $t-1$ e
+ao frame $t+1$, em geral.
+Utilizar a forma anterior não aproveita esse fato, o que leva a se imaginar buscar metodologias
+que façam codificação inter-frame.
+
+A \autoref{fig:hybenc} apresenta a ideia do funcionamento geral de um \textit{encoder} de vídeo,
+mostrando, em alto nível, o funcionamento do mesmo.
+\begin{figure}[H]
+    \label{fig:hybenc}
+    \caption{\textit{Encoder} de vídeo híbrido (em especial H.264).}
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{img/HybridCodec.png}
+    \end{center}
+    \legend{Fonte: \citet{SullivanH264}.}
+\end{figure}
+
+Um conceito que aproveita a dependência temporal é o MCP (\textit{motion-compensated prediction}).
+O MCP considera que, muitas vezes, as mudanças durante os vídeos acontecem devido ao movimento.
+Dessa forma, se for possível estimar um vetor de movimento, seria possível fazer uma predição
+de compensação de movimento \cite{SullivanH264}. 
+
+Diversas formas de executar-se o MCP foram desenvolvidas pela literatura, unindo ganhos
+na complexidade a ganhos em compressibilidade e qualidade, utilizando uma ou mais imagens 
+do passado como base para criar predições de movimento.
+
+A seguir será explicado, de forma superficial, o funcionamento do codec H.264, com o qual 
+serão feitas comparações nesse trabalho.
+
+\subsection*{Codec H.264}
+O codec H.264 foi lançado como padrão em 2003.
+Ele incorporou funcionalidades de codecs anteriores, como H.262 e H.263, mas também
+trouxe novas funcionalidades.
+
+Antes de entrar mais especificamente nas funcionalidades, é necessário entender-se o 
+funcionamento geral do codec.
+Em primeiro lugar, podemos dividir o codec em \emph{Network Abstraction Layer} (NAL), a parte
+relativa à configuração da rede pela qual o video será transmitido,
+e a \emph{Video Coding Layer} (VCL), que diz respeito a forma como será representado o vídeo 
+e seus frames.
+Neste resumo o foco será nas funcionalidades relativas a codificação de vídeo, 
+por tratarem de um assunto mais próximo a proposta do trabalho.
+
+Sendo assim, a seguir serão listadas funcionalidades presentes no codec.
+Basicamente, a VCL separa cada imagem em porções com uma quantidade variável de macroblocos 
+de dimensão $16\times16$.
+Estes, por sua vez, podem ser divididos em sub-blocos de $16\times8$, $8\times16$,
+$8\times8$, $8\times4$, $4\times8$ e $4\times4$.
+A partir dos sub-blocos, dos macroblocos e das porções é que a codificação de vídeo 
+é executada, levando em consideração o MCP.
+
+Cada um dos frames pode somente fazer predição intra-frame (I-frames), utilizar 
+predição inter-frames (P-frames) com uma imagem de referência, ou utilizar 
+duas imagens de referência, com pesos diferenciados (B-frames).
+Segundo \citet{WiegangH264}, as principais funcionalidades relativas a eficiência
+da codificação são as seguintes:
+\begin{itemize}
+    \item \textbf{Compensação de movimento (CM) com blocos de tamanho variável:}
+    Dentro do macrobloco, cada um dos sub-blocos pode fazer CM.
+    \item \textbf{CM com acurácia de um quarto de amostra:} A maioria dos codecs anteriores 
+    provia CM com acurácia de um meio de amostra. O codec H.264 aumenta o poder 
+    de acurácia para um quarto.
+    \item \textbf{Vetores de movimento nas bordas da imagem:} Já presente como opcional
+    no padrão H.263, permite que bordas também tenham vetores de movimento, utilizando
+    técnicas de extrapolação das bordas.
+    \item \textbf{Imagens de referência para CM múltiplas:} Permite que o \textit{encoder}
+    escolha entre múltiplas imagens as referências para fazer CM.
+    \item \textbf{Possibilidade de utilizar imagens preditas como referência:} Em alguns 
+    codecs anteriores não era permitido utilizar imagens preditas como referência para o 
+    processo de CM. O H.264 remove essa restrição.
+    \item \textbf{Predição com pesos:} Permite que o MCP atribua pesos e offsets aos 
+    sinais de referência utilizados.
+    \item \textbf{Melhorias na predição intra-imagem:} Foram aprimoradas técnicas de
+    extrapolação de arestas para a predição intra-imagem.
+    \item \textbf{DCT aplicada a blocos menores:} No H.264 a DCT é aplicada a blocos de 
+    dimensão $4\times4$, utilizando uma transformada inteira. Porém é possível aplicar 
+    a DCT de mesma dimensão novamente a blocos maiores, de forma hierárquica.
+    \item \textbf{Melhorias na codificação de entropia:} Foi melhorada a codificação de 
+    entropia utilizando um método chamado \emph{arithmetic coding}.
+\end{itemize}
+
+Esse apêndice buscou apresentar os conceitos básicos utilizados na codificação de vídeos, 
+dando enfoque principal ao padrão H.264, fortemente utilizado no meio.
+% Buscar terminar melhor essa parte....
+\newpage
+\section*{Introdução a CUDA\reg}
+CUDA\reg~é uma plataforma de programação paralela, bem como um modelo de programação, 
+desenvolvido pela Nvidia para aplicações de propósito geral poderem ser executadas
+em GPU's.
+Sua primeira versão foi lançada em 2006.
+Desde então, diversas empresas e trabalhos acadêmicos utilizaram a plataforma.
+Além da forte utilização, também bibliotecas baseadas na plataforma surgiram, 
+com o intuito de prover funções para aplicações já conhecidas como paralelizáveis.
+Exemplos de tais plataformas são cuFFT, para aplicações com transformada de Fourier,
+cuBLAS, para álgebra linear básica, NPP, para processamento de vídeo, imagens e 
+sinais em geral.
+
+A plataforma tem ótimos resultados para algoritmos, procedimentos, que possam utilizar
+fortemente o paralelismo \cite{CUDAMAIN}.
+Atualmente, GPU's podem possuir mais de 4000 cores, por exemplo, a Nvidia Geforce RTX 2080 Ti,
+além de serem capazes de rodarem 32 threads simultaneamente.
+Todos os cores, ou pelo menos aqueles que forem designados para determinada aplicação,
+devem estar rodando o mesmo código, porém com valores de variáveis que podem ser diferentes.
+
+A arquitetura de CUDA\reg~se dá como na figura abaixo.
+Ao ser executado um determinado \textit{kernel}, este é distribuído em um \textit{grid}
+com $B$ blocos, cada bloco com $T$ threads.
+Dentro de um bloco pode ser compartilhada memória de rápido acesso, enquanto para 
+acesso fora do bloco precisa-se de memória global.
+\begin{figure}[H]
+    \caption{Arquitetura de CUDA\reg.}
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{img/CUDAarch.png}
+    \end{center}
+    \legend{Fonte: \cite{CUDACGUIDE}}
+\end{figure}
+
+Os resultados que CUDA\reg~apresenta são muito consistentes para algoritmos claramente
+paralelizáveis, como é possível verificar no gráfico abaixo, que apresenta o 
+\emph{speedup} alcançado por funções da cuBLAS em comparação com as mesmas funções 
+executadas na CPU.
+\begin{figure}[H]
+    \caption{Speedup de cuBLAS (GPU) em relação a MKL BLAS (CPU).}
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{img/cublas9_2.png}
+    \end{center}
+    \legend{Fonte: \cite{CUBLAS}}
+\end{figure}
+
+
+Em geral o uso da interface com CUDA, através de alguma das linguagens de programação 
+que permitem o uso, tais quais Python, C++, Fortran, se dá nas seguintes etapas:
+\begin{enumerate}
+    \item Alocação inicial de memória da GPU;
+    \item Envio dos dados para a GPU;
+    \item Processamento das informações;
+    \item Aquisição dos dados;
+    \item Liberação de memória da GPU.
+\end{enumerate}
+
+Os passos de alocação e liberação de memória demandam bastante tempo de CPU.
+Em geral, para ganhos de performance, tenta-se alocar memória somente no início da
+execução da aplicação, enviando, processando e recuperando as computações executadas 
+sem gerar novas alocações.
+
+Para exemplificar o quão simples é executar programas claramente paralelos em 
+CUDA\reg, a seguir está descrito um \textit{kernel} que soma duas matrizes,
+$\mat{A}$ e $\mat{B}$, e põe o resultado em $\mat{C}$.
+\begin{center}
+    \begin{lstlisting}
+        __global__ void MatAdd(float A[N][N], float B[N][N],
+                               float C[N][N])
+        {
+            int i = threadIdx.x;
+            int j = threadIdx.y;
+            C[i][j] = A[i][j] + B[i][j];
+        }
+        \end{lstlisting}
+\end{center}
+
+É possível perceber que, além da simplicidade do código, a sintaxe é muito próxima a
+da linguagem C. 
+Esse fato pode ser considerado uma ajuda para a popularização da plataforma.
+Também é possível verificar como se dá o paralelismo. 
+Através dos parâmetros $x$ e $y$ de $threadIdx$, seleciona-se qual parte da matriz que 
+será somada. 
+Nesse caso, por simplicidade, é considerado que o \textit{kernel} será criado com apenas
+$1$ bloco, de forma que somente é necessário utilizar o número da thread para definir 
+os índices operados.
+Caso fossem utilizados mais blocos, deveriam ser considerados os valores de $blockIdx$, 
+que corresponde ao identificador de que bloco está sendo processado, e $blockDim$, que 
+representa o tamanho do bloco.
+
+% A plataforma CUDA\reg~foi utlizada no trabalho proposto para a paralelização do algoritmo
+% OMP (\ref{algo:omp}), conforme será discutido nos próximos capítulos.
+
 
 \end{document}
