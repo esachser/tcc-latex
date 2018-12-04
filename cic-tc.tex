@@ -320,6 +320,12 @@ representa a matriz $\mat{X}$ na t-ésima iteração.
 O mesmo acontece com vetores, por exemplo, $\vec{x_{(t)}}$.
 
 % A cada iteração t o valor de X é alterado, na iteração.
+Além dessas definições, é utilizado o conceito de produto interno 
+de dois vetores $\vec{x}, \vec{y} \in \mathbb{R}^m$, 
+conforme a seguinte notação:
+\begin{equation*}
+    \langle \vec{x}, \vec{y} \rangle = \sum_{i=1}^m {x_i y_i}.
+\end{equation*}
 
 Por fim, vale lembrar a definição da norma $\ell_p$ para um vetor $\vec{x} \in \mathbb{R}^m$:
 \begin{equation*}
@@ -435,6 +441,10 @@ geram informação redundante.
 % acabam por causar o descarte de boa parte da informação coletada durante a etapa de compressão. 
 Tal fato traz a tona a pergunta: existe 
 uma forma de aquisição de sinais na qual as amostras comprimidas são obtidas diretamente? \cite{chen2015compressed}.
+Em diversas situações, na verdade, o que se tem em mãos são somente as medidas que foram executadas, 
+e conhecida a forma na qual a amostragem foi feita, além do conhecimento de que existe uma representação
+esparsa do sinal em determinada base.
+Em especial para essas situações o \emph{compressed sensing} é bastante adequado.
 
 O modelo de \emph{compressed sensing} surgiu com esse intuito \cite{DonohoCS}. Trabalhos na área mostram que, para certas classes
 de sinais, poucas amostras são necessárias para representar o sinal com acurácia \cite{chen2015compressed}.
@@ -529,9 +539,14 @@ como a maior correlação entre suas colunas:
 \end{equation}
 
 Fica definido, portanto, que um operador de amostragem é \textit{incoerente} quando a sua coerência $\mu$ é 
-suficientemente pequena. Por exemplo, um operador de amostragem que seja uma base ortonormal é incoerente, 
+suficientemente pequena. Por exemplo, um operador de amostragem que seja uma base ortonormal é incoerente.
+% Outro exemplo de operador de amostragem incoerente é 
 % Melhorar o exemplo
 bem como operadores que sejam aproximadamente ortonormais para vetores esparsos.
+Nesse segundo caso, pode-se imaginar, por exemplo, que o conjunto de vetores esparsos utiliza 
+somente os índices $i$, $j$ e $k$.
+Dessa forma, apenas as colunas de $\mat{\Phi}$ correspondentes a $i$, $j$ e $k$ precisam ser 
+ortonormais entre si, ou com baixa coerência entre essas mesmas colunas.
 
 Uma propriedade que captura a mesma ideia que o referido acima foi desenvolvida por \citet{CandesSignalRecovery}, chamada 
 \textit{restricted isometry property} (RIP). A constante de isometria restrita 
@@ -545,7 +560,7 @@ $\delta_s$ é o menor valor tal que:
 Diz-se que um operador de amostragem $\mathbf{\Phi}$ satisfaz a RIP de ordem $s$ quando $\delta_s$ é suficientemente
 pequeno. %, por exemplo, $\delta_s \le 0,1$.
 A questão importante da RIP é descobrir qual o número de amostras $m$ é necessária e quais são as 
-classes de matrizes que possuem a propriedade. Doi importantes exemplos de matrizes que satisfazem a RIP são
+classes de matrizes que possuem a propriedade. Dois importantes exemplos de matrizes que satisfazem a RIP são
 as seguintes \cite{chen2015compressed}: 
 \begin{itemize}
     \item \textbf{Matrizes subgaussianas}: uma variável randômica $\mat{X}$ é subgaussiana se 
@@ -693,58 +708,62 @@ limites demonstrados, bem como número de iterações e medidas. Dois principais
 \textit{IHT (Iterative Hard Thresholding)} \cite{BLUMENSATHIHT}.
 
 \subsubsection{Métodos utilizando \textit{Total Variation}}
-Em diversas aplicações, os sinais de interesse são imagens. Imagens natuais normalmente são compressíveis
-em determinada base, tal qual Wavelets. Porém, a utilização dos métodos anteriores para recuperação 
+Em diversas aplicações, os sinais de interesse são imagens. Imagens naturais normalmente são compressíveis
+em determinada base, como por exemplo Wavelets. 
+Porém, a utilização dos métodos anteriores para recuperação 
 destas imagens gera, algumas vezes, artefatos de alta frequência, que se tornam desagradáveis a
 visualização \cite{chen2015compressed}.
 Tal fato levou ao desenvolvimento de outro método de minimização, baseado em \textit{Total Variation},
 ou seja, na minimização da norma $\ell_1$ do gradiente da imagem.
 
-Para simplificar a definição, considere-se uma imagem em tons de cinza $\mat{X}$ de tamanho $N\times N$.
-Por definição, a \textit{total variation} (TV) de uma imagem $\mat{X}$ é:
+Para simplificar a definição, considere-se uma imagem em tons de cinza $\mat{X}$ de tamanho $n\times n$.
+Por definição, a \textit{total variation norm} (TV) de uma imagem $\mat{X}$ é:
 \begin{equation}
     \lVert \mat{X} \rVert_{TV} = \sum_{j,k}
     \sqrt{\left( \mat{X_{j+1,k}} - \mat{X_{j,k}} \right)^2 + \left( \mat{X_{j,k+1}} - \mat{X_{j,k}} \right)^2} = 
-    \sum_{j,k} |\mat{(\nabla X)}_{j,k} |
+    \sum_{j,k} |\mat{(\nabla X)}_{j,k} |,
 \end{equation}
-tal que $\mat{\nabla X}$ é o gradiente discreto da imagem $\mat{X}$. O gradiente pode ser definido da 
+no qual $\mat{\nabla X}$ é o gradiente da imagem (discreta) $\mat{X}$. O gradiente pode ser definido da 
 seguinte forma:
 \begin{align*}
     \mat{(X_x)}_{j,k} = \mat{X_{j+1,k}} - \mat{X_{j,k}} \\
     \mat{(X_y)}_{j,k} = \mat{X_{j,k+1}} - \mat{X_{j,k}},
 \end{align*}
-
-Resultando, por fim, em:
+resultando, por fim, em:
 \begin{equation}
     \mat{\nabla X} = 
     \begin{cases}
-        \left( \mat{(X_x)}_{j,k}, \mat{(X_y)}_{j,k} \right), \hspace{0.5em} 1 \le j \le N-1, \hspace{0.5em} 1 \le k \le N-1 \\
-        \left( 0, \mat{(X_y)}_{j,k} \right), \hspace{0.5em} j=N, \hspace{0.5em} 1 \le k \le N-1 \\
-        \left( \mat{(X_x)}_{j,k}, 0 \right), \hspace{0.5em} 1 \le j \le N-1, \hspace{0.5em} k=N \\
-        \left(0,0\right), \hspace{0.5em} j = N, \hspace{0.5em} k=N
+        \left( \mat{(X_x)}_{j,k}, \mat{(X_y)}_{j,k} \right), \hspace{0.5em} 1 \le j \le n-1, \hspace{0.5em} 1 \le k \le n-1 \\
+        \left( 0, \mat{(X_y)}_{j,k} \right), \hspace{0.5em} j=n, \hspace{0.5em} 1 \le k \le n-1 \\
+        \left( \mat{(X_x)}_{j,k}, 0 \right), \hspace{0.5em} 1 \le j \le n-1, \hspace{0.5em} k=n \\
+        \left(0,0\right), \hspace{0.5em} j = n, \hspace{0.5em} k=n
     \end{cases}
 \end{equation}
 
 Após definidas essas bases, pode-se considerar a minimização a seguir, utilizando a norma TV \cite{chen2015compressed}.
 \begin{equation}
-    \mat{X'} = \underset{\mat{M}}{argmin} \lVert \mat{M} \rVert_{TV} 
+    \mat{X'} = \underset{\mat{M} \in \mathbb{R}^{n\times n}}{argmin} \lVert \mat{M} \rVert_{TV} 
     \hspace{1em} \text{sujeito a} \hspace{1em}
     \lVert \vec{y} - A(\mat{M}) \rVert_2 \le \epsilon,
 \end{equation}
-tal que $A$ seleciona medidas e vetoriza, $\vec{y} = A(\mat{X}) + \vec{e}$ são as medidas com ruído $\vec{e}$,
+tal que $A$ é uma função que realiza a vetorização da imagem, 
+e em seguida amostragem de alguns coeficientes.
+$\vec{y} = A(\mat{X}) + \vec{e}$ são as medidas com ruído $\vec{e}$,
 sendo que $\lVert \vec{e} \rVert_2 \le \epsilon$.
 
 O ganho na representação de imagens se dá pelo fato de que não se cria uma representação esparsa da imagem
 diretamente, mas sim do gradiente da imagem, o que torna a mesma mais suave e remove artefatos com alta
 frequência.
-Resultados utilizando a norma TV já foram observados em diversos trabalhos.
+A norma TV foi utilizada em diversos trabalhos.
 Por exemplo, entre os primeiros resultados que motivaram o surgimento dessa área de estudo está
-o trabalho proposto por \citet{CandesMRI}, no qual, com aproximadamente $5\%$ das medidas de imagens de
+o trabalho proposto por \citet{CandesMRI}, no qual, possuindo aproximadamente $5\%$ das medidas de imagens de
 ressonância magnética, foi possível recuperar toda a imagem, como é possível visualizar na figura 
 abaixo.
 \begin{figure}[H]
-    \caption{Exemplo de recuperação por norma TV. Em (a) a imagem de teste.
-    (b) Amostragem no domínio frequência. (c) Reconstrução via \textit{Filtered BackProjection}
+    \caption{Exemplo de recuperação de imagem de ressonância magnética utilizando a norma TV.
+    (a) A imagem final correta desejada.
+    (b) Amostragem que se possuía no domínio frequência.
+    (c) Reconstrução via \textit{Filtered BackProjection}.
     (d) Reconstrução utilizando a norma TV.}
     \begin{center}
         \includegraphics[width=0.6\textwidth]{img/candesmri}
@@ -754,21 +773,29 @@ abaixo.
 \end{figure}
 
 \subsection{Resultados com dicionários coerentes}
-A utilização de matrizes de amostragens incoerentes, ou dicionários incoerentes, limita a aplicação de 
-compressed sensing em algumas áreas, ou para alguns problemas cuja base de solução dos mesmos é baseada
-em dicionários coerentes, que podem ser, por exemplo, um dicionário supercompleto, com mais colunas que linhas. 
-"Coerência é, de certa forma, uma propriedade natural para compressed sensing, 
+A partir dessa seção, ao se tratar das matrizes de amostragem, se utilizará 
+o termo dicionários, que representam uma transformação do sinal, 
+não necessariamente uma transformação de domínio conhecida,
+podendo esta ser aprendida utilizando métodos que serão apresentados na seção \ref{sec:diclearn}.
+A utilização de matrizes de amostragens incoerentes, ou dicionários incoerentes, 
+limita a aplicação de ,
+\emph{compressed sensing} para áreas cuja base de solução dos mesmos é baseada
+em dicionários incoerentes.
+Porém existem áreas com soluções baseadas em dicionários coerentes, que utilizam, 
+por exemplo, dicionários supercompletos, com mais colunas que linhas. 
+"Coerência é, de certa forma, uma propriedade natural para \emph{compressed sensing}, 
 porque se duas colunas são muito correlatas, será impossível em geral distinguir se a energia do sinal
 vem de uma ou da outra" 
-\footnote{"Coherence is in some sense a natural property in the compressed sensing framework, for if two
+\footnote{"Coherence is in some sense a natural property in the \emph{compressed sensing} framework, for if two
 columns are closely correlated, it will be impossible in general to distinguish whether the energy in 
 the signal comes from one or the other"}
-(\citeauthor{CANDESDICTS}, \citeyear{CANDESDICTS}, tradução própria).
+(\citeauthor{CANDESDICTS}, \citeyear{CANDESDICTS}, tradução livre).
 
 Porém, em alguns casos, não precisa-se recuperar os coeficientes originais do sinal, o que com dicionários 
 coerentes não é possível, mas sim o próprio sinal já transportado para uma nova base.
 Matematicamente falando, imagine-se um sinal $\vec{f} = \mathbf{D}\vec{x}$, no qual suas medidas são
-$\vec{y} = \mathbf{\Phi}\vec{f} = \mathbf{\Phi}\mathbf{D}\vec{x}$, se o dicionário $\mathbf{D}$ for
+$\vec{y} = \mathbf{\Phi}\vec{f} = \mathbf{\Phi}\mathbf{D}\vec{x}$. 
+Se o dicionário $\mathbf{D}$ for
 coerente, não é possível recuperar os coeficientes $\vec{x}$, mas é possível recuperar $\vec{f}$ \cite{CANDESDICTS}.
 
 A partir desses estudos, \citet{CANDESDICTS} apresentou uma nova definição para o problema de CS, 
@@ -808,10 +835,8 @@ Esse novo campo de estudo abriu caminhos para novas análises e usos de CS para 
 problemas, antes não possível, além tornar possível utilizar os modelos e técnicas de CS
 para outros campos do conhecimento.
 
-% \subsubsection{Métodos utilizando \textit{Total Variation}}
-% Decidir se terá ou não
-
 \section{Aprendizado de Dicionários}
+\label{sec:diclearn}
 A área de aprendizado de dicionários, do inglês \textit{dictionary learning}, busca, através
 dos dados já conhecidos de uma classe de sinais, prover novos dicionários nos quais os sinais 
 serão capazes de se conformar de forma mais esparsa. 
@@ -939,6 +964,7 @@ que sempre minimiza a função objetivo, chega-se no novo dicionário $\mat{D_{(
 \end{equation}
 
 Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLearn}.
+\vspace{1em}
 
 \begin{algorithm}[H]
     \label{algo:odl}
@@ -964,7 +990,7 @@ Por fim, será descrito o algoritmo do ODL, conforme \citet{MairalOnlineDictLear
     }
     \Return{$\mat{D_{(t)}}$}
 \end{algorithm}
-
+\vspace{1em}
 
 \subsection{Codificação Esparsa}
 \label{sec:codesparsa}
