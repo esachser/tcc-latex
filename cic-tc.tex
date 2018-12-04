@@ -400,7 +400,6 @@ Dessa forma, pode-se imaginar que um sinal amostrado é composto pelo próprio s
 $\vec{f} = \vec{y} + \vec{e}$, no qual $\vec{f}$ é a amostragem, $\vec{y}$ é o sinal real, 
 e $\vec{e}$ é o erro.
 
-
 Uma definição importante para o prosseguimento do trabalho é a de energia $E$ de um sinal $\vec{f} \in \mathbb{R}^m$, como segue:
 \begin{equation}
     E = \sum_{i=1}^m f_i^2 = \lVert \vec{f} \rVert_2^2,
@@ -498,7 +497,8 @@ $\vec{f_s}$:
 \end{equation} 
 
 Por fim, a definição \eqref{eq:f0less} exige que $\vec{f}$ seja esparso, ou seja, tenha $s$ coeficientes não nulos
-no máximo. Por outro lado, $\vec{f}$ pode ser esparso em alguma outra base ortonormal $\mathbf{D}$, aqui referida como 
+no máximo. 
+Por outro lado, $\vec{f}$ pode ser esparso em alguma outra base ortonormal $\mathbf{D}$, aqui referida como 
 \textit{sparsifying basis} \cite{CandesDecoLinear}. Nesse caso, considera-se $\vec{f}$ s-esparso se:
 \begin{equation}
     \vec{f} = \mathbf{D}\vec{x} \hspace{1em} \text{dado que} \hspace{1em} \lVert \vec{x} \rVert_0 \le s \ll d.
@@ -506,61 +506,60 @@ no máximo. Por outro lado, $\vec{f}$ pode ser esparso em alguma outra base orto
 
 
 \subsection{Mecanismos de Amostragem}
-A partir das definições básicas do modelo, pode-se formular o problema básico de CS da seguinte forma:
-
-Tomando um operador de amostragem $\mathbf{\Phi}$, mapeamento linear de $\mathbb{C}^d$ para algum espaço de dimensão 
-$\mathbb{C}^m$, para recuperarmos um sinal $\vec{f}$ a partir de suas medidas $\vec{y} = \mathbf{\Phi} \vec{f}$, pode-se escrever
-como um problema de minimização.
+A partir das definições básicas do modelo, pode-se formular o problema básico de CS da seguinte forma.
+Tomando um operador de amostragem $\mathbf{\Phi}$, o mapeamento linear de $\mathbb{C}^d$ para algum espaço de dimensão 
+$\mathbb{C}^m$, para recuperarmos um sinal $\vec{f}$ a partir de suas medidas $\vec{y} = \mathbf{\Phi} \vec{f}$,
+pode ser descrito como um problema de minimização:
 \begin{equation}
     \label{eq:problem}
     \vec{f}' = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \vec{g} \rVert_0 \hspace{1em} \text{sujeito a} \hspace{1em}
-    \mathbf{\Phi} \vec{g} = \vec{y} 
+    \mathbf{\Phi} \vec{g} = \vec{y}.
 \end{equation}
 
-A partir da formulação, se $\mathbf{\Phi}$ não mapeia 2 vetores esparsos quaisquer para a mesma imagem, ou seja,
+Se $\mathbf{\Phi}$ não mapeia 2 vetores esparsos quaisquer para o mesmo valor de $\vec{y}$, ou seja,
 se $\vec{f} \ne \vec{g} \rightarrow \mathbf{\Phi}\vec{f} \ne \mathbf{\Phi}\vec{g} $, então a solução $\vec{f}'$ recupera
 $\vec{f}$, $\vec{f}' = \vec{f}$ \cite{chen2015compressed}. Esse problema, por outro lado, é intratável, e, em geral,
 NP-difícil \cite{Mut05}.
 Para que o operador de amostragem forneça o resultado anterior, ele deve ser \textit{incoerente}.
 Dado um operador $\mathbf{\Phi}$ de colunas $\{ \vec{\phi_i} \}$  com norma unitária, define-se a sua coerência $\mu$
-como a maior correlação entre suas colunas.
+como a maior correlação entre suas colunas:
 \begin{equation}
     \label{eq:coerence}
-    \mu = \underset{i \ne j}{max}\langle \vec{\phi_i} , \vec{\phi_j} \rangle
+    \mu = \underset{i \ne j}{max}\langle \vec{\phi_i} , \vec{\phi_j} \rangle.
 \end{equation}
 
 Fica definido, portanto, que um operador de amostragem é \textit{incoerente} quando a sua coerência $\mu$ é 
-suficientemente pequena. Por exemplo, um operador de amostragem que seja uma base ortonormal é incoerente, bem como
-operadores que sejam aproximadamente ortonormais para vetores esparsos.
+suficientemente pequena. Por exemplo, um operador de amostragem que seja uma base ortonormal é incoerente, 
+% Melhorar o exemplo
+bem como operadores que sejam aproximadamente ortonormais para vetores esparsos.
 
 Uma propriedade que captura a mesma ideia que o referido acima foi desenvolvida por \citet{CandesSignalRecovery}, chamada 
-\textit{Restricted Isometry Property} (RIP). A constante de isometria restrita 
-$\delta_s$ é a menor tal que:
+\textit{restricted isometry property} (RIP). A constante de isometria restrita 
+$\delta_s$ é o menor valor tal que:
 \begin{equation}
     \label{eq:rip}
     (1 - \delta_s)\lVert \vec{f} \rVert\SPSB{2}{2} \le \lVert \mathbf{\Phi} \vec{f} \rVert \SPSB{2}{2} \le 
     (1 + \delta_s)\lVert \vec{f} \rVert\SPSB{2}{2} \hspace{1em} \text{para todo vetor s-esparso } \vec{f}.
 \end{equation}
 
-Diz-se que um operador de amostragem $\mathbf{\Phi}$ tem a RIP de ordem $s$ quando $\delta_s$ é suficientemente
-pequeno, por exemplo, $\delta_s \le 0,1$.
-
+Diz-se que um operador de amostragem $\mathbf{\Phi}$ satisfaz a RIP de ordem $s$ quando $\delta_s$ é suficientemente
+pequeno. %, por exemplo, $\delta_s \le 0,1$.
 A questão importante da RIP é descobrir qual o número de amostras $m$ é necessária e quais são as 
 classes de matrizes que possuem a propriedade. Doi importantes exemplos de matrizes que satisfazem a RIP são
 as seguintes \cite{chen2015compressed}: 
 \begin{itemize}
     \item \textbf{Matrizes subgaussianas}: uma variável randômica $\mat{X}$ é subgaussiana se 
-    $\mathbb{P}(|\mat{X}| > t) \le Ce^{-ct^2}$ para todo $t>0$ e constantes positivas $C$ e $c$. Ou seja,
+    $\mathbb{P}(|\mat{X}| > t) \le Ce^{-vt^2}$ para todo $t>0$ e constantes positivas $C$ e $v$. Ou seja,
     variáveis subgaussianas possuem distribuição de média aproximadamente $0$, e a maior parte dos valores
     próximos a média. Exemplos dessa distribuição são a própria distribuição Gaussiana e a matrizes de 
     Bernoulli, que possuem coeficientes $-1$ e $+1$ distribuídos com média $0$. \citet{Mendelson2008} provaram que
     se $\mat{\Phi} \in \mathbb{R}^{m\times d}$ é subgaussiana, então, com alta probabilidade, $\frac{1}{\sqrt{m}}\mat{\Phi}$
     satisfaz a RIP de ordem $s$ quando $m$ está na ordem de $s\log{d}$.
-    \item \textbf{Matrizes parcialmente ortogonais limitadas}: dada uma matriz $d\times d$ ortogonal $\mat{\Psi}$
+    \item \textbf{Matrizes parcialmente ortogonais limitadas}: dada uma matriz ortogonal $\mat{\Psi}$ com dimensões $d\times d$
     cujos coeficientes são limitados por $\frac{C}{\sqrt{d}}$ para uma constante $C$. Uma matriz parcialmente
-    ortogonal limitada $\mat{\Phi}$ é formada escolhendo $m$ colunas de $\mat{\Psi}$ randomicamente.
-    Por exemplo, a matriz da transformada discreta de Fourier tem coeficientes limitados em $\frac{1}{\sqrt{d}}$,
-    logo escolhendo $m$ linhas randomicamente tem-se uma matriz parcialmente ortogonal limitada.
+    ortogonal limitada $\mat{\Phi}$ pode ser obtida escolhendo $m$ colunas de $\mat{\Psi}$ randomicamente.
+    Por exemplo, a matriz da transformada discreta de Fourier tem coeficientes limitados em $\frac{1}{\sqrt{d}}$.
+    Logo, escolhendo-se $m$ linhas randomicamente tem-se uma matriz parcialmente ortogonal limitada.
     \citet{rudelson2008sparse} provaram que essas matrizes satisfazem RIP com alta probabilidade quando
     o número de medidas $m$ é na ordem de $s\log^4{d}$.
 \end{itemize}
@@ -570,11 +569,11 @@ as seguintes \cite{chen2015compressed}:
 \label{sec:csalgo}
 Ao considerar-se a formulação do problema geral de CS apresentada na seção anterior, um dos resultados também apresentados
 é de que o problema é NP-difícil. Sob essa ótica, diversas soluções alternativas foram desenvolvidas com 
-o intuito de, através da solução de algum outro problema relacionado, ou do uso de alguma diferente estratégia, fosse possível 
+o intuito de, através da solução de algum outro problema relacionado, ou do uso de alguma estratégia diferente, fosse possível 
 chegar a uma solução ótima para a formulação de CS. 
 
-Inicialmente, é necessário levar em consideração que nem sempre as amostras coletadas estão completamente corretas,
-o que leva a um novo vetor de medidas, $\vec{y} = \mathbf{\Phi} \vec{f} + \vec{e}$, que considera o ruído de amostragem, 
+Inicialmente, é necessário levar em consideração que nem sempre as amostras coletadas estão completamente corretas.
+Dessa forma, tem-se um novo vetor de medidas, $\vec{y} = \mathbf{\Phi} \vec{f} + \vec{e}$, que considera o ruído de amostragem, 
 ou vetor de erro, $\vec{e}$.
 
 Além disso, é essencial definir as propriedades ideais de um método de recuperação
@@ -583,10 +582,10 @@ baseado em CS. Segundo \citet{chen2015compressed}, as propriedades são as segui
     \item \textbf{Amostragem não adaptativa:} Os operadoes de amostragem não devem ser dependentes do sinal. 
           Operadores que possuem RIP também possuem essa propriedade.
     \item \textbf{Número ótimo de amostras:} O número de amostras necessárias deve ser mínimo.
-    \item \textbf{Garatia de Uniformidade:} Um único operador de amostragem deve ser suficiente para qualquer sinal.
+    \item \textbf{Garatia de uniformidade:} Um único operador de amostragem deve ser suficiente para qualquer sinal.
     \item \textbf{Robustez:} O método deve ser estável e robusto em relação ao ruído, e possuir garantias 
           quanto ao erro.
-    \item \textbf{Complexidade:} O algoritmo deve ser eficiente.
+    \item \textbf{Complexidade:} O algoritmo deve ser computacionalmente eficiente.
 \end{itemize}
 
 Buscando obedecer o maior número das propriedades citadas acima, alguns métodos e algoritmos surgiram. 
@@ -594,20 +593,21 @@ Nas subseções seguintes serão descritas duas metodologias que foram utilizada
 
 \subsubsection{Métodos baseados em otimização}
 Essa metodologia, utilizada pelos primeiros trabalhos na área, utiliza uma relaxação convexa como forma
-de chegar a solução do problema \eqref{eq:problem}. Ou seja, utiliza a norma $\ell_1$ ao invés da norma $\ell_0$,
-de forma que o problema se torna convexo e solúvel através de métodos de programação linear.
+de chegar a solução do problema \eqref{eq:problem}. 
+Ou seja, utiliza a norma $\ell_1$ ao invés da norma $\ell_0$,
+de forma que o problema se torne convexo e solúvel através de métodos de programação linear.
 
 Dessa forma, o problema relaxado para a norma $\ell_1$ fica como segue:
 \begin{equation}
     \label{eq:probleml1}
     \vec{f'} = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \vec{g} \rVert_1 \hspace{1em} \text{sujeito a} \hspace{1em}
-    \lVert \mathbf{\Phi} \vec{g} - \vec{y} \rVert_2 \le \epsilon
+    \lVert \mathbf{\Phi} \vec{g} - \vec{y} \rVert_2 \le \epsilon,
 \end{equation}
 tal que $\lVert \vec{e} \rVert_2 \le \epsilon $.
 
 A geometria da norma $\ell_1$ permite esparsidade, como pode-se ver no exemplo a seguir. Imaginando-se 
 que a reta em verde retrata todas as possíveis soluções para um sinal $\vec{f} \in \mathbb{R}^2$, os pontos
-mais esparsos da reta são $A=(0;1)$ e $B=(-1.\overline{6};0)$. A região em azul limita todos os pontos 
+mais esparsos da reta são $A=(0;1)$ e $B=(-1,66;0)$. A região em azul limita todos os pontos 
 nos quais $\lVert\vec{p}\rVert_1 \le 1,0$, tal que $\vec{p} \in \mathbb{R}^2$. Nesse caso, o ponto $A$ é o 
 de menor norma $\ell_1$ da reta, sendo essa a solução do problema \eqref{eq:probleml1} e, ao mesmo tempo, 
 uma das possíveis soluções do problema \eqref{eq:problem}.
@@ -620,7 +620,7 @@ uma das possíveis soluções do problema \eqref{eq:problem}.
     \label{fig:l1ball}
 \end{figure}
 
-Candès, Romberg e Tao chegaram a resultados quanto a garantias para os limites de erro, baseado na 
+\citet{candes2006stable} chegaram a resultados quanto a garantias para os limites de erro, baseado na 
 intensidade do ruído, como segue.
 \begin{teorema}
     \cite{candes2006stable}. 
@@ -639,8 +639,8 @@ intensidade do ruído, como segue.
 Depois da formalização do problema de CS, gerando a demanda para uma solução,
 surgiram os primeiros algoritmos que, de forma iterativa, resolvem o problema \eqref{eq:problem}. 
 Um dos principais algoritmos é o \textit{Orthogonal Matching Pursuit (OMP)}, analisado por Gilbert e Tropp \cite{GilbertOMP}.
-
 Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
+\vspace{1em}
 
 \begin{algorithm}[H]
 \label{algo:omp}
@@ -650,9 +650,11 @@ Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 $\vec{r_{(0)}} \leftarrow \vec{y}$\;
 $t \leftarrow 1$\;
 $\Lambda_{(0)} \leftarrow \emptyset$\;
+$\mat{\Phi_{(0)}} \leftarrow []$\;
 $\vec{f'} \leftarrow \vec{0}$\;
 \While{$t \le s$}{
-    $\lambda_{(t)} = \underset{j=1,...,d}{argmax}|\langle\vec{r_{(t-1)}}, \vec{\phi_j}\rangle|$\;
+    // Retorna o primeiro índice $j$ que possui o maior produto interno.\\
+    $\lambda_{(t)} = \underset{j=1,...,d}{argmax}|\langle\vec{r_{(t-1)}}, \vec{\phi_j}\rangle|$\; 
     $\Lambda_{(t)} = \Lambda_{(t-1)} \cup \left\{\lambda_{(t)}\right\}$\;
     $\mathbf{\Phi_{(t)}} = \left[ \mathbf{\Phi_{(t-1)}} \hspace{0.5em} \vec{\phi_{\lambda_{(t)}}} \right]$\;
     Resolver problema de mínimos quadrados: $\vec{x_{(t)}} = \underset{\vec{x}}{argmin} \lVert \vec{y} - \mathbf{\Phi_{(t)}} \vec{x} \rVert^2$\;
@@ -662,26 +664,27 @@ $\vec{f'} \leftarrow \vec{0}$\;
 }
 $\vec{f'}_{\Lambda_{(t-1)}} \leftarrow \vec{x_{(t-1)}}$\;
 \end{algorithm}
+\vspace{1em}
 
 Uma importante observação relativa ao sucesso do algoritmo OMP é que, dado que a matriz $\mathbf{\Phi}$ é incoerente,
-seu conjugado transposto multiplicado por si mesmo é próximo a identidade, ou seja, 
+seu conjugado transposto multiplicado por si mesmo é próximo à identidade, ou seja, 
 $\vec{u} = \mathbf{\Phi}^* \vec{y} = \mathbf{\Phi}^* \mathbf{\Phi} \vec{f}$ 
-é muito próximo a $\vec{f}$. Logo, o OMP considera que o mais alto coeficiente de 
+é muito próximo a $\vec{f}$. 
+Logo, o algoritmo OMP considera que o mais alto coeficiente de 
 $\vec{u}$ é um dos coeficientes esparsos de $\vec{f}$ \cite{chen2015compressed}.
-
-Gilbert e Tropp ainda apresentam um teorema sobre o algoritmo.
+\citet{GilbertOMP} ainda apresentam um teorema sobre o algoritmo.
 \begin{teorema}
     \cite{GilbertOMP}.
-    Dado $\mathbf{\Phi}$ uma matriz $m \times d$ subgaussiana de medidas tal que $m \ge C s \log{d}$ e
+    Dada uma matriz $\mathbf{\Phi}$ de dimensões $m \times d$ subgaussiana de medidas tal que $m \ge C s \log{d}$, e
     $\vec{f}$ um sinal s-esparso em $\mathbb{R}^d$.
     Então, com alta probabilidade, OMP reconstrui corretamente o sinal $\vec{f}$ a partir de suas
     medidas $\vec{y} = \mathbf{\Phi}\vec{f}$.
 \end{teorema}
-Sem nenhuma modificação, o OMP não é reconhecidamente robusto a ruído, nem oferece garantias de uniformidade.
-Porém, esse algoritmo possui um baixo custo computacional e boa eficiência, tendo complexidade de
+Sem nenhuma modificação, o OMP não é reconhecidamente robusto a ruído, nem oferece garantias de uniformidade (vide \autoref{sec:csalgo}).
+Porém, esse algoritmo possui um baixo custo computacional e boa eficiência, tendo complexidade 
 $O(s m d)$ \cite{chen2015compressed}. 
 Algo que fica claro, observando-se o pseudo-código e a complexidade, é que o OMP tem desempenho inversamente
-proporcional com a esparsidade da solução, ou seja, a cada nova iteração no \textit{loop} principal, um 
+proporcional à esparsidade da solução, ou seja, a cada nova iteração no \textit{loop} principal, um 
 novo coeficiente da solução é calculado.
 
 Outros algoritmos de estratégia gulosa oferecem garantias de uniformidade, além de robustez a ruído, com 
