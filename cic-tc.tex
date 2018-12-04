@@ -1149,14 +1149,14 @@ No próximo capítulo será detalhada a proposta do trabalho, explicitando detal
 da implementação.
 Em seguida, testes e resultados serão apresentados com base na proposta.
 
-\chapter{Proposta}
+\chapter{Aplicação de técnicas de compressed sensing e aprendizado de dicionários para codificação de vídeos em tempo real}
 \label{cap:proposta}
 Após considerar o desenvolvimento da área de CS e de aprendizado de dicionários e 
 resumidos alguns trabalhos que focaram em alguma dessas áreas, será descrita a proposta 
 do trabalho de forma detalhada.
 
 O trabalho proposto visa desenvolver uma metodologia para codificação de vídeos em
-tempo real, utilizando pré-aprendidos dicionários relacionados ao próprio vídeo.
+tempo real, utilizando dicionários pré-aprendidos relacionados ao próprio vídeo.
 Por ser um \textit{framework} com foco em tempo real, transmissão e recepção, 
 naturalmente se põe em questão 
 a necessidade de definir as funções que serão desenvolvidas por parte do \textit{encoder}
@@ -1167,7 +1167,7 @@ e por parte do \textit{decoder}.
 % As técnicas apresentadas de forma resumida na seção \autoref{sec:codvideo} podem ser 
 % aplicadas juntamente a metodologia apresentada.
 
-A imagem a seguir apresenta um diagrama geral de blocos, dividindo entre \textit{encoder}
+A imagem a seguir apresenta um diagrama geral de blocos, dividido entre \textit{encoder}
 e \textit{decoder}, além de representar blocos funcionais de cada uma das partes de 
 forma geral.
 \begin{figure}[H]
@@ -1176,6 +1176,7 @@ forma geral.
         \includegraphics[width=0.9\textwidth]{img/DiagramaFinal.png}
     \end{center}
     \legend{Fonte: O Autor.}
+    \label{fig:geral}
 \end{figure}
 
 Entende-se que os frames processados estarão no formato de imagem colorida,
@@ -1191,14 +1192,12 @@ Essa é uma diferença para com os codecs conhecidos, que utilizam comumente o e
 para processamento.
 O codec proposto não necessita fazer tal transformação, pois a transformação executada pelas 
 técnicas de aprendizado de dicionários absorve a transformação no espaço de cor.
-
-Em seguida são definidas as nomenclaturas de alguns parâmetros importantes do
-\textit{framework} proposto.
+Em seguida são definidas as nomenclaturas de alguns parâmetros importantes da abordagem proposta.
 
 \section{Parâmetros do sistema}
-Os parâmetros modificáveis do sistema proposto como um todo estão na tabela a seguir. 
+Os parâmetros modificáveis do sistema proposto podem ser vistos na \autoref{tbl:params}. 
 As escolhas e resultados obtidos com a alteração dos parâmetros serão discutidas no 
-capítulo \autoref{sec:results}.
+Capítulo \ref{sec:results}.
 
 \begin{table}[h]
     \caption{Parâmetros do sistema.}
@@ -1220,47 +1219,47 @@ capítulo \autoref{sec:results}.
 \end{table}
 
 Nas seções seguintes serão descritas mais a fundo cada uma das etapas, seguindo a ordem
-apresentada na imagem, além de explicitar a ligação entre cada um dos blocos funcionais
+apresentada na \autoref{fig:geral}, além de explicitar a ligação entre cada um dos blocos funcionais
 do projeto.
 
 \section{Aprendizado de dicionário}
 \label{sec:learn}
-A parte de aprendizado do dicionário é essencial para que a qualidade da representação
+A etapa de aprendizado do dicionário, a qual é realizada off-line, é essencial para que a qualidade da representação
 esparsa utilizada seja boa.
 Além disso, para o caso de treinamento a partir de frames de vídeos, caso em que se está
 trabalhando, é também necessário fazer a escolha de um algoritmo que permita a utilização
 de uma grande quantidade de dados de treinamento.
 
-Considerando isso e o desempenho apresentado por \citet{MairalOnlineDictLearn}, foi escolhido
-como algoritmo de treinamento do dicionário o \textit{Online Dictionary Learning},
-descrito em \autoref{sec:odl},
-pois esse apresenta bom resultado para grande número de sinais de treinamento.
+Considerando esses aspectos e o desempenho apresentado por \citet{MairalOnlineDictLearn}, foi escolhido
+como algoritmo de treinamento do dicionário o \textit{Online Dictionary Learning} \cite{MairalOnlineDictLearn},
+descrito na \autoref{sec:odl}.
+Este algoritmo apresenta bom resultado para grande número de sinais de treinamento.
 
 O treinamento foi executado da seguinte forma:
 \begin{enumerate}
-    \item Separados frames de vídeos de classe semelhante. Por exemplo, vídeos naturais, vídeos
-    de esportes, \textit{cartoon}, etc...
+    \item Os vídeos foram separados em diversas classes. Por exemplo, vídeos naturais, vídeos
+    de esportes, \textit{cartoon}, etc.;
     \item Os frames foram sorteados, de forma a garantir que um comportamento dos últimos frames
-    não prepondere sobre todo o dicionário.
-    \item Cada frame foi separado em patches com tamanho $p \times p$, sendo $p$ o tamanho de
-    patch escolhido para o sistema.
+    não prepondere sobre todo o dicionário;
+    \item Cada frame foi separado em patches com tamanho $p \times p$;
     Para o treinamento, foram utilizados patches com sobreposição. Por fim, todos os patches
-    foram vetorizados da mesma forma que em \autoref{sec:frameaquisition}.
-    \item Executado algoritmo do ODL, conforme o algoritmo \ref{algo:odl}.
+    foram vetorizados como descritos na \autoref{sec:frameaquisition};
+    \item O dicionário foi obtido executando o algoritmo ODL (Algoritmo \ref{algo:odl}).
 \end{enumerate}
 
 Vale ressaltar que, para vídeos muito especializados, pode-se utilizar um treinamento
-mais especializado. Por exemplo, uma transmissão esportiva, que seja de somente um tipo
-de esporte, pode treinar um dicionário somente com frames desse determinado esporte.
+mais especializado. 
+Por exemplo, uma transmissão esportiva, de um esporte específico pode se beneficiar 
+de um dicionário obtido a partir de apenas frames desse determinado esporte.
 
 A fase de aprendizado do dicionário, por envolver um tempo maior de processamento,
-deve ser executada antes da transmissão de tempo real, por parte do \textit{encoder}.
+deve ser executada antes da transmissão em tempo real, por parte do \textit{encoder}.
 Isso é possível, mesmo que não
 se conheça a transmissão em si, mas se conheça que tipo de conteúdo será transmitido.
 
-Um importante parâmetro que deve ser escolhido é o número de átomos $K$ do dicionário.
+Um importante parâmetro que deve ser escolhido é o número de átomos (i.e., colunas do dicionário) $K$ do dicionário.
 Escolhas de valores maiores tendem a proporcionar maior qualidade na representação do vídeo,
-porém com perda de desempenho. No capítulo \ref{sec:results} serão mostrados resultados
+porém com perda de desempenho. No Capítulo \ref{sec:results} serão mostrados resultados
 de escolhas diferentes no número de átomos do dicionário.
 
 Como parametrização do ODL, utiliza-se o valor $s$ como esparsidade desejada e
@@ -1268,18 +1267,18 @@ $K$ como número de átomos do dicionário.
 O algoritmo ainda precisa saber o número de amostras que devem ser selecionadas aleatoriamente
 de cada frame.
 Para determinar isso, foram executados testes de qualidade com diversos valores
-(\ref{sec:parametrizacao}).
+(\autoref{sec:parametrizacao}).
 Foi utilizada a implementação da biblioteca SPAMS \cite{SPAMS} do algoritmo ODL.
 
 O resultado final desse etapa será um dicionário $\mat{D} \in \mathbb{R}^{3p^2 \times K}$,
 que será utilizado nas etapas seguintes de codificação e decodificação.
-Assim, portanto, em caso de uma transmissão de tempo real ou até mesmo se salvo em arquivo,
+Assim, portanto, em caso de uma transmissão de tempo real ou até mesmo se o vídeo for salvo em arquivo,
 uma das primeiras informações que deve ser enviada é o dicionário que servirá de base
 para a transmissão.
 
 
-\section{\textit{Encoder}}
-\subsection{Aquisição do frame}
+% \section{\textit{Encoder}}
+\section{Aquisição do frame}
 \label{sec:frameaquisition}
 Essa etapa tem como entrada o frame a ser codificado, sendo que o histórico de frames já
 processados, para a posterior verificação de igualdade, está armazenado também neste
@@ -1293,15 +1292,15 @@ discutidos resultados alcançados com ambas escolhas de tamanho de patch.
 A escolha por processar patches se dá pela necessidade do processamento em tempo real, pois 
 os algoritmos relacionados a CS dependem diretamente do tamanho
 dos sinais envolvidos, do tamanho dos dicionários e do número de valores não nulos.
-Porém, o tamanho dos dicionários e a o número de valores não nulos precisam ser maiores conforme maior for 
+Porém, o tamanho dos dicionários e o número de valores não nulos precisam ser maiores quanto maior for 
 o sinal, o que leva a um aumento de complexidade maior que linear com o aumento do tamanho dos
 patches, além de uma utilização maior de memória para o dicionário.
 Utilizar patches pequenos possibilita a paralelização dos cálculos.
 No caso do trabalho que está sendo apresentado, em que o processamento dos patches, que será 
-comentado na próxima seção, se dá utilizando a arquitetura da GPU, a utilização de maior 
+comentado na próxima seção, se dá utilizando a GPU, a utilização de maior 
 paralelismo tende a aumentar a velocidade de processamento.
-Resultados nesse sentido serão discutidos na seção \ref{sec:parametrizacao}.
-Como já comentado na seção \autoref{sec:learn}, existe também um \textit{trade-off} entre 
+Resultados nesse sentido serão discutidos na \autoref{sec:parametrizacao}.
+Como já comentado na \autoref{sec:learn}, existe também um \textit{trade-off} entre 
 diminuir o tamanho do patch e aumentar a compressão.
 
 Tomada a imagem RGB $\mat{I}$ de dimensões $m \times n \times 3$, ela será separada em patches
@@ -1309,9 +1308,10 @@ $p \times p \times 3$, sem sobreposição. Por exemplo, um dos patches iniciará
 e terá parte em $p$ linhas e $p$ colunas, indo a $\mat{I_{p-1, p-1}}$. Em seguida, o próximo
 patch iniciará em $\mat{I_{0, p}}$ e terminará em $\mat{I_{p-1, 2p-1}}$.
 Nos finais de linha e de coluna, os valores de $m$ e $n$ podem não ser divisíveis por $p$,
-o que gera um resíduo. Nesse caso foi adotada a solução que o padrão JPEG utiliza de repetir
+o que gera um resíduo. 
+Nesse caso, foi adotada a solução que o padrão JPEG utiliza de repetir
 o último pixel a esquerda para as colunas e o pixel acima para as linhas, até que chegue-se
-a um patch $p \times p$.
+a um patch $p \times p$ \cite{mitchell1992digital}.
 Junto ao processo de tomada dos patches, estes são vetorizados, também no formato 
 linha a linha, para cada pixel RGB.
 Para um patch $\mat{P}$, os três primeiros valores do vetor corresponderão ao RGB de
@@ -1321,19 +1321,23 @@ Como resultado final, pode-se dizer que a imagem $\mat{I}$ foi separada em
 \begin{equation*}
     T = \ceil*{\frac{m}{p}} \ceil*{\frac{n}{p}}
 \end{equation*}
-sinais de dimensão $L = 3p^2$. Pode-se escrever esses sinais como uma matriz 
+vetores de dimensão $L = 3p^2$. Pode-se escrever esses vetores como uma matriz 
 $\mat{X}\in \mathbb{R}^{L\times T}$, 
-na qual cada coluna $\vec{x_i}$ da matriz representa um dos patches vetorizados.
+na qual cada coluna $\vec{x_i}$ da matriz representa um dos patches vetorizados. 
+A \autoref{fig:vectorize} ilustra o processo de vetorização de um patch.
 \begin{figure}[H]
     \caption{Funcionamento da vetorização do patch.}
     \begin{center}
         \includegraphics[width=0.6\textwidth]{img/vectorize}
     \end{center}
     \legend{Fonte: O Autor.}
+    \label{fig:vectorize}
 \end{figure}
 
+
 Além do processo de vetorização, este subsistema também verifica se o patch atual $i$ é 
-igual ao mesmo $i$ anterior. Caso seja, marca um vetor $\vec{c}\in \mathbb{B}^T$, que indica os 
+igual ao patch $i$ correspondente no quadro anterior. 
+Caso seja, marca um vetor de booleanos $\vec{c}\in \mathbb{B}^T$, que indica os 
 patches que precisam ou não ser recalculados.
 A métrica considera que um patch deve ser recalculado caso qualquer um dos valores dos 
 pixels inseridos nele mudem.
@@ -1342,7 +1346,7 @@ da aplicação seja acelerado.
 Parte considerável dos vídeos possuem partes com essas características, e esse cálculo simples
 não aumenta significativamente a complexidade do sistema como um todo.
 
-\subsection{Codificação esparsa dos patches}
+\section{Codificação esparsa dos patches}
 A partir dos patches $\mat{X}$ da etapa anterior, do dicionário $\mat{D}$, e do parâmetro 
 de esparsidade desejada $s$, pode-se formular o problema de codificação esparsa, tal que 
 $\vec{\gamma_i}$ seja a representação esparsa de $\vec{x_i}$, como segue:
@@ -1353,29 +1357,33 @@ $\vec{\gamma_i}$ seja a representação esparsa de $\vec{x_i}$, como segue:
     \text{ para todo } i.
 \end{equation}
 
-O problema acima, como citado anteriormente, pode ser resolvido via OMP.
+O problema acima, como mencionado anteriormente, pode ser resolvido via OMP.
 A implementação básica escolhida para o sistema foi baseada na biblioteca SPAMS \cite{SPAMS}.
 A partir dela, foi desenvolvida uma versão em CUDA\reg, focada em paralelizar o algoritmo
-OMP para cada $(\vec{x_i}, \vec{\gamma_i})$. Assim, foi possível calcular a representação
-em tempo suficiente para transmissão em tempo real, conforme será verificado no capítulo 
-de resultados.
+OMP para cada $(\vec{x_i}, \vec{\gamma_i})$. Assim, foi possível obter uma representação
+em tempo real, conforme será verificado no Capítulo \ref{sec:results}.
 
-Um importante fato a ser considerado sobre o algoritmo \autoref{algo:omp} é que, a cada iteração $i$,
-ele descobre a melhor solução para o parâmetro de esparsidade $i$. Ou seja, se escolhid $s=5$,
+Um importante fato a ser considerado sobre o Algoritmo \ref{algo:omp} (Subseção \ref{sec:greedy}) 
+é que, a cada iteração $i$,
+ele descobre a melhor solução para o parâmetro de esparsidade $i$. Ou seja, se escolhido $s=5$,
 por exemplo, é possível armazenar-se os resultados com parâmetro de esparsidade $s=1,...,5$. 
 A utilidade desse fato se dá no controle da taxa de transmissão, pois quanto mais esparsa a 
 representação, menor o bitrate. 
-Portanto, com a aplicação do OMP, já se é possível gerar as melhores e piores representações.
+Portanto, com a aplicação do OMP, é possível gerar as melhores e piores representações.
 Imaginando múltiplas transmissões a partir do mesmo \textit{encoder}, cada uma poderia ter 
 uma taxa diferente sem a necessidade de mais cálculos nessa etapa.
+% Como resultado final desse subsistema teremos, para cada patch $i$, uma matriz de representação
+% $\mat{\Gamma_i} \in \mathbb{R}^{K \times s}$, sendo que cada coluna $(\mat{\Gamma_i})_j$ é 
+% j-esparsa.
+Assim, montamos para cada patch $i$ uma matriz de representação $\mat{\Gamma_i} \in R^{K \times s}$
+que armazena as várias representações esparsas para o patch $i$. Cada coluna $(\mat{\Gamma_i})_j$ é 
+j-esparsa, onde j corresponde aos valores de s de 1 a $s_max$ (no exemplo anterior $s_max = 5$). 
+$K$ corresponde ao número de átomos de $\vec{\gamma_i}$, 
+i.e., o número de elementos do vetor $\vec{\gamma_i}$. 
 
-Como resultado final desse subsistema teremos, para cada patch $i$, uma matriz de representação
-$\mat{\Gamma_i} \in \mathbb{R}^{K \times s}$, sendo que cada coluna $(\mat{\Gamma_i})_j$ é 
-j-esparsa.
-
-\subsection{Quantização e compressão}
+\section{Quantização e compressão}
 A partir da codificação esparsa apresentada na seção anterior, a ideia dessa seção é 
-fazer com que a codificação seja a mais comprimida possível, sem perdas tão sensíveis
+fazer com que a codificação seja a mais comprimida possível, sem perdas sensíveis
 na representação do sinal.
 Além disso, ao final dessa seção, é necessário que haja uma representação em formato de 
 \textit{stream} de bytes, para ser enviada ou armazenada pelo \textit{encoder}.
@@ -1384,104 +1392,116 @@ Primeiramente, o sinal é quantizado uniformemente em 8 bits.
 Para isso, é necessário identificar-se os coeficientes máximo $u$ e mínimo $l$ em $\mat{\Gamma}$.
 Em seguida, cada coeficiente $c$ de $\mat{\Gamma}$ é quantizado de acordo com a seguinte equação:
 \begin{equation*}
-    c' = \floor*{0,5 + 255\frac{c - l}{u - l}}
+    c' = \floor*{0,5 + 255\frac{c - l}{u - l}}.
 \end{equation*}
 
 Um dos parâmetros que entra em ação é o parâmetro de esparsidade de envio da informação, $q$. 
 Ele é o responsável pela escolha de qual será o nível de esparsidade escolhido,
 dado que $1 \le q \le s$.
-A partir desse parâmetro escolhem-se as colunas $q-1$ de cada $\mat{\Gamma_i}$ (já quantizado), 
-formando $\mat{C} \in \mathbb{N}^{K \times T}$.
+A partir desse parâmetro escolhe-se a coluna $q$ de cada $\mat{\Gamma_i}$ (já quantizada), 
+formando $\mat{C} \in \mathbb{N}^{2q \times T}$.
 Para representação de $\mat{C}$ são utilizadas as matrizes $\mat{V} \in \mathbb{N}^{q \times T}$ e
 $\mat{R} \in \mathbb{N}^{q \times T}$, sendo que $\mat{V}$ representa os coeficientes não nulos de
-$\mat{C}$ e $\mat{R}$ representa os índices dos mesmos.
+$\mat{C}$ e $\mat{R}$ representa os índices dos mesmos:
+\begin{equation*}
+    \mat{C} = 
+    \begin{bmatrix}
+        \mat{V} \\
+        \mat{R}
+    \end{bmatrix}.
+\end{equation*}
 
 Para geração do \textit{bitstream}, são criados vetores a partir de $\mat{V}$ e $\mat{R}$.
-Uma consideração importante é que nem sempre os $q$ índices de um patch estarão completos.
-Nesse caso foi inserido um valor inválido no vetor de índices, enquanto o vetor de coeficientes
-mantém os valores.
-
-Como exemplo prático, selecione-se $q=3$ e $K=16$,
+% Uma consideração importante é que nem sempre os $q$ índices de um patch estarão completos.
+% Nesse caso foi inserido um valor inválido no vetor de índices, enquanto o vetor de coeficientes
+% mantém os valores.
+O exemplo a seguir ilustra uma situação para a qual $q = 3$ e o número de átomos em 
+$\vec{\gamma_i}$ é $K = 16$. 
+$K$ limita o maior valor que os índice da matriz $\mat{R}$ podem assumir. 
 \begin{equation*}
     \mat{V} = 
     \begin{bmatrix}
         189 & 36 & 114 \\
-        45  & -1 & 32  \\
-        8   & -1 & -1
+        45  & 0 & 32  \\
+        8   & 0 & 0
     \end{bmatrix},
     \mat{R} = 
     \begin{bmatrix}
         7 & 12 & 15 \\
-        1  & -1 & 3  \\
-        5   & -1 & -1
+        1  & 0 & 3  \\
+        5   & 0 & 0
     \end{bmatrix}
 \end{equation*}
-tal que as entradas com valor $-1$ correspondem a entradas que não foram necessárias, 
-e cada coluna representa um patch $\vec{\gamma_i}$. 
+tal que as entradas com valor $0$ correspondem a entradas que não foram necessárias 
+(i.e., a representação esparsa do patch correspondente à respectiva coluna das matrizes 
+contém menos que $q$ coeficientes não nulos),
+e cada coluna representa um patch $\vec{\gamma_i}$.
+A matriz $\mat{V}$ está organizada de modo que o coeficiente de maior magnitude
+esteja sempre nas linhas de menor índice. 
+Assim, para uma coluna $j$, se na linha $i$ for encontrado um valor $0$ (i.e., coeficiente não necessário),
+significa que as demais linhas da coluna também serão $0$.
+Logo, ao encontrar um valor $0$ numa coluna, apenas este precisa ser inserido no vetor $\vec{r}$, 
+pois se sabe que o próximo índice já será relativo a próxima coluna.  
 Dessa forma, os vetores $\vec{v}$ e $\vec{r}$ serão os seguintes: 
 \begin{center}
     $\vec{v} = \left[ 189, 45, 8, 36, 114, 32 \right]$, \\
-    $\vec{r} = \left[ 7,1,5,12,-1,15,3,-1 \right]$.
+    $\vec{r} = \left[ 7,1,5,12,0,15,3,0 \right]$.
 \end{center}
 
 Ainda em tempo, considerando que alguns dos patches não foram recalculados, estes 
 também não precisam ser reenviados. 
-Para marcar em que ponto isso acontece foi utilizado o valor $-2$ em $\vec{r}$, 
+Para marcar em que ponto isso acontece foi utilizado o valor $254$ em $\vec{r}$, 
 seguido do número de patches não enviados.
 
 Esses vetores, mais a informação de máximo, mínimo e $q$ precisam ser empacotados 
 e comprimidos para enviar ao decoder.
 A compressão utilizada foi baseada em codificação de Huffman, e foi utilizada 
-a biblioteca \textit{Boost Gzip} \cite{Boost} para tal.
+a biblioteca \textit{Boost Gzip} \cite{Boost} para tal. 
+O Apêndice A descreve o processo de codificação de Huffman.
 
-\section{\textit{Decoder}}
+% \section{\textit{Decoder}}
 
-\subsection{Decompressão e dequantização}
+\section{Decompressão e dequantização}
 \label{sec:decdeq}
 
-A primeira etapa necessária é e decompressão dos dados recebidos. 
-Foi executado o processo contrário a codificação de Huffman, 
+A primeira etapa do processo de decodificação consiste na descompressão dos dados recebidos. 
+É executada a decodificação de Huffman, 
 baseando-se na tabela de compressão gerada para recuperar os valores originais.
 A biblioteca \textit{Boost Gzip} \cite{Boost} foi utilizada novamente com esse objetivo.
-
-A partir do sinal decomprimido deve-se recuperar as matrizes $\mat{V}$ e $\mat{R}$
+A partir do sinal descomprimido deve-se recuperar as matrizes $\mat{V}$ e $\mat{R}$
 tomando os vetores $\vec{v}$ e $\vec{r}$ recebidos.
-
 Em seguida é necessário recompor os coeficientes quantizados 
 executando a operação inversa a de quantização.
 Considerando $c'$ cada coeficiente recebido, $u$ o maior valor e $l$ o menor, 
 valores todos recebidos no \textit{bitstream},
 \begin{equation*}
-    c = \frac{c' (u - l)}{255} + l
+    c = \frac{c' (u - l)}{255} + l.
 \end{equation*}
 
-Por fim, é inicializada com zeros uma matriz $\mat{\Gamma} \in \mathbb{R}^{K \times T}$,
-basta associar $\mat{\Gamma_{\mat{R_{:,i}}, i}} = \mat{V_{:,i}}$ para todo $0 \le i < T$.
-
+Por fim, é inicializada com zeros uma matriz $\mat{\Gamma} \in \mathbb{R}^{K \times T}$.
+Em seguida, associa-se $\mat{\Gamma_{\mat{R_{:,i}}, i}} = \mat{V_{:,i}}$ para todo $0 \le i < T$.
 Vale lembrar que alguns dos patches podem não ter sido recebidos. 
 Essa informação deve ser passada adiante para que somente os patches modificados
 sejam reprocessados.
-
 Terminada essa etapa procede-se com a recuperação dos patches.
 
-\subsection{Recuperação dos patches}
+\section{Recuperação dos patches}
 A recuperação dos patches por parte do \textit{decoder} é um processo muito simples,
 pois incorre somente em uma multiplicação entre o dicionário $\mat{D}$ e a 
 representação esparsa recebida $\mat{\Gamma}$.
-
-De tal modo, pode-se definir que a matriz de patches $\mat{X} = \mat{D} \mat{\Gamma}$.
+Assim, pode-se definir que a matriz de patches $\mat{X} = \mat{D} \mat{\Gamma}$.
 Uma simplificação que pode aumentar a velocidade da decodificação é não criar a matriz $\mat{\Gamma}$,
 ou seja, utilizar as informações de $\mat{V}$ e $\mat{R}$ para formar $\mat{X}$. 
 Esse procedimento tende a ser mais eficiente, pois quando formada a matriz $\mat{\Gamma}$, 
 a maior parte dos coeficientes dessa matriz é nulo, por se tratar de uma representação esparsa.
-Porém, aplicando uma multiplicação da forma natural, esse fato é desconsiderado e acabam
-acontecendo mais operações de multiplicação do que o necessário.
+% Porém, aplicando uma multiplicação da forma natural, esse fato é desconsiderado e acabam
+% acontecendo mais operações de multiplicação do que o necessário.
 
-\subsection{Reconstrução do frame}
+\section{Reconstrução do frame}
 A reconstrução do frame se dá exatamente da forma contrária a separação por patches.
-
-Vale notar que alguns dos patches não precisarão ser atualizados.
-Essa informação foi recebida pelo \textit{decoder} na etapa \autoref{sec:decdeq} e repassada
+Vale notar que alguns dos patches não precisarão ser atualizados
+(i. e., não se modificaram de um frame para outro).
+Essa informação foi recebida pelo \textit{decoder} na \autoref{sec:decdeq} e repassada
 até essa etapa.
 
 Assim, cada um dos patches de $\mat{X}$, que estavam vetorizados, são novamente transformados
@@ -1491,10 +1511,9 @@ a imagem recebida $\mat{I}$ de dimensões $m \times n$.
 \section{Implementação}
 A implementação do codec se deu utilizando a linguagem de programação Python para a etapa 
 de aprendizado de dicionários, e, como já citado, a biblioteca SPAMS \cite{SPAMS}.
-
 Para o \emph{encoder} e \emph{decoder} foi escolhida a linguagem C++. 
 O carregamento de vídeos utilizou a biblioteca OpenCV \cite{OpenCV}.
-Já para o processamento matricial não executado pela plataforma CUDA\reg, a biblioteca 
+Já para o processamento das matrizes na memória da CPU, a biblioteca 
 Eigen \cite{Eigen} foi a selecionada.
 
 O programa para testes executa os processos de codificação e decodificação, realizando 
@@ -1641,7 +1660,7 @@ enquanto $K$ representa o número de átomos do dicionário.
 
 Os parâmetros para teste foram escolhidos com base na implementação, também considerando 
 o padrão H.264, que utiliza, na etapa de transformação, patches de $4\times4$, 
-e o padrão JPEG, cujos patches são $8\times8$.
+e o padrão JPEG, cujos patches são $8\times8$ \cite{mitchell1992digital}.
 O valor de $s$, parâmetro de esparsidade (\autoref{tbl:params}), foi fixo para os valores de $p$. 
 Sendo assim, para $p=4$, $s=4$, e para $p=8$, $s=8$.
 
@@ -2070,8 +2089,9 @@ melhor os assuntos base da proposta, que não são estudados dentro do escopo da
 \bibliographystyle{abntex2-alf}
 \bibliography{biblio}
 
-\chapter*{Apêndices}
-\section*{APÊNDICE A - Codificação de Huffman}
+\section*{APÊNDICES}
+\chapter*{APÊNDICE A}
+\section*{Codificação de Huffman}
 Dentre os diversos tipos de codificação de dados que existem, alguns deles 
 permitem a representação compacta dos dados sem perdas de compressão.
 Esse é o caso da codificação de Huffman, um algoritmo de compressão por entropia,
@@ -2176,6 +2196,7 @@ estando presente em padrões de codificação de imagens, tal qual o JPEG,
 ou de codificação de vídeo, por exemplo, o H.264.
 % Escrever exemplo disso aí
 \newpage
+\chapter*{APÊNDICE B}
 \section*{Codificação de Vídeo}
 \label{sec:codvideo}
 A comunicação através de vídeo, nas últimas décadas, tem sido uma das principais formas
@@ -2324,6 +2345,7 @@ Esse apêndice buscou apresentar os conceitos básicos utilizados na codificaç�
 dando enfoque principal ao padrão H.264, fortemente utilizado no meio.
 % Buscar terminar melhor essa parte....
 \newpage
+\chapter*{APÊNDICE C}
 \section*{Introdução a CUDA\reg}
 CUDA\reg~é uma plataforma de programação paralela, bem como um modelo de programação, 
 desenvolvido pela Nvidia para aplicações de propósito geral poderem ser executadas
