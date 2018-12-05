@@ -202,7 +202,7 @@
     Do ponto de vista teórico, o trabalho apresenta os conceitos fundamentais de representação
     de sinais, além 
     de aprofundar os assuntos de \emph{compressed sensing} e aprendizado de dicionários,
-    mostrando alguns resultados alcançados e técnicas aplicadas a cada um deles.
+    mostrando alguns resultados alcançados e técnicas aplicadas a cada um dos assuntos.
     Também são abrangidos outros trabalhos que têm relação com a proposta,
     sobre os quais são discutidas as ideias principais, bem como resultados alcançados, e de que 
     maneira se relacionam com o trabalho proposto.
@@ -212,8 +212,8 @@
     O trabalho ainda compara o amplamente utilizado padrão de codificação e decodificação 
     de vídeos H.264
     com a proposta, através das métricas de bitrate e PSNR.
-    Os resultados alcançados nessa comparação são inferiores ao padrão H.264 na relação entre o PSNR alcançado
-    para determinado bitrate.
+    Os resultados obtidos são inferiores ao padrão H.264 quando comparado o PSNR alcançado por ambos
+    para um mesmo bitrate.
     O trabalho permite a compreensão dos assuntos
     de \emph{compressed sensing} e aprendizado de dicionários,
     aplicados ao problema de codificação de vídeos.
@@ -223,27 +223,27 @@
 % como parametros devem ser passados o titulo e as palavras-chave
 % na outra língua, separadas por vírgulas
 % \title{Aplicação de técnicas de compressed sensing e aprendizado de dicionários para codificação de vídeos em tempo real}
-\begin{englishabstract}{An application of compressed sensing and dictionary learning techniques for real-time coding and decoding of videos}
+\begin{englishabstract}{An application of compressed sensing and dictionary learning techniques for real-time video coding and decoding}
     {compressed sensing. compressive sampling. dictionary learning. real-time. UFRGS}
     Millions of videos run through the internet every day.
     To make this possible, coding methods must be developed, this ones capable of compress 
-    video data, combining compressibility and quality in the representation.
+    video data, combining compressibility and quality of representation.
     This work proposes a method for real-time video coding and decoding,
     using compressed sensing and dictionary learning techniques, besides of quantization 
     and compression based on Huffman coding.
     From a theoretical point of view, this work introduces the fundamental concepts of 
     signal representation, in addition to deepening the subjects of compressed sensing 
-    and dictionary learning, showing some results achieved and techniques applied to each of them.
+    and dictionary learning, showing some achieved results and techniques applied to each of the subjects.
     Also are covered works related to the proposal,
-    on which the main ideas are discussed, as well the results achieved, 
+    on which the main ideas are discussed, as well the achieved results, 
     and how they relate to the proposed work.
-    In the experimentation are discussed the possible paramitrizations of 
-    the proposed codec, showing experimental results achieved and recomendations 
+    In the experimentation are discussed the possible parameterizations of 
+    the proposed codec, showing achieved experimental results and recomendations 
     related to the manner of using the codec.
     The work also compares the widely used video coding and decoding standard H.264
     with the proposal, through bitrate and PSNR metrics.
-    The results achieved on this comparison are lower than the H.264 standard in the relation 
-    of obtained PSNR for a fixed bitrate.
+    The obtained results are lower than the H.264 standard when compared the achieved PSNR by the both 
+    with same bitrates.
     This work allows to comprehend the subjects of compressed sensing and dictionary learning, 
     applying to video coding.
 \end{englishabstract}
@@ -257,16 +257,16 @@
 % lista de abreviaturas e siglas
 % o parametro deve ser a abreviatura mais longa
 \begin{listofabbrv}{CoSaMP}
-    \item[CS] Compressed Sensing
-    \item[RIP] Restricted Isometric Property
-    \item[OMP] Orthogonal Matching Pursuit
-    \item[CoSaMP] Compressive Sampling Matching Pursuit 
-    \item[ODL] Online Dictionary Learning 
-    \item[DCT] Discrete Cosine Transform 
-    \item[GPU] Graphical Processing Unit
-    \item[PSNR] Peak signal-noise ratio 
     \item[CoDec] Coding and Decoding  
+    \item[CoSaMP] Compressive Sampling Matching Pursuit 
+    \item[CS] Compressed Sensing
+    \item[DCT] Discrete Cosine Transform 
     \item[FPS] Frames por segundo
+    \item[GPU] Graphical Processing Unit
+    \item[ODL] Online Dictionary Learning 
+    \item[OMP] Orthogonal Matching Pursuit
+    \item[PSNR] Peak signal-noise ratio 
+    \item[RIP] Restricted Isometric Property
 \end{listofabbrv}
 
 % idem para a lista de símbolos
@@ -377,17 +377,16 @@ Outras definições serão agregadas ao longo do texto, somando-se as atuais,
 que foram apresentadas por serem aplicadas em toda a extensão do trabalho.
 
 \section{Estrutura do Trabalho}
-O capítulo \ref{cap:ref} apresenta os conceitos fundamentais que serviram de base
+O Capítulo \ref{cap:ref} apresenta os conceitos fundamentais que serviram de base
 para a elaboração da proposta do trabalho,
-abordando assuntos relativos a processamento de sinais, \emph{compressed sensing}, 
-aprendizado de dicionários, codificação de vídeos e uma breve introdução 
-a plataforma CUDA\reg.
-No capítulo \ref{cap:relacionados} discutem-se alguns trabalhos que inspiraram a 
+abordando assuntos relativos a processamento de sinais, \emph{compressed sensing} e 
+aprendizado de dicionários.
+No Capítulo \ref{cap:relacionados} discutem-se alguns trabalhos que inspiraram a 
 proposta ou que apresentam diferentes óticas para o mesmo problema.
 A seguir, será detalhada a proposta. 
-Baseando-se na mesma, serão apresentados alguns resultados de medidas 
-aplicadas ao objeto do trabalho, encerrando com conclusões tiradas com 
-base na proposta, nos trabalhos relacionados, e nas medidas executadas.
+Baseando-se na mesma, serão apresentados alguns resultados de experimentos 
+aplicados ao objeto do trabalho, encerrando com conclusões tiradas com 
+base na proposta, nos trabalhos relacionados, e nos experimentos executadas.
 
 \chapter{Conceitos Fundamentais}
 \label{cap:ref}
@@ -517,7 +516,8 @@ e no eixo x a variação de $k$.
 Um sinal compressível é aquele que cada coeficiente $f_k^*$ fica abaixo da curva apresentada,
 para algum $q$. 
 \begin{figure}[H]
-    \caption{Curvas de sinais compressíveis com $R=1,0$ e variando $q$ e $k$.}
+    \caption{Curvas de limite superior para sinais compressíveis com $R=1,0$, $k$ no eixo x e valores 
+    diferentes valores de $q$.}
     \begin{center}
         \includegraphics[width=\textwidth]{img/rkq.png}
     \end{center}
@@ -1237,8 +1237,8 @@ Capítulo \ref{sec:results}.
           \hline
           \hline
           $p$    & Tamanho do patch. \\ 
+          $K$    & Número de átomos do dicionário, também descrito como "tamanho" do dicionário. \\
           $s$    & Valor máximo da norma $\ell_0$ de cada patch. Quantidade de valores não nulos da representação do patch. \\     
-          $K$    & Número de átomos do dicionário. \\
           $q$    & Parâmetro de esparsidade de envio da informação, $q \le s$. \\
           \hline
         \end{tabular}
@@ -1507,7 +1507,9 @@ valores todos recebidos no \textit{bitstream},
 \end{equation*}
 
 Por fim, é inicializada com zeros uma matriz $\mat{\Gamma} \in \mathbb{R}^{K \times T}$.
-Em seguida, associa-se $\mat{\Gamma_{\mat{R_{:,i}}, i}} = \mat{V_{:,i}}$ para todo $0 \le i < T$.
+% Em seguida, associa-se $\mat{\Gamma_{\mat{R_{:,i}}, i}} = \mat{V_{:,i}}$ para todo $0 \le i < T$.
+Em seguida, associa-se a cada índice $R_{i,j}$ de $\mat{\Gamma}$ o coeficiente
+$V_{i,j}$ correspondente, para todo $1 \le i \le T$ e $1 \le j \le q$.
 Vale lembrar que alguns dos patches podem não ter sido recebidos. 
 Essa informação deve ser passada adiante para que somente os patches modificados
 sejam reprocessados.
