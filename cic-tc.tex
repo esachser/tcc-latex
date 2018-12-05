@@ -1839,7 +1839,7 @@ O que se pode perceber é que conforme o valor de $s$ aumenta, o PSNR médio tam
 mas não de forma linear.
 Os pontos $s=4,5,6$ de ambos vídeos não apresentam tão importantes melhoras no 
 PSNR médio na relação entre eles. 
-Inclusive, para $s=6$, o vídeo indoor apresentou degradação em relação a $s=5$, 
+Inclusive, para $s~=~6$, o vídeo indoor apresentou degradação em relação a $s=5$, 
 causada pelos erros de quantização envolvidos.
 Dadas essas constatações, pode-se verificar que o aumento do valor de $s$ faz com 
 que a representação seja capaz de aprimorar as altas frequências, muito semelhante 
@@ -1848,15 +1848,14 @@ ao uso da DCT.
 Por fim, foi aplicada a métrica de \emph{bitrate},
 que consiste em calcular quantos bits por segundo a representação compactada 
 de cada vídeo conseguiu alcançar.
-
 A partir da codificação salva dos vídeos codificados,
 foi percebido que as melhores compressões aconteceram com tamanho de patch $p=8$, 
 variando pouco em relação ao tamanho do dicionário.
-Além disso, é possível verificar que o PSNR médio não tem tantas mudanças em relação 
-a mudança do tamanho do patch ou do dicionário, como já citado anteriormente,
+Além disso, é possível verificar que o PSNR médio não apresenta mudança significativa em relação 
+à mudança do tamanho do patch ou do dicionário, como já citado anteriormente,
 o que proporciona a possibilidade de se escolher a representação mais compacta para 
 comparar com o codec H.264.
-Portando, foi calculado o bitrate usando o tamanho do patch em $8$ e o tamanho do dicionário
+Portanto, foi calculado o bitrate usando o tamanho do patch em $8$ e o tamanho do dicionário
 em $128$.
 
 % Tabela do bitrate
@@ -1888,23 +1887,25 @@ em $128$.
 A informação de quantos bytes a representação possui foi verificada através do salvamento
 de um arquivo por teste com a codificação apresentada na proposta do trabalho.
 
-É possível visualizar que, para vídeos com a câmera em movimento, caso dos dois últimos vídeos,
+É possível observar que, para vídeos com a câmera em movimento, caso dos dois últimos vídeos da \autoref{tbl:bitrate}, 
+o valor do
 o bitrate degrada consideravelmente, chamando a atenção da necessidade de se agregar possivelmente
 algum tipo de detecção de movimento.
-Em especial é possível notar que o maior vídeo teve maior compressão.
+Em especial é possível notar que o maior vídeo (sintel\_trailer) teve maior compressão.
 Além de ser o maior vídeo, o mesmo também possui diversas partes com a câmera parada, 
 o que facilita a compressão devido ao método proposto.
 
 Fica claro que, quando se deseja tempo real na codificação, deve-se utilizar valores 
-de tamanho de patch, parâmetro de esparsidade e tamanho de dicionário mais baixos, enquanto para que haja melhor compressão, 
+de tamanho de patch, parâmetro de esparsidade e tamanho de dicionário mais baixos, enquanto para 
+que haja uma representação mais comprimida, 
 devem ser utilizados valores mais altos.
 O parâmetro de esparsidade $s$ é capaz de controlar a qualidade, a compressão e até mesmo a velocidade 
 da codificação, sendo então necessário considerar várias possibilidades para seus valores.
 
-Para resumir, a tabela a seguir traz recomendações para os valores dos parâmetros do codec, 
+Para resumir, a \autoref{tbl:recomendation} traz recomendações para os valores dos parâmetros do codec, 
 nos casos em que o foco está em tempo real ou compressão.
 
-\begin{table}
+\begin{table}[h]
     \caption{Valores recomendados de parâmetros em função da aplicação desejada.}
     \centering
     \begin{tabular}{|l|c|c|c|c|}
@@ -1923,14 +1924,15 @@ nos casos em que o foco está em tempo real ou compressão.
         \hline
     \end{tabular}
     \legend{Fonte: O Autor.}
+    \label{tbl:recomendation}
 \end{table}
 
 \section{Comparação com codec H.264}
 Para a comparação com o codec H.264 foi utilizado o software FFmpeg \cite{FFmpeg}, tendo como entrada
 as mesmas sequências que serviram para os testes executados. 
-O software permite que se gere arquivos de saída com aproximadamente um bitrate desejado.
+O software permite que se gere arquivos de saída com aproximadamente um valor de bitrate desejado.
 Dessa forma, foi executado o programa para alcançar os mesmos bitrates que os apresentados 
-na tabela \ref{tbl:bitrate}.
+na \autoref{tbl:bitrate}.
 O codec H.264 permite diversas parametrizações.
 Por questão de simplicidade, foi utilizada a configuração padrão, apenas forçando o bitrate desejado.
 Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
@@ -1951,7 +1953,7 @@ Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
           Cartoon & sintel\_trailer & $11.922,5$ & $41,83$ & $54,96$ \\
           Esportes & football & $13.945,9$ & $24,96$ & $36,55$ \\
           Indoor & johnny & $56.861,3$ & $30,25$ & $37,50$ \\
-          Monitoramento & stockholm & $64.208,8$ & $35,11$ & $42,96$ \\
+          Monitor. & stockholm & $64.208,8$ & $35,11$ & $42,96$ \\
           Natureza & park\_joy & $62.531,8$ & $23,60$ & $32,37$ \\
           \hline
         \end{tabular}
@@ -1960,19 +1962,20 @@ Em seguida, foi calculado o PSNR médio dos vídeos gerados com o codec H.264.
 \end{table}
 
 Os resultados obtidos tiveram, para todos os casos, valores de PSNR médio inferiores
-ao codec H.264, o que já era esperado, devido a simplicidade do codec proposto, 
-aliado a que o padrão H.264 é amplamente desenvolvido e foi aprimorado tanto pela 
+aos obtidos com o uso do codec H.264, o que já era esperado.
+A abordagem proposta é bastante simples, enquanto que o padrão H.264 é amplamente 
+desenvolvido e foi aprimorado tanto pela 
 academia quanto pela indústria.
-Porém, é possível perceber que as qualidades apresentadas são boas, o que indica que 
-o codec proposto funciona, porém precisa ser aprimorado em relação a buscar gerar 
-resultados mais comprimidos.
-Em especial, buscar utilizar as técnicas já conhecidas dos padrões de codec pode 
+Porém, é possível perceber que 
+o codec proposto funciona, porém precisa ser aprimorado.
+Em especial, buscar utilizar as técnicas já conhecidas dos padrões de codec, 
+por exemplo predição de movimento, pode 
 ser uma via para melhorias no PSNR médio e no bitrate.
 
 Para possibilitar uma melhor visualização da situação, também foi executado o 
 software FFmpeg codificando os vídeos para H.264 sem utilizar nenhuma parametrização, 
 ou seja, utilizando o padrão do programa.
-Os resultados se deram como segue.
+Os resultados são mostrados na \autoref{tbl:bitrateonlyh264}.
 
 \begin{table}[h]
     \caption{PSNR médio e bitrate usando codificação padrão.}
@@ -1996,14 +1999,14 @@ Os resultados se deram como segue.
     \label{tbl:bitrateonlyh264}
 \end{table}
 
-Os valores amostrados indicam que a opção pelo uso das técnicas propostas,
+Os experimentos realizados indicam que a opção pelo uso das técnicas propostas,
 agregados a melhorias que possam ser executadas, podem gerar resultados ainda melhores.
 
 \section{Resultado visual}
 \label{sec:resultadovisual}
-Para encerrar o capítulo de resultados, serão observados alguns resultados visuais relativos 
-ao codec.
-Os resultados discutidos apresentam visualmente erros gerados nos quadros gerados 
+Por fim, serão observados alguns resultados visuais relativos 
+ao codec proposto.
+Os resultados discutidos apresentam erros nos quadros gerados 
 pelo codec proposto,
 comparando a imagem de referência com a gerada pela codificação.
 
@@ -2022,15 +2025,15 @@ comparando a imagem de referência com a gerada pela codificação.
     \label{fig:johnnyres}
 \end{figure}
 
-Nesse primeira comparação pode-se verificar que altas frequências foram adicionadas a imagem,
-na comparação entre a imagem de referência e a imagem gerada pelo codec, 
-o que se deve a erros relacionados a quantização.
+Na \autoref{fig:johnnyres} pode-se verificar que altas frequências foram adicionadas a imagem,
+na comparação entre a imagem de referência e a imagem gerada pelo codec.
 
 \begin{figure}[H]
     \caption{Vídeo big\_buck\_bunny, tamanho do dicionário $K=16$, parâmetro de esparsidade $s=5$ e patches $4\times4$, 
     quantizado 8 bits. 
     (a) Referência. 
-    (b) Resultado com codec proposto.}
+    (b) Resultado com codec proposto.
+    Um retângulo delimita uma região onde é possível perceber artefatos de quantização.}
     \begin{center}
         \begin{tabular}{r c r c}
             (a) & \raisebox{-0.5 \height}{\includegraphics[width=0.4\textwidth]{img/bbbref.png}} & \hspace{1em}
@@ -2042,18 +2045,23 @@ o que se deve a erros relacionados a quantização.
 \end{figure}
 
 Já nesse caso, o quadro resultado é bem próximo ao original. 
-O que se nota, apesar disso, é que em alguns pontos da imagem foram criados artefatos devido ao 
-uso de patches sem sobreposição.
-A imagem foi recortada para melhor visualização do efeito.
+O que se nota, apesar disso, é que em alguns pontos da imagem foram criados artefatos relacionados 
+ao fato da imagem ter sido dividida em patches.
+% A imagem foi recortada para melhor visualização do efeito.
 Para reduzir um pouco os efeitos, mas sem causar ofuscamento na imagem, foi utilizado um filtro 
-bilateral parametrizado para não surtir tanto efeito.
+bilateral.
 Esta não é a solução ideal, dado que existem algoritmos para especificamente filtrar esses blocos,
 porém na versão final do codec não foi implementada essa funcionalidade.
 
 \chapter{Conclusão}
-O trabalho apresentou uma proposta de codec utlizando métodos de compressed sensing
-aliados a aprendizado de dicionários, além de realizar métricas relacionadas ao próprio codec 
-e também em relação ao padrão H.264, amplamente utilizado para codificação de vídeos.
+O trabalho apresentou uma proposta de codificação e decodificação de vídeo em tempo real
+utilizando métodos de \emph{compressed sensing}
+aliados a aprendizado de dicionários.
+% além de realizar métricas relacionadas ao próprio codec 
+% e também em relação ao padrão H.264, 
+O desempenho do codec proposto foi avaliado considerando métricas como PSNR e bitrate em 
+comparação com o padrão H.264,
+amplamente utilizado para codificação de vídeos.
 
 Na fase de execução de testes e geração de resultados foi possível constatar o funcionamento 
 do codec para 5 tipos diferentes de classes de vídeos.
@@ -2061,22 +2069,23 @@ Ficou clara também a relação entre execução em tempo real, compressibilidad
 qualidade com os parâmetros $K$ (número de átomos do dicionário), $p$ (tamanho do bloco), 
 e $s$ (parâmetro de esparsidade da representação).
 
-Mudanças no valor de $K$ (tamanho do dicionário) acarretam em pouca diferença na qualidade do vídeo, desde que 
+Mudanças no valor de $K$ (tamanho do dicionário) acarretam pouca diferença na qualidade do vídeo, desde que 
 o valor não seja muito pequeno. 
 Por outro lado, o valor de $K$ altera linearmente o tempo de codificação dos quadros, como 
-pode ser verificado nas figuras \ref{fig:timep4} e \ref{fig:timep8}.
-Também nas figuras anteriores se percebe que o tempo de decodificação não se altera.
+pode ser verificado nos gráficos das Figuras \ref{fig:timep4} e \ref{fig:timep8}.
+Também se percebe que o tempo de decodificação não se altera.
 A compressibilidade é alterada pelo valor de $K$, sendo que valores maiores correspondem 
-a maior capacidade de compressão.
+a maior capacidade de compressão (i.e., resultam em arquivos de menor tamanho).
 Resumindo, se o objetivo for maior compressão, deve-se escolher valores maiores de $K$.
 Se a ideia é tempo real, valores menores são necessários.
-Vale lembrar que os dicionários precisam ser previamente treinados. 
+Vale lembrar que os dicionários precisam ser previamente gerados. 
 O que pode valer a pena, nesse caso, é escolher, para determinada classe, um dicionário para 
-tempo real e outro para compressão, através de testes.
+tempo real e outro para obter maior compressão, através de testes.
 
 Quanto ao tamanho do patch $p$, esse produz dois distúrbios no codec.
 Em primeiro lugar, ao observar $p=4$ e $p=8$, fica claro que, para tempo real, $p=4$ é uma melhor 
-solução. Para compressão, $p=8$. 
+solução. 
+Para maior compressão, $p=8$. 
 Seria interessante serem executados testes com valores de $p$ maiores que $8$, 
 no sentido de verificar a capacidade de compressão.
 Para isso, em primeiro lugar, deve-se trabalhar em tornar mais veloz a codificação, tanto 
@@ -2085,16 +2094,16 @@ Por exemplo, durante a execução do trabalho, não foi possível verificar o fu
 paralelo do algoritmo IHT \cite{BLUMENSATHIHT}, que claramente apresenta características
 interessantes para um algoritmo paralelizável.
 Um detalhe importante é que o tamanho do patch não altera significativamente a qualidade 
-da representação, podendo ser alcançados boa qualidade com tamanhos diferentes. 
-Porém, vale ressaltar um problema relacionado com o uso de patches sem sobreposição, os 
-artefatos visuais. 
-Para aprimorar nesse sentido foram criados algoritmos para \emph{deblocking}, que poderiam 
-ser aplicados a solução apresentada.
+da representação, podendo ser alcançada boa qualidade com tamanhos diferentes. 
+Porém, vale ressaltar que o uso de patches sem sobreposição tende a produzir artefatos 
+nos quadros de vídeos comprimidos.
+Para minimizar este problema foram criados algoritmos para \emph{deblocking}, que poderiam 
+ser aplicados ao codec proposto.
 
 Já no que diz respeito ao parâmetro de esparsidade $s$, ficou claro que ele altera a qualidade da representação 
 e também a compressibilidade.
-Quanto a compressibilidade, o resultado pode ser verificado pela própria representação dos dados.
-Considere um quadro 720p usando $p=4$, utilizando $1$ byte para o valor e $1$ para o índice em cada 
+Quanto à compressibilidade, o resultado pode ser verificado pela própria representação dos dados.
+Considere um quadro 720p usando $p=4$, utilizando $1$ byte para o valor e $1$ byte para o índice em cada 
 patch, e que são $57600$ patches, $112,5$ kbytes serão utilizados aproximadamente a cada incremento
 em $s$.
 
@@ -2104,16 +2113,18 @@ Em relação aos padrões já existentes, fica clara a necessidade de maior dese
 todas as dimensões do codec, pois o que foi apresentado ilustra a ideia principal.
 Um caminho a ser seguido é combinar as metodologias já existentes para predição intra-quadro 
 e inter-quadro com o aprendizado de dicionários, além de estruturar essa relação.
-Além disso, é necessário verificar formas de implementar a camada de rede do codec baseando-se 
+Além disso, é necessário verificar formas de implementar a camada de rede 
+(i.e. parte do codec que define como transmissor e receptor irão se comunicar) 
+do codec baseando-se 
 nos padrões já existentes.
 
-De forma resumida, o trabalho proposto apresentou um caminho para a codificação de vídeos 
+De forma resumida, este trabalho apresentou uma proposta para a codificação de vídeos 
 utilizando aprendizado de dicionários e técnicas de compressed sensing.
-Além disso, foi possível somar conhecimento de áreas até antes desconhecidas, 
-compressed sensing e aprendizado de dicionários.
-Especialmente do ponto de vista do conhecimento, o trabalho proposto foi um sucesso, 
-pois fez com que, através da pesquisa e do estudo, fosse possível compreender e dominar 
-melhor os assuntos base da proposta, que não são estudados dentro do escopo da graduação.
+% Além disso, foi possível somar conhecimento de áreas até antes desconhecidas, 
+% compressed sensing e aprendizado de dicionários.
+EDo ponto de vista do aprendizado, o trabalho proposto permitiu que, 
+através da pesquisa e do estudo, fosse possível compreender e dominar 
+melhor os assuntos base da proposta, que não são estudados no escopo das disciplinas de graduação.
 
 
 % referências
@@ -2130,8 +2141,13 @@ melhor os assuntos base da proposta, que não são estudados dentro do escopo da
 
 % \newpage
 \chapter*{APÊNDICES}
-\section*{APÊNDICE A}
-\section*{Codificação de Huffman}
+{
+    \centering
+    \textbf{APÊNDICE A} \\
+    \textbf{Codificação de Huffman} \par
+}
+\vspace{1em}
+
 Dentre os diversos tipos de codificação de dados que existem, alguns deles 
 permitem a representação compacta dos dados sem perdas de compressão.
 Esse é o caso da codificação de Huffman, um algoritmo de compressão por entropia,
@@ -2236,9 +2252,13 @@ estando presente em padrões de codificação de imagens, tal qual o JPEG,
 ou de codificação de vídeo, por exemplo, o H.264.
 % Escrever exemplo disso aí
 \newpage
-\section*{APÊNDICE B}
-\section*{Codificação de Vídeo}
-\label{sec:codvideo}
+{
+    \centering
+    \textbf{APÊNDICE B} \\
+    \textbf{Codificação de Vídeo} \par
+}
+\vspace{1em}
+
 A comunicação através de vídeo, nas últimas décadas, tem sido uma das principais formas
 de comunicação, sob as mais diversas formas.
 \citet{SullivanH264} apresentam alguns cenários onde a vídeos digitais são aplicados:
@@ -2385,8 +2405,13 @@ Esse apêndice buscou apresentar os conceitos básicos utilizados na codificaç�
 dando enfoque principal ao padrão H.264, fortemente utilizado no meio.
 % Buscar terminar melhor essa parte....
 \newpage
-\section*{APÊNDICE C}
-\section*{Introdução a CUDA\reg}
+{
+    \centering
+    \textbf{APÊNDICE C} \\
+    \textbf{Introdução a CUDA\reg} \par
+}
+\vspace{1em}
+
 CUDA\reg~é uma plataforma de programação paralela, bem como um modelo de programação, 
 desenvolvido pela Nvidia para aplicações de propósito geral poderem ser executadas
 em GPU's.
