@@ -93,7 +93,7 @@
 % 
 % Informações gerais
 % 
-\title{Aplicação de técnicas de compressed sensing e aprendizado de dicionários para codificação de vídeos em tempo real}
+\title{Aplicação de Técnicas de Compressed~Sensing e Aprendizado~de~Dicionários para Codificação de Vídeos em Tempo~Real}
 
 \author{Sachser}{Eduardo}
 % alguns documentos podem ter varios autores:
@@ -226,15 +226,19 @@
 \begin{englishabstract}{An application of compressed sensing and dictionary learning techniques for real-time video coding and decoding}
     {compressed sensing. compressive sampling. dictionary learning. real-time. UFRGS}
     Millions of videos run through the internet every day.
-    To make this possible, coding methods must be developed, this ones capable of compress 
-    video data, combining compressibility and quality of representation.
+    To make this possible, 
+    coding methods capable of compressing video data need to be developed,
+    more importantly, allying compressibility and quality of representation.
+    % coding methods must be developed, this ones capable of compress 
+    % video data, combining compressibility and quality of representation.
     This work proposes a method for real-time video coding and decoding,
     using compressed sensing and dictionary learning techniques, besides of quantization 
     and compression based on Huffman coding.
     From a theoretical point of view, this work introduces the fundamental concepts of 
     signal representation, in addition to deepening the subjects of compressed sensing 
     and dictionary learning, showing some achieved results and techniques applied to each of the subjects.
-    Also are covered works related to the proposal,
+    % Also are covered works related to the proposal,
+    Works related to the proposal are also covered,
     on which the main ideas are discussed, as well the achieved results, 
     and how they relate to the proposed work.
     In the experimentation are discussed the possible parameterizations of 
@@ -316,7 +320,7 @@ O trabalho também avalia o desempenho da técnica implementada, comparando-o co
 \section{Objetivos}
 Este trabalho tem os seguintes objetivos:
 \begin{itemize}
-    \item Apresentar uma proposta de codificação de decodificação de vídeos
+    \item Apresentar uma proposta de codificação e decodificação de vídeos
     em tempo real baseada em técnicas de \emph{compressed sensing} e aprendizado de 
     dicionários;
     \item Realizar medidas comparativas entre as diversas possibilidades 
@@ -324,7 +328,7 @@ Este trabalho tem os seguintes objetivos:
     \item Realizar medidas comparativas com outros padrões conhecidos de 
     codecs de vídeo;
     \item Aprofundar o conhecimento da área de \emph{compressed sensing} e aprendizado 
-    de dicionários através aplicação de técnicas relacionadas a tais assuntos.
+    de dicionários através da aplicação de técnicas relacionadas a tais assuntos.
 \end{itemize}
 
 \section{Notações Utilizadas}
@@ -349,13 +353,13 @@ O mesmo acontece com vetores, por exemplo, $\vec{x_{(t)}}$.
 
 % A cada iteração t o valor de X é alterado, na iteração.
 Além dessas definições, é utilizado o conceito de produto interno 
-de dois vetores $\vec{x}, \vec{y} \in \mathbb{R}^m$, 
+de dois vetores $\vec{x}, \vec{y} \in \mathbb{C}^m$, 
 conforme a seguinte notação:
 \begin{equation*}
     \langle \vec{x}, \vec{y} \rangle = \sum_{i=1}^m {x_i y_i}.
 \end{equation*}
 
-Por fim, vale lembrar a definição da norma $\ell_p$ para um vetor $\vec{x} \in \mathbb{R}^m$:
+Por fim, vale lembrar a definição da norma $\ell_p$ para um vetor $\vec{x} \in \mathbb{C}^m$:
 \begin{equation*}
     \lVert \vec{x} \rVert_p = 
     \left( \sum_{i=1}^m {|x_i|^p} \right)^{\frac{1}{p}}, 
@@ -414,7 +418,8 @@ Um exemplo simples poderia ser o controle de volume de um aparelho de som,
 que gera um novo sinal proporcional ao sinal de entrada.
 Podemos considerar sistemas bem mais complexos também, como um reconhecedor 
 de faces, que precisa tomar como sinais as faces já conhecidas e a que se 
-deseja reconhecer, e fornece como saída o nome ou as informações da face reconhecida.
+deseja reconhecer, e fornece como saída sinais relativos ao nome ou 
+às informações da face reconhecida.
 
 Sinais podem ser contínuos - ou analógicos - e digitais.
 Na verdade, em geral, sinais da natureza são contínuos, mas são digitalizados 
@@ -457,8 +462,9 @@ Por fim, um resultado clássico sobre amostragem de sinais no domínio tempo, o 
 % \subsection{O modelo de Compressed Sensing}
 \textit{Compressed Sensing (CS)} ou \textit{Compressive Sampling} é um campo de estudo de sinais cujos
 primeiros trabalhos surgiram a partir de 2006, a partir da análise de amostragens executadas em imagens de 
-ressonância magnética. Essas amostragens eram de muito menor dimensionalidade do que a da imagem, o que 
-fez com que os métodos conhecidos de processamento de sinais não tivessem boa acurácia.
+ressonância magnética. 
+Essas amostragens eram de muito menor dimensionalidade do que a da imagem, o que 
+fez com que os métodos conhecidos para recuperação de sinais não tivessem boa acurácia.
 
 "Muitos sinais de interesse possuem menos informação do que a dimensão do ambiente sugere"
 \footnote{"Many signals of interest contain far less information than their ambient dimension suggests"}
@@ -496,7 +502,7 @@ nulos $s$ de um sinal $\vec{f} \in \mathbb{C}^d$, também conhecida como norma $
 \begin{equation}
     \lVert \vec{f} \rVert_0 = s.
 \end{equation}
-Considerando o mesmo sinal $\vec{f}$, diz-se que este é \textit{s-esparso}, quando, para dado um um valor $s$, $\vec{f}$
+Considerando o mesmo sinal $\vec{f}$, diz-se que este é \textit{s-esparso}, quando, para dado um valor $s$, $\vec{f}$
 satisfaz a seguinte inequação:
 \begin{equation}
     \label{eq:f0less}
@@ -511,23 +517,26 @@ que são aqueles que obedecem à seguinte lei de decaimento exponencial \cite{ch
 \end{equation}
 tal que $\vec{f}^* $ é o rearranjo decrescente de $\vec{f}$, ou seja, o vetor $\vec{f}$ reorganizado de forma que o maior 
 coeficiente em magnitude seja $f_1^*$, o segundo maior, $f_2^*$, e assim por diante. $R$ é uma constante positiva e $0< q < 1$. 
-Para ilustrar essa ideia, o gráfico abaixo apresenta curvas geradas variando $q$, usando $R=1,0$
+Para ilustrar essa ideia, o gráfico abaixo apresenta curvas geradas variando $q$, usando $R=1$
 e no eixo x a variação de $k$.
 Um sinal compressível é aquele que cada coeficiente $f_k^*$ fica abaixo da curva apresentada,
 para algum $q$. 
 \begin{figure}[H]
-    \caption{Curvas de limite superior para sinais compressíveis com $R=1,0$, $k$ no eixo x e valores 
+    \caption{Curvas de limite superior para sinais compressíveis com $R=1$, $k$ no eixo x e valores 
     diferentes valores de $q$.}
     \begin{center}
         \includegraphics[width=\textwidth]{img/rkq.png}
     \end{center}
     \legend{Fonte: O Autor.}
+    \label{fig:sinaiscompressiveis}
 \end{figure}
 
 Percebe-se que para valores bem pequenos de $q$ a compressibilidade se torna praticamente o mesmo que esparsidade.
 % Fazer gráfico para ilustrar, aí fica mais fácil de dizer isso. OK
 Segundo \citet{chen2015compressed}, se considerar-se 
-$\vec{f_s}$ o vetor com os $s$ maiores valores de $\vec{f}$ em magnitude, temos que, para sinais compressíveis $\vec{f}$ e 
+$\vec{f_s}$ o vetor de mesma dimensão que $\vec{f}$ e com os $s$ maiores coeficientes de $\vec{f}$ em magnitude, 
+sendo os demais coeficientes nulos,
+temos que, para sinais compressíveis $\vec{f}$ e 
 $\vec{f_s}$:
 \begin{equation}
     \lVert \vec{f} - \vec{f_s} \rVert_2 \le Rs^{\frac{1}{2} - \frac{1}{q}} \hspace{1em} \text{ e } \hspace{1em}
@@ -567,7 +576,8 @@ como a maior correlação entre suas colunas:
 \end{equation}
 
 Fica definido, portanto, que um operador de amostragem é \textit{incoerente} quando a sua coerência $\mu$ é 
-suficientemente pequena. Por exemplo, um operador de amostragem que seja uma base ortonormal é incoerente.
+suficientemente pequena, próxima a $0$, por exemplo, $\mu=0,08$.
+Por exemplo, um operador de amostragem que seja uma base ortonormal é incoerente,
 % Outro exemplo de operador de amostragem incoerente é 
 % Melhorar o exemplo
 bem como operadores que sejam aproximadamente ortonormais para vetores esparsos.
@@ -599,8 +609,9 @@ as seguintes \cite{chen2015compressed}:
     se $\mat{\Phi} \in \mathbb{R}^{m\times d}$ é subgaussiana, então, com alta probabilidade, $\frac{1}{\sqrt{m}}\mat{\Phi}$
     satisfaz a RIP de ordem $s$ quando $m$ está na ordem de $s\log{d}$.
     \item \textbf{Matrizes parcialmente ortogonais limitadas}: dada uma matriz ortogonal $\mat{\Psi}$ com dimensões $d\times d$
-    cujos coeficientes são limitados por $\frac{C_2}{\sqrt{d}}$ para uma constante $C_2$. Uma matriz parcialmente
-    ortogonal limitada $\mat{\Phi}$ pode ser obtida escolhendo $m$ colunas de $\mat{\Psi}$ randomicamente.
+    cujos coeficientes são limitados por $\frac{C_2}{\sqrt{d}}$ para uma constante $C_2$. 
+    Uma matriz parcialmente ortogonal limitada $\mat{\Phi} \in \mathbb{R}^{m\times d}$ 
+    pode ser obtida escolhendo $m$ linhas de $\mat{\Psi}$ randomicamente.
     Por exemplo, a matriz da transformada discreta de Fourier tem coeficientes limitados em $\frac{1}{\sqrt{d}}$.
     Logo, escolhendo-se $m$ linhas randomicamente tem-se uma matriz parcialmente ortogonal limitada.
     \citet{rudelson2008sparse} provaram que essas matrizes satisfazem RIP com alta probabilidade quando
@@ -625,7 +636,7 @@ baseado em CS. Segundo \citet{chen2015compressed}, as propriedades são as segui
     \item \textbf{Amostragem não adaptativa:} Os operadoes de amostragem não devem ser dependentes do sinal. 
           Operadores que possuem RIP também possuem essa propriedade.
     \item \textbf{Número ótimo de amostras:} O número de amostras necessárias deve ser mínimo.
-    \item \textbf{Garatia de uniformidade:} Um único operador de amostragem deve ser suficiente para qualquer sinal.
+    \item \textbf{Garantia de uniformidade:} Um único operador de amostragem deve ser suficiente para qualquer sinal.
     \item \textbf{Robustez:} O método deve ser estável e robusto em relação ao ruído, e possuir garantias 
           quanto ao erro.
     \item \textbf{Complexidade:} O algoritmo deve ser computacionalmente eficiente.
@@ -681,7 +692,18 @@ intensidade do ruído, como segue.
 \label{sec:greedy}
 Depois da formalização do problema de CS, gerando a demanda para uma solução,
 surgiram os primeiros algoritmos que, de forma iterativa, resolvem o problema \eqref{eq:problem}. 
-Um dos principais algoritmos é o \textit{Orthogonal Matching Pursuit (OMP)}, analisado por Gilbert e Tropp \cite{GilbertOMP}.
+Um dos principais algoritmos é o \textit{Orthogonal Matching Pursuit (OMP)}, analisado por \citet{GilbertOMP}.
+
+A ideia principal do algoritmo é, a cada iteração, escolher a coluna da matriz $\mat{\Phi}$ 
+que captura mais energia do sinal residual.
+O sinal residual começa sendo a amostragem de entrada.
+A cada nova iteração, a partir da escolha da coluna, 
+são recalculados todos os coeficientes da representação esparsa e, 
+em seguida, reduzido o sinal residual, 
+eliminando a contribuição já calculada.
+Dessa forma, dado um parâmetro de esparsidade $s$, 
+depois de $t \le s$ iterações, o OMP já calculou
+a melhor representação t-esparsa da amostragem de entrada.
 Segundo \citet{GilbertOMP}, o algoritmo do OMP é o que segue:
 \vspace{1em}
 
@@ -720,9 +742,9 @@ $\vec{u}$ é um dos coeficientes esparsos de $\vec{f}$ \cite{chen2015compressed}
 \citet{GilbertOMP} ainda apresentam um teorema sobre o algoritmo.
 \begin{teorema}
     \cite{GilbertOMP}.
-    Dada uma matriz $\mathbf{\Phi}$ de dimensões $m \times d$ subgaussiana de medidas tal que $m \ge C s \log{d}$, e
+    Dada uma matriz de amostragem $\mathbf{\Phi}$ de dimensões $m \times d$ subgaussiana tal que $m \ge C s \log{d}$, e
     $\vec{f}$ um sinal s-esparso em $\mathbb{R}^d$.
-    Então, com alta probabilidade, OMP reconstrui corretamente o sinal $\vec{f}$ a partir de suas
+    Então, com alta probabilidade, OMP reconstroi corretamente o sinal $\vec{f}$ a partir de suas
     medidas $\vec{y} = \mathbf{\Phi}\vec{f}$.
 \end{teorema}
 Sem nenhuma modificação, o OMP não é reconhecidamente robusto a ruído, nem oferece garantias de uniformidade (vide \autoref{sec:csalgo}).
@@ -803,16 +825,18 @@ abaixo.
 \end{figure}
 
 \subsection{Resultados com dicionários coerentes}
-A partir dessa seção, ao se tratar das matrizes de amostragem, se utilizará 
+A partir dessa seção, se utilizará 
 o termo dicionários, que representam uma transformação do sinal, 
-não necessariamente uma transformação de domínio conhecida,
-podendo esta ser aprendida utilizando métodos que serão apresentados na seção \ref{sec:diclearn}.
+não necessariamente um operador de projeção, ou matriz de amostragem,
+podendo esses ser aprendidos utilizando métodos que serão apresentados na \autoref{sec:diclearn}.
 A utilização de matrizes de amostragens incoerentes, ou dicionários incoerentes, 
-limita a aplicação de ,
+limita a aplicação de
 \emph{compressed sensing} para áreas cuja base de solução dos mesmos é baseada
 em dicionários incoerentes.
 Porém existem áreas com soluções baseadas em dicionários coerentes, que utilizam, 
 por exemplo, dicionários supercompletos, com mais colunas que linhas. 
+Nesse caso os dicionários não se tratam mais de matrizes de amostragem,
+mas vetores que formam uma "base" para a solução.
 "Coerência é, de certa forma, uma propriedade natural para \emph{compressed sensing}, 
 porque se duas colunas são muito correlatas, será impossível em geral distinguir se a energia do sinal
 vem de uma ou da outra" 
@@ -823,14 +847,15 @@ the signal comes from one or the other"}
 
 Porém, em alguns casos, não precisa-se recuperar os coeficientes originais do sinal, o que com dicionários 
 coerentes não é possível, mas sim o próprio sinal já transportado para uma nova base.
-Matematicamente falando, imagine-se um sinal $\vec{f} = \mathbf{D}\vec{x}$, no qual suas medidas são
+Matematicamente falando, imagine-se um sinal $\vec{f} = \mathbf{D}\vec{x}$, sendo $\vec{x}$ esparso,
+no qual suas medidas são
 $\vec{y} = \mathbf{\Phi}\vec{f} = \mathbf{\Phi}\mathbf{D}\vec{x}$. 
 Se o dicionário $\mathbf{D}$ for
 coerente, não é possível recuperar os coeficientes $\vec{x}$, mas é possível recuperar $\vec{f}$ \cite{CANDESDICTS}.
 
 A partir desses estudos, \citet{CANDESDICTS} apresentou uma nova definição para o problema de CS, 
 baseado na solução utilizando a norma $\ell_1$, considerando $\vec{f} = \mathbf{D}\vec{x}$ o sinal
-e $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$ as medidas, $\vec{e}$ o erro.
+e $\vec{y} = \mathbf{\Phi}\vec{f} + \vec{e}$ as medidas, $\vec{e}$ o erro:
 \begin{equation}
     \label{eq:problemDl1}
     \vec{f'} = \underset{\vec{g} \in \mathbb{C}^d}{\text{argmin}} \lVert \mathbf{D}^*\vec{g} \rVert_1, 
@@ -869,8 +894,10 @@ para outros campos do conhecimento.
 A área de aprendizado de dicionários, do inglês \textit{dictionary learning}, busca, através
 dos dados já conhecidos de uma classe de sinais, prover novos dicionários nos quais os sinais 
 serão capazes de se conformar de maneira mais esparsa. 
-Sob o ponto de vista de CS, um dicionário $\mat{D}$ normalmente é escolhido de forma aleatória,
-desde que satisfaça a RIP.
+Sob o ponto de vista de CS, um dicionário $\mat{D}$ 
+% normalmente é escolhido de forma aleatória,
+% desde que satisfaça a RIP.
+é uma matriz de amostragem que satisfaz a RIP.
 Aprendizado de dicionários, por outro lado, busca gerar modelos considerando os sinais envolvidos,
 ou seja, dicionários que dependem dos dados, ou \textit{data-dependent dictionaries} \cite{chen2015compressed}.
 
@@ -886,9 +913,9 @@ um sub-dicionário da língua portuguesa a partir de uma grande quantidade texto
 
 Mais formalmente, seja $\vec{x_1}, \vec{x_2}, ..., \vec{x_n} \in \mathbb{R}^L$
 um conjunto finito de sinais de treinamento, e sejam $m$ e $s$ inteiros positivos.
-Deseja-se encontrar a matriz $\mat{D}$ e os vetores s-esparsos
+Deseja-se encontrar a matriz $\mat{D} \in \mathbb{R}^{L\times m}$ e os vetores s-esparsos
 $\vec{\gamma_1}, \vec{\gamma_2}, ..., \vec{\gamma_n} \in \mathbb{R}^m$, tais que
-$\mat{D}\vec{\gamma_i} \approx x_i$ para todo $i$. Dessa forma, pode-se definir o problema
+$\mat{D}\vec{\gamma_i} \approx \vec{x_i}$ para todo $i$. Dessa forma, pode-se definir o problema
 de aprendizado de dicionários utilizando a norma $\ell_2$ como segue  \cite{chen2015compressed}:
 \begin{equation}
     \label{eq:dlgeneral}
@@ -918,7 +945,7 @@ dicionário.
 por outra função de erro, como, por exemplo, a norma $\ell_1$ \cite{chen2015compressed}.
 
 Também é possível formular o problema com um dado erro de aproximação $\epsilon$.
-Nesse caso, pode-se reformular o problema de aprendizado de dicionários como segue \cite{chen2015compressed}.
+Nesse caso, pode-se reformular o problema de aprendizado de dicionários como segue \cite{chen2015compressed}:
 \begin{equation}
     \label{eq:dleps}
     \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
@@ -940,14 +967,14 @@ uma reformulação somente trocando a norma $\ell_0$ pela norma $\ell_1$ \cite{c
 \begin{equation}
     \label{eq:dlunical1}
     \underset{\mat{D}, \vec{\gamma_1}...\vec{\gamma_n}}{min} 
-    \sum_{i=1}^{n} {\lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2} + \lambda \lVert \vec{\gamma_i} \rVert_1}
+    \sum_{i=1}^{n} {\lVert \vec{x_i} - \mat{D}\vec{\gamma_i} \rVert\SPSB{2}{2} + \lambda \lVert \vec{\gamma_i} \rVert_1}.
 \end{equation}
 
 Aprendizado de dicionários tem ligação com diversas outras áreas do conhecimento. 
 Em especial
 % e que será utilizado no decorrer do desenvolvimento do trabalho, está sua ligação
 com CS, da forma que foi explicitada no início da seção, e com processamento de imagens,
-o que será melhor abordados na seção \autoref{sec:codesparsa}.
+o que será melhor abordados na \autoref{sec:codesparsa}.
 
 \subsection{\textit{Online Dictionary Learning}}
 \label{sec:odl}
@@ -999,7 +1026,7 @@ Tomando como valor inicial $\mat{D} = \mat{D_{(t-1)}}$,
 e utilizando o seguinte cálculo recursivo em cada coluna $\vec{d_k}$, 
 que sempre minimiza a função objetivo \cite{MairalOnlineDictLearn}, 
 chega-se no novo dicionário $\mat{D_{(t)}}$,
-iterando até que não se tenha mudança em $\mat{D}$.
+iterando até que não se tenha mudança em $\mat{D}$:
 \begin{equation}
     \vec{d_k} \leftarrow \frac{1}{\mat{A_{(t)_{k,k}}}}
     \left( \vec{B_{(t)_{:,k}}} - \mat{D}\vec{A_{(t)_{:,k}}} \right) +
@@ -1185,7 +1212,7 @@ do trabalho de forma detalhada.
 
 O trabalho proposto visa desenvolver uma metodologia para codificação de vídeos em
 tempo real, utilizando dicionários pré-aprendidos relacionados ao próprio vídeo.
-Por ser um \textit{quadrowork} com foco em tempo real, transmissão e recepção, 
+Por ser um \textit{framework} com foco em tempo real, transmissão e recepção, 
 naturalmente se põe em questão 
 a necessidade de definir as funções que serão desenvolvidas por parte do \textit{encoder}
 e por parte do \textit{decoder}.
@@ -1218,8 +1245,8 @@ Em contraste com essa definição o quadro em memória poderia ser coluna por co
 alguns cálculos internos, sendo possível adaptar o sistema desenvolvido de forma bastante simples.
 Essa é uma diferença para com os codecs conhecidos, que utilizam comumente o espaço de cor YCbCr
 para processamento.
-O codec proposto não necessita fazer tal transformação, pois a transformação executada pelas 
-técnicas de aprendizado de dicionários absorve a transformação no espaço de cor.
+% O codec proposto não necessita fazer tal transformação, pois a transformação executada pelas 
+% técnicas de aprendizado de dicionários absorve a transformação no espaço de cor.
 Em seguida são definidas as nomenclaturas de alguns parâmetros importantes da abordagem proposta.
 
 \section{Parâmetros do sistema}
@@ -1300,6 +1327,7 @@ Foi utilizada a implementação da biblioteca SPAMS \cite{SPAMS} do algoritmo OD
 
 O resultado final desse etapa será um dicionário $\mat{D} \in \mathbb{R}^{3p^2 \times K}$,
 que será utilizado nas etapas seguintes de codificação e decodificação.
+Esse dicionário é armazenado em floats 32 bits.
 Assim, portanto, em caso de uma transmissão de tempo real ou até mesmo se o vídeo for salvo em arquivo,
 uma das primeiras informações que deve ser enviada é o dicionário que servirá de base
 para a transmissão.
@@ -1405,7 +1433,7 @@ uma taxa diferente sem a necessidade de mais cálculos nessa etapa.
 % j-esparsa.
 Assim, montamos para cada patch $i$ uma matriz de representação $\mat{\Gamma_i} \in R^{K \times s}$
 que armazena as várias representações esparsas para o patch $i$. Cada coluna $(\mat{\Gamma_i})_j$ é 
-j-esparsa, onde j corresponde aos valores de s de 1 a $s_max$ (no exemplo anterior $s_max = 5$). 
+j-esparsa, onde j corresponde aos valores de s de 1 a $s_{max}$ (no exemplo anterior $s_{max} = 5$).
 $K$ corresponde ao número de átomos de $\vec{\gamma_i}$, 
 i.e., o número de elementos do vetor $\vec{\gamma_i}$. 
 
@@ -1427,10 +1455,10 @@ Um dos parâmetros que entra em ação é o parâmetro de esparsidade de envio d
 Ele é o responsável pela escolha de qual será o nível de esparsidade escolhido,
 dado que $1 \le q \le s$.
 A partir desse parâmetro escolhe-se a coluna $q$ de cada $\mat{\Gamma_i}$ (já quantizada), 
-formando $\mat{C} \in \mathbb{N}^{2q \times T}$.
-Para representação de $\mat{C}$ são utilizadas as matrizes $\mat{V} \in \mathbb{N}^{q \times T}$ e
-$\mat{R} \in \mathbb{N}^{q \times T}$, sendo que $\mat{V}$ representa os coeficientes não nulos de
-$\mat{C}$ e $\mat{R}$ representa os índices dos mesmos:
+formando $\mat{C} \in {[0;255]}^{2q \times T}$.
+Para representação de $\mat{C}$ são utilizadas as matrizes $\mat{V} \in [0;255]^{q \times T}$ e
+$\mat{R} \in [0;K]^{q \times T}$, sendo que $\mat{V}$ representa os coeficientes não nulos de
+$\mat{C}$ e $\mat{R}$ os índices de cada um desses coeficientes:
 \begin{equation*}
     \mat{C} = 
     \begin{bmatrix}
@@ -1445,7 +1473,7 @@ Para geração do \textit{bitstream}, são criados vetores a partir de $\mat{V}$
 % mantém os valores.
 O exemplo a seguir ilustra uma situação para a qual $q = 3$ e o número de átomos em 
 $\vec{\gamma_i}$ é $K = 16$. 
-$K$ limita o maior valor que os índice da matriz $\mat{R}$ podem assumir. 
+$K$ limita o maior valor que os índice da matriz $\mat{R}$ podem assumir:
 \begin{equation*}
     \mat{V} = 
     \begin{bmatrix}
@@ -1458,7 +1486,7 @@ $K$ limita o maior valor que os índice da matriz $\mat{R}$ podem assumir.
         7 & 12 & 15 \\
         1  & 0 & 3  \\
         5   & 0 & 0
-    \end{bmatrix}
+    \end{bmatrix};      
 \end{equation*}
 tal que as entradas com valor $0$ correspondem a entradas que não foram necessárias 
 (i.e., a representação esparsa do patch correspondente à respectiva coluna das matrizes 
@@ -1470,6 +1498,7 @@ Assim, para uma coluna $j$, se na linha $i$ for encontrado um valor $0$ (i.e., c
 significa que as demais linhas da coluna também serão $0$.
 Logo, ao encontrar um valor $0$ numa coluna, apenas este precisa ser inserido no vetor $\vec{r}$, 
 pois se sabe que o próximo índice já será relativo a próxima coluna.  
+Os vetores $\vec{v}$ e $\vec{r}$ usam 8 bits para representar cada um dos símbolos
 Dessa forma, os vetores $\vec{v}$ e $\vec{r}$ serão os seguintes: 
 \begin{center}
     $\vec{v} = \left[ 189, 45, 8, 36, 114, 32 \right]$, \\
@@ -1697,7 +1726,7 @@ Sendo assim, para $p=4$, $s=4$, e para $p=8$, $s=8$.
 A \autoref{fig:diccp8d192} mostra um dicionário aprendido para a classe cartoon com patches $8\times8$. 
 Isto resulta em um dicionário contendo $192$ linhas ($8\times8\times3$). 
 Neste exemplo, o dicionário também contém $192$ colunas. 
-Cada quadrado mostrado contém $8\times8$ pixels, sendo cada pixel exibindo um valore RGB.
+Cada quadrado mostrado contém $8\times8$ pixels, sendo cada pixel exibindo um valor RGB.
 O conteúdo de cada um dos quadrados corresponde a uma coluna, com os valores associados às $192$ linhas. 
 
 A \autoref{fig:dicip4d32} mostra um outro exemplo de dicionário aprendido para a classe indoors com patches de $4\times4$. 
@@ -1721,7 +1750,7 @@ $32$ colunas (número de quadrados mostrados na figura).
 \end{figure}
 
 \begin{figure}[H]
-    \caption{Exemplo de dicionário aprendido para a classe cartoon com patches $4\times4$. 
+    \caption{Exemplo de dicionário aprendido para a classe indoor com patches $4\times4$. 
     Isto resulta em um dicionário contendo $48$ linhas ($4\times4\times3$). 
     Este dicionário contém $32$ colunas. 
     Cada quadrado mostrado contém $4\times4$ pixels, 
@@ -1845,6 +1874,8 @@ Pode-se verificar, ainda, com o uso de 16 bits, que o PSNR aumenta em função
 do tamanho do dicionário, de uma forma geral.
 Uma exceção está nos vídeos indoor, que, para tamanho do patch $4$ e tamanho do dicionário $48$
 tem um resultado de PSNR médio um pouco pior.
+Esse fato pode ser consequência da aleatoriedade inserida pelo treinamento 
+na parte de seleção de quais patches de um quadro serão utilizados para treinamento.
 Porém, apesar da diferença de PSNR confrome o tamanho do dicionário, essa não é 
 tão grande, o que mostra que o uso de dicionários menores pode ser bastante útil,
 especialmente quando se leva em conta a velocidade de codificação.
@@ -1871,6 +1902,10 @@ Os pontos $s=4,5,6$ de ambos vídeos não apresentam tão importantes melhoras n
 PSNR médio na relação entre eles. 
 Inclusive, para $s~=~6$, o vídeo indoor apresentou degradação em relação a $s=5$, 
 causada pelos erros de quantização envolvidos.
+Levando em consideração a \autoref{fig:sinaiscompressiveis}, que exemplifica o conceito de
+sinais compressíveis, percebe-se que, 
+em função do aumento de $s$, a contribuição de cada novo coeficiente para com 
+a energia do sinal é cada vez menor.
 Dadas essas constatações, pode-se verificar que o aumento do valor de $s$ faz com 
 que a representação seja capaz de aprimorar as altas frequências, muito semelhante 
 ao uso da DCT.
