@@ -1182,17 +1182,18 @@ porém, por parte do \textit{decoder}, ao invés de utilizar algum dicionário c
 utilizar um aprendido.
 
 % Ler o Lima e falar sobre com mais intensidade... OK
-\citet{lima2012codificaccao} apresenta em seu trabalho um codec de vídeo bastante 
+\citet{lima2012codificaccao2} apresenta em seu trabalho um codec de vídeo bastante 
 próximo ao proposto.
 Em sua proposta, o autor utiliza o algoritmo K-SVD para treinamento de um dicionário
 de 256 átomos, seguindo a proposta de \citeauthor{BRYTFACEKSVD}, conforme descrito
-anteriomente.
-Para a decomposição, também utiliza o algoritmo OMP, utilizando blocos $8\times8$,
+anteriormente.
+No trabalho proposto será utilizado o algoritmo ODL com o mesmo objetivo.
+Para a decomposição, \citet{lima2012codificaccao2}
+também utiliza o algoritmo OMP, utilizando blocos $8\times8$,
 sem sobreposição.
-As principais diferenças entre o trabalho descrito e o proposto
-estão no uso do ODL como algoritmo de treinamento de dicionários, 
-além da forma como são processados os blocos.
-No trabalho descrito, \citeauthor{lima2012codificaccao} utiliza a diferença entre o
+Na proposta, haverá a possibilidade de parametrização do tamanho do bloco, 
+também sendo dividido o quadro em blocos sem sobreposição.
+No trabalho descrito, \citeauthor{lima2012codificaccao2} utiliza a diferença entre o
 bloco anterior e o atual ou somente o atual, dado um limite. 
 No trabalho proposto, sempre será utilizado o bloco atual.
 Porém, quando a diferença não for significativa, não recalculará a representação do bloco.
@@ -1722,6 +1723,10 @@ o padrão H.264, que utiliza, na etapa de transformação, patches de $4\times4$
 e o padrão JPEG, cujos patches são $8\times8$ \cite{mitchell1992digital}.
 O valor de $s$, parâmetro de esparsidade (\autoref{tbl:params}), foi fixo para os valores de $p$. 
 Sendo assim, para $p=4$, $s=4$, e para $p=8$, $s=8$.
+A proposta utiliza ainda um parâmetro de esparsidade $q$. 
+Para os experimentos executados, sempre foi utlizado $s = q$.
+O tempo para gerar cada um dos dicionários ficou entre um e cinco minutos, dependendo do número
+de quadros para treinamento e do número de átomos $K$ do dicionário.
 
 A \autoref{fig:diccp8d192} mostra um dicionário aprendido para a classe cartoon com patches $8\times8$. 
 Isto resulta em um dicionário contendo $192$ linhas ($8\times8\times3$). 
@@ -2114,9 +2119,12 @@ O que se nota, apesar disso, é que em alguns pontos da imagem foram criados art
 ao fato da imagem ter sido dividida em patches.
 % A imagem foi recortada para melhor visualização do efeito.
 Para reduzir um pouco os efeitos, mas sem causar ofuscamento na imagem, foi utilizado um filtro 
-bilateral.
+bilateral, com uso de funções Gaussianas, parâmetros $\sigma_c = 20$ e $\sigma_s = 20$, 
+utilizando a implementação da biblioteca OpenCV \cite{OpenCV}.
 Esta não é a solução ideal, dado que existem algoritmos para especificamente filtrar esses blocos,
 porém na versão final do codec não foi implementada essa funcionalidade.
+Os valores de PSNR médio da \autoref{sec:parametrizacao} foram calculados com base na
+solução utilizando o filtro bilateral.
 
 \chapter{Conclusão}
 O trabalho apresentou uma proposta de codificação e decodificação de vídeo em tempo real
@@ -2171,6 +2179,16 @@ Quanto à compressibilidade, o resultado pode ser verificado pela própria repre
 Considere um quadro 720p usando $p=4$, utilizando $1$ byte para o valor e $1$ byte para o índice em cada 
 patch, e que são $57600$ patches, $112,5$ kbytes serão utilizados aproximadamente a cada incremento
 em $s$.
+
+Os experimentos realizados proporcionaram diversas análises,
+abrindo a possibilidade de realização de outras medidas.
+Por exemplo, podem ser realzados experimentos buscando 
+utilizar dicionários mais generalizados (i.e. para diversas classes),
+ou mais especializados (i.e. para um determinado vídeo). 
+Outro caso de estudo seria a utilização de um dicionário baseado na DCT.
+Também poderiam ser testadas variações no espaço de cores,
+com a intenção de verificar se diferenças em qualidade ou 
+em compressibilidade seriam alcançáveis.
 
 Por fim, as comparações com o codec H.264 mostraram que existem muitos pontos que podem ser 
 aprimorados, mas também mostra que a proposta apresentada pode ser construtiva.
